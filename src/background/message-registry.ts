@@ -30,6 +30,7 @@ import {
     handleLogError,
     handleGetSessionLogs,
     handleGetSessionReport,
+    handleBrowseOpfsSessions,
 } from "./handlers/logging-handler";
 
 import {
