@@ -18,6 +18,8 @@ import {
   XCircle,
   Clock,
   AlertCircle,
+  Copy,
+  Check,
 } from "lucide-react";
 
 interface ChainEntry {
@@ -65,6 +67,7 @@ export function DependencyChainPanel() {
   const [expanded, setExpanded] = useState(false);
   const [snapshot, setSnapshot] = useState<ChainSnapshot | null>(null);
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const fetchChain = useCallback(async () => {
     setLoading(true);
@@ -79,6 +82,52 @@ export function DependencyChainPanel() {
       setLoading(false);
     }
   }, []);
+
+  const formatChainText = useCallback((snap: ChainSnapshot): string => {
+    const flag = (ok: boolean) => ok ? "✓" : "✗";
+    const divider = "═".repeat(50);
+    const lines = [
+      divider,
+      "  Dependency Chain Diagnostics",
+      `  Generated: ${new Date().toISOString()}`,
+      `  Injection: ${new Date(snap.timestamp).toISOString()}`,
+      `  Total: ${snap.totalMs}ms  |  Tab: ${snap.tabId}`,
+      divider,
+      "",
+      `── CHAIN (${snap.chain.length} scripts) ──`,
+      "",
+      "  #  Script                Role          R  F  E  Time   Source",
+      "  ── ──────────────────── ───────────── ── ── ── ────── ──────",
+    ];
+    for (let i = 0; i < snap.chain.length; i++) {
+      const e = snap.chain[i];
+      const num = String(i + 1).padStart(2);
+      const name = e.scriptName.padEnd(20);
+      const role = (ROLE_LABELS[e.role] ?? e.role).padEnd(13);
+      const r = flag(e.resolved);
+      const f = flag(e.fetched);
+      const x = flag(e.executed);
+      const ms = e.executeMs !== null ? `${e.executeMs}ms`.padEnd(6) : "  —   ";
+      const src = e.codeSource ?? "";
+      lines.push(`  ${num} ${name} ${role} ${r}  ${f}  ${x}  ${ms} ${src}`);
+      if (e.error) {
+        lines.push(`     ⚠ ${e.error}`);
+      }
+    }
+    lines.push("");
+    const allOk = snap.chain.every(c => c.resolved && c.fetched && c.executed);
+    lines.push(`  Status: ${allOk ? "✓ ALL OK" : "✗ ISSUES DETECTED"}`);
+    lines.push(divider);
+    return lines.join("\n");
+  }, []);
+
+  const copyToClipboard = useCallback(async () => {
+    if (!snapshot) return;
+    const text = formatChainText(snapshot);
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [snapshot, formatChainText]);
 
   useEffect(() => {
     if (expanded) {
@@ -127,15 +176,32 @@ export function DependencyChainPanel() {
             <span className="text-[9px] text-muted-foreground uppercase tracking-wider">
               Last injection chain
             </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-5 w-5 p-0"
-              onClick={fetchChain}
-              disabled={loading}
-            >
-              <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
-            </Button>
+            <div className="flex items-center gap-0.5">
+              {snapshot && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-5 w-5 p-0"
+                  onClick={copyToClipboard}
+                  title="Copy chain diagnostics"
+                >
+                  {copied ? (
+                    <Check className="h-3 w-3 text-emerald-500" />
+                  ) : (
+                    <Copy className="h-3 w-3" />
+                  )}
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-5 w-5 p-0"
+                onClick={fetchChain}
+                disabled={loading}
+              >
+                <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
+              </Button>
+            </div>
           </div>
 
           {!snapshot && !loading && (
