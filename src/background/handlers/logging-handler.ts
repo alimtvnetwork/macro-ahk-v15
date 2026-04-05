@@ -123,9 +123,8 @@ function insertLogRow(msg: {
     scriptId?: string;
     projectId?: string;
     configId?: string;
-}): void {
+}, sessionId: number): void {
     const db = getLogsDb();
-    const sessionId = ensureSessionId();
     const now = new Date().toISOString();
     const version = chrome.runtime.getManifest().version;
 
