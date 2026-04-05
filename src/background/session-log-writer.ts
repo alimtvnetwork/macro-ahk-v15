@@ -231,9 +231,12 @@ export async function buildSessionReport(sid?: string): Promise<string> {
         const dir = await logsRoot.getDirectoryHandle(`${SESSION_PREFIX}${targetSid}`);
 
         const sections: string[] = [];
+        const expectedFiles = ["events.log", "errors.log", "scripts.log"] as const;
+        const found: string[] = [];
+        const missing: string[] = [];
 
         // Read each log file
-        for (const filename of ["events.log", "errors.log", "scripts.log"]) {
+        for (const filename of expectedFiles) {
             try {
                 const handle = await dir.getFileHandle(filename);
                 const file = await handle.getFile();
@@ -241,13 +244,16 @@ export async function buildSessionReport(sid?: string): Promise<string> {
                 if (text.trim()) {
                     sections.push(text);
                 }
+                found.push(filename);
             } catch {
-                // File may not exist yet — skip
+                missing.push(filename);
             }
         }
 
         if (sections.length === 0) {
-            return `[Session #${targetSid}] No log files found.`;
+            const missingList = missing.length > 0 ? ` Missing: [${missing.join(", ")}].` : "";
+            const foundList = found.length > 0 ? ` Found (empty): [${found.join(", ")}].` : "";
+            return `[Session #${targetSid}] No log data in OPFS dir "${sessionDirPath}".${missingList}${foundList}`;
         }
 
         const ver = version || "?";
@@ -263,7 +269,16 @@ export async function buildSessionReport(sid?: string): Promise<string> {
 
         return header + sections.join("\n\n");
     } catch (err) {
-        return `[session-log-writer] Failed to read session #${targetSid} at OPFS path "${sessionDirPath}": ${err}`;
+        const errName = err instanceof DOMException ? err.name : "UnknownError";
+        const errMsg = err instanceof Error ? err.message : String(err);
+        const expected = ["events.log", "errors.log", "scripts.log"].join(", ");
+        return [
+            `[session-log-writer] Failed to read session #${targetSid}`,
+            `  OPFS path: ${sessionDirPath}`,
+            `  Error: ${errName}: ${errMsg}`,
+            `  Expected files: ${expected}`,
+            `  Cause: The session directory was likely pruned or never created.`,
+        ].join("\n");
     }
 }
 
