@@ -100,12 +100,14 @@ export async function initSessionLogDir(sid: string, ver: string): Promise<void>
             "",
         ].join("\n"));
 
-        console.log(`[session-log-writer] Initialized session-logs/session-${sid}/`);
+        console.log(`[session-log-writer] Initialized OPFS dir "opfs-root/${LOGS_DIR_NAME}/${SESSION_PREFIX}${sid}/" with files: [${EVENTS_LOG}, ${ERRORS_LOG}, ${SCRIPTS_LOG}]`);
 
         // Fire-and-forget: prune old sessions on each new session start
         void pruneOldSessionLogs();
     } catch (err) {
-        console.warn("[session-log-writer::initSessionDir] OPFS session dir init failed:", err);
+        const absDir = `opfs-root/${LOGS_DIR_NAME}/${SESSION_PREFIX}${sid}`;
+        const errDetail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+        console.warn(`[session-log-writer::initSessionDir] OPFS dir init failed at "${absDir}" (${errDetail}). Expected files: [${absDir}/${EVENTS_LOG}, ${absDir}/${ERRORS_LOG}, ${absDir}/${SCRIPTS_LOG}]`);
         sessionDir = null;
     }
 }
@@ -153,7 +155,9 @@ async function flushPending(): Promise<void> {
             await writable.write(content);
             await writable.close();
         } catch (err) {
-            console.warn(`[session-log-writer::flushPending] Failed to write ${filename}:`, err);
+            const absPath = `opfs-root/${LOGS_DIR_NAME}/${SESSION_PREFIX}${sessionId}/${filename}`;
+            const errDetail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+            console.warn(`[session-log-writer::flushPending] Failed to write "${absPath}" (${errDetail})`);
         }
     }
 }
@@ -298,7 +302,7 @@ export async function pruneOldSessionLogs(maxAgeDays = 7): Promise<number> {
                     toDelete.push(name);
                 }
             } catch {
-                // No events.log → stale dir, mark for deletion
+                // No events.log at "opfs-root/session-logs/{name}/events.log" → stale dir, mark for deletion
                 toDelete.push(name);
             }
         }
@@ -309,10 +313,11 @@ export async function pruneOldSessionLogs(maxAgeDays = 7): Promise<number> {
         }
 
         if (removed > 0) {
-            console.log(`[session-log-writer] Pruned ${removed} session dirs older than ${maxAgeDays}d`);
+            console.log(`[session-log-writer] Pruned ${removed} session dirs from "opfs-root/${LOGS_DIR_NAME}/" older than ${maxAgeDays}d`);
         }
     } catch (err) {
-        console.warn("[session-log-writer::pruneOldSessionLogs] Session log pruning failed:", err);
+        const errDetail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+        console.warn(`[session-log-writer::pruneOldSessionLogs] Pruning failed at "opfs-root/${LOGS_DIR_NAME}/" (${errDetail})`);
     }
     return removed;
 }
