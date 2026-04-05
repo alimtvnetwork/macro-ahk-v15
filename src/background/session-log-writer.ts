@@ -313,10 +313,11 @@ export async function pruneOldSessionLogs(maxAgeDays = 7): Promise<number> {
         }
 
         if (removed > 0) {
-            console.log(`[session-log-writer] Pruned ${removed} session dirs older than ${maxAgeDays}d`);
+            console.log(`[session-log-writer] Pruned ${removed} session dirs from "opfs-root/${LOGS_DIR_NAME}/" older than ${maxAgeDays}d`);
         }
     } catch (err) {
-        console.warn("[session-log-writer::pruneOldSessionLogs] Session log pruning failed:", err);
+        const errDetail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+        console.warn(`[session-log-writer::pruneOldSessionLogs] Pruning failed at "opfs-root/${LOGS_DIR_NAME}/" (${errDetail})`);
     }
     return removed;
 }
