@@ -18,6 +18,8 @@ import {
   XCircle,
   Clock,
   AlertCircle,
+  Copy,
+  Check,
 } from "lucide-react";
 
 interface ChainEntry {
