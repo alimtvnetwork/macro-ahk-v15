@@ -75,11 +75,11 @@ export function getErrorsDb() {
 }
 
 /** Returns the current session ID, creating one if needed. */
-function ensureSessionId(): number {
+async function ensureSessionId(): Promise<number> {
     const isMissingSession = currentSessionId === null;
 
     if (isMissingSession) {
-        startSession("0.0.0");
+        await startSession("0.0.0");
     }
     return currentSessionId!;
 }
