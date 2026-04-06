@@ -194,8 +194,7 @@ async function flushPending(): Promise<void> {
             await writable.close();
         } catch (err) {
             const absPath = `opfs-root/${LOGS_DIR_NAME}/${SESSION_PREFIX}${sessionId}/${filename}`;
-            const errDetail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
-            console.warn(`[session-log-writer::flushPending] Failed to write "${absPath}" (${errDetail})`);
+            console.error(`[session-log-writer::flushPending] Failed to write "${absPath}"`, err);
             fileHandleCache.delete(filename);
         }
     }
