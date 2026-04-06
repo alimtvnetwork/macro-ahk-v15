@@ -31,6 +31,7 @@ import {
     handleGetSessionLogs,
     handleGetSessionReport,
     handleBrowseOpfsSessions,
+    handleGetOpfsStatus,
 } from "./handlers/logging-handler";
 
 import {
