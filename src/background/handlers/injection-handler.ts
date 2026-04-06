@@ -39,7 +39,7 @@ import { handleGetSettings } from "./settings-handler";
 import { getFilesByProject } from "./file-storage-handler";
 import { generateLlmGuide } from "../../lib/generate-llm-guide";
 import { toCodeName, slugify } from "../../lib/slug-utils";
-import { STORAGE_KEY_ALL_CONFIGS } from "../../shared/constants";
+import { STORAGE_KEY_ALL_CONFIGS, EXTENSION_VERSION } from "../../shared/constants";
 import { readNamespaceCaches } from "../namespace-cache";
 import { hashSettingsKey, getSettingsNsCache, setSettingsNsCache } from "../settings-ns-cache";
 import { recordInjectionTiming } from "../injection-timing-history";
