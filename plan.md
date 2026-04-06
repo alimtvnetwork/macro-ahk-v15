@@ -22,7 +22,8 @@ All critical AHK features implemented. 44 issue write-ups documented. 26 enginee
 - Improved session log read failures to print the exact missing OPFS path: `session-logs/session-<id>`.
 - Fixed false-positive injection success by restoring macro-controller startup recovery hooks and re-registering the controller singleton in `api.mc`.
 - Fixed cross-database `Sessions` lookups that caused repeated `no such table: Sessions` errors in error/user-script logging paths.
-- Unified extension/runtime script version to `2.95.0`.
+- Blocked built-in scripts from falling back to stale embedded storage code when bundled recovery fails.
+- Unified extension/runtime script version to `2.97.0`. 
 
 ---
 
