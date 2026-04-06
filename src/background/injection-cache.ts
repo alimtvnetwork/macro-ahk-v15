@@ -16,6 +16,7 @@
  */
 
 import { EXTENSION_VERSION, STORAGE_KEY_LAST_BUILD_ID } from "../shared/constants";
+import { logCaughtError } from "./bg-logger";
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
@@ -144,7 +145,7 @@ export async function cacheSet<T>(category: CacheCategory, value: T, subKey = ""
             };
         });
     } catch (err) {
-        console.error("[injection-cache] cacheSet error:", err);
+        logCaughtError("[injection-cache]", "cacheSet error", err);
     }
 }
 
@@ -283,7 +284,7 @@ export async function syncCacheWithBuildId(
 
         return { changed: true, cleared: clearResult.cleared };
     } catch (err) {
-        console.error("[injection-cache] Build sync failed:", err);
+        logCaughtError("[injection-cache]", "Build sync failed", err);
         return { changed: false, cleared: 0 };
     }
 }

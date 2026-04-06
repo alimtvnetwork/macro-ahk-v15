@@ -27,6 +27,7 @@ import { registerShortcutCommands } from "./shortcut-command-handler";
 import { registerSpaReinject } from "./spa-reinject";
 import { startHotReload } from "./hot-reload";
 import { MessageType } from "../shared/messages";
+import { logCaughtError } from "./bg-logger";
 
 const BOOT_FAST_PATH_TYPES = new Set<string>([
     MessageType.GET_CONFIG,
@@ -98,11 +99,7 @@ for (const [label, register] of registrations) {
     try {
         register();
     } catch (err) {
-        console.error(
-            "[Marco] ⚠ Registration '%s' failed (non-fatal): %s",
-            label,
-            err instanceof Error ? err.message : String(err),
-        );
+        logCaughtError("[Marco]", `Registration '${label}' failed (non-fatal)`, err);
     }
 }
 
@@ -115,7 +112,7 @@ try {
         removeTabInjection(tabId);
     });
 } catch (err) {
-    console.error("[Marco] ⚠ tabs.onRemoved registration failed:", err);
+    logCaughtError("[Marco]", "tabs.onRemoved registration failed", err);
 }
 
 /* ------------------------------------------------------------------ */

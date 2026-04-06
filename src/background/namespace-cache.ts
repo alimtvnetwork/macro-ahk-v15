@@ -15,6 +15,7 @@ import type { StoredProject } from "../shared/project-types";
 import { buildProjectNamespaceScript } from "./project-namespace-builder";
 import { getFilesByProject } from "./handlers/file-storage-handler";
 import { toCodeName, slugify } from "../lib/slug-utils";
+import { logCaughtError } from "./bg-logger";
 
 const NS_CACHE_PREFIX = "ns_cache_";
 
@@ -69,8 +70,7 @@ export async function rebuildNamespaceCache(project: StoredProject): Promise<voi
         await chrome.storage.local.set({ [nsCacheKey(project.id)]: entry });
         console.log("[ns-cache] Rebuilt namespace cache for \"%s\" (%d chars)", project.name, nsScript.length);
     } catch (err) {
-        console.error("[ns-cache] Failed to rebuild cache for %s: %s",
-            project.id, err instanceof Error ? err.message : String(err));
+        logCaughtError("[ns-cache]", `Failed to rebuild cache for ${project.id}`, err);
     }
 }
 

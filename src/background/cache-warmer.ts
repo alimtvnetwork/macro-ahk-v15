@@ -14,6 +14,7 @@
 import type { StoredScript } from "../shared/script-config-types";
 import { STORAGE_KEY_ALL_SCRIPTS } from "../shared/constants";
 import { cacheScriptCode } from "./injection-cache";
+import { logCaughtError } from "./bg-logger";
 
 /**
  * Reads all scripts from chrome.storage.local, finds those with a filePath,
@@ -57,7 +58,7 @@ export async function warmScriptCache(): Promise<{ warmed: number; failed: numbe
 
         console.log("[cache-warmer] ✅ Warmed %d scripts, %d failed", warmed, failed);
     } catch (err) {
-        console.error("[cache-warmer] Warming aborted:", err);
+        logCaughtError("[cache-warmer]", "Warming aborted", err);
     }
 
     return { warmed, failed };
@@ -74,13 +75,13 @@ async function warmOneScript(script: StoredScript): Promise<boolean> {
         const response = await fetch(url);
 
         if (!response.ok) {
-            console.error("[cache-warmer] Fetch failed for %s: HTTP %d", filePath, response.status);
+            logCaughtError("[cache-warmer]", `Fetch failed for ${filePath}: HTTP ${response.status}`, new Error(`HTTP ${response.status}`));
             return false;
         }
 
         const code = await response.text();
         if (!code || code.length < 10) {
-            console.error("[cache-warmer] Empty/tiny response for %s (%d chars)", filePath, code?.length ?? 0);
+            logCaughtError("[cache-warmer]", `Empty/tiny response for ${filePath} (${code?.length ?? 0} chars)`, new Error("Empty response"));
             return false;
         }
 
@@ -88,7 +89,7 @@ async function warmOneScript(script: StoredScript): Promise<boolean> {
         console.log("[cache-warmer] Cached %s (%d chars)", filePath, code.length);
         return true;
     } catch (err) {
-        console.error("[cache-warmer] Error warming %s:", filePath, err);
+        logCaughtError("[cache-warmer]", `Error warming ${filePath}`, err);
         return false;
     }
 }

@@ -8,6 +8,7 @@
 
 import { type MessageRequest } from "../shared/messages";
 import { trackMessage } from "./message-tracker";
+import { logCaughtError } from "./bg-logger";
 
 import {
     BROADCAST_TYPES,
@@ -100,7 +101,7 @@ function buildErrorResponse(error: unknown): {
         ? error.message
         : String(error);
 
-    console.error(`[Marco] Message handler failed: ${errorMessage}`);
+    logCaughtError("[message-router]", `Message handler failed: ${errorMessage}`, error);
 
     return {
         isOk: false,
