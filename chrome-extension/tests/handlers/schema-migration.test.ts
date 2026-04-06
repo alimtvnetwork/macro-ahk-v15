@@ -56,7 +56,7 @@ describe("Schema Migration Runner", () => {
     });
 
     it("skips migrations when already at current version", async () => {
-        await chrome.storage.local.set({ marco_schema_version: 4 });
+        await chrome.storage.local.set({ marco_schema_version: 6 });
 
         const logsDb = await createTestDb(BASE_LOGS_SCHEMA);
         const errorsDb = await createTestDb(BASE_ERRORS_SCHEMA);
