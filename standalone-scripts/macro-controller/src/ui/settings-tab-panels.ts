@@ -8,6 +8,7 @@
  */
 
 import { taskNextState } from './task-next-ui';
+import { getBackdropOpacity, setBackdropOpacity } from './panel-layout';
 import type { ExtensionResponse, ResolvedPromptsConfig } from '../types';
 import { getLogConfig, resetLogConfig, type LogManagerConfig } from '../log-manager';
 import {
