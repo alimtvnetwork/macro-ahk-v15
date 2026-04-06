@@ -42,7 +42,7 @@ export function registerShortcutCommands(): void {
                 logBgWarnError("[shortcut]", `Shortcut '${RUN_SCRIPTS_COMMAND}' exists but has NO key binding assigned! Go to chrome://extensions/shortcuts to assign one.`);
             }
         } else {
-            console.error("[Marco] ❌ Shortcut '%s' not found in manifest commands — check manifest.json", RUN_SCRIPTS_COMMAND);
+            logBgWarnError("[shortcut]", `Shortcut '${RUN_SCRIPTS_COMMAND}' not found in manifest commands — check manifest.json`);
         }
 
         // Log all registered commands for cross-reference
