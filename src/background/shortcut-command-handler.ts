@@ -68,7 +68,7 @@ async function runScriptsFromShortcut(): Promise<void> {
         const scripts = await getActiveProjectScripts();
 
         if (scripts.length === 0) {
-            console.error("[Marco] Shortcut: no scripts in active project — aborting");
+            logBgWarnError("[shortcut]", "No scripts in active project — aborting");
             return;
         }
 
