@@ -21,6 +21,7 @@ import { injectWithCspFallback } from "../csp-fallback";
 import { wrapWithIsolation } from "./injection-wrapper";
 import { getLogsDb, markLoggingDirty } from "./logging-handler";
 import { getFilesByProject } from "./file-storage-handler";
+import { logCaughtError } from "../bg-logger";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -113,7 +114,7 @@ export async function handleDynamicRequire(
     } catch (err) {
         const errMsg = err instanceof Error ? err.message : String(err);
         logDynamicLoad(requesterProjectId, target, "error", errMsg);
-        console.error("[dynamic-require] ❌ %s → %s failed: %s", requester.name, target, errMsg);
+        logCaughtError("[dynamic-require]", `${requester.name} → ${target} failed`, err);
         return { isOk: false, errorMessage: errMsg };
     }
 }
@@ -212,6 +213,6 @@ function logDynamicLoad(
         );
         markLoggingDirty();
     } catch (err) {
-        console.error("[dynamic-require] Failed to log dynamic load:", err);
+        logCaughtError("[dynamic-require]", "Failed to log dynamic load", err);
     }
 }

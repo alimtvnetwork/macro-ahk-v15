@@ -13,6 +13,7 @@ import {
     type TransientState,
 } from "./state-manager";
 import { countTable, getLogsDb, getErrorsDb } from "./handlers/logging-handler";
+import { logBgWarnError, logCaughtError } from "./bg-logger";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const _chr = globalThis.chrome as any;
@@ -51,7 +52,7 @@ export async function buildHealthResponse(): Promise<HealthStatusResponse> {
         if (computedState === "HEALTHY") {
             console.log("[health] %s → HEALTHY (recovered)", previousState);
         } else {
-            console.error("[health] %s → %s: %s", previousState, computedState, details.join("; "));
+            logBgWarnError("[health]", `${previousState} → ${computedState}: ${details.join("; ")}`);
         }
     } else {
         setHealthState(computedState);
@@ -70,9 +71,7 @@ export function transitionHealth(
 
     if (isDowngrade) {
         setHealthState(newState);
-        console.error(
-            `[health] ${currentState} → ${newState}: ${reason}`,
-        );
+        logBgWarnError("[health]", `${currentState} → ${newState}: ${reason}`);
     }
 }
 
@@ -98,7 +97,7 @@ async function checkStorageAvailability(): Promise<boolean> {
             ? storageError.message
             : String(storageError);
 
-        console.error(`[health] Storage check failed: ${errorMessage}`);
+        logCaughtError("[health]", "Storage check failed", storageError);
         return false;
     }
 }

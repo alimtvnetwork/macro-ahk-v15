@@ -21,6 +21,7 @@
  */
 
 import type { ProjectDbManager } from "./project-db-manager";
+import { logCaughtError } from "./bg-logger";
 
 /* ------------------------------------------------------------------ */
 /*  Schema                                                             */
@@ -147,7 +148,7 @@ export async function seedConfigToDb(
     try {
         parsed = JSON.parse(configJson);
     } catch (e) {
-        console.error(`[config-seeder] Invalid JSON for "${configName}":`, e);
+        logCaughtError("[config-seeder]", `Invalid JSON for "${configName}"`, e);
         return false;
     }
 
@@ -247,7 +248,7 @@ export function updateConfigValue(
         manager.markDirty();
         return true;
     } catch (e) {
-        console.error("[config-seeder] Update failed:", e);
+        logCaughtError("[config-seeder]", "Update failed", e);
         return false;
     }
 }

@@ -9,6 +9,7 @@
 
 import type { MessageRequest } from "../../shared/messages";
 import { getChatBoxXPath, applyTemplateVariables } from "./settings-handler";
+import { logBgWarnError, logCaughtError } from "../bg-logger";
 
 const STORAGE_KEY = "marco_prompt_chains";
 
@@ -128,13 +129,13 @@ export async function handleExecuteChainStep(msg: MessageRequest): Promise<{ isO
         }
 
         if (!result.verified) {
-            console.error(`[Marco] Step ${step.stepIndex + 1}: prompt may be truncated`);
+            logBgWarnError("[Marco]", `Step ${step.stepIndex + 1}: prompt may be truncated`);
         }
 
         console.log(`[Marco] Step ${step.stepIndex + 1}/${step.totalSteps} complete`);
     } catch (err) {
         const reason = err instanceof Error ? err.message : String(err);
-        console.error(`[Marco] Chain step ${step.stepIndex + 1} failed: ${reason}`);
+        logCaughtError("[Marco]", `Chain step ${step.stepIndex + 1} failed`, err);
         throw new Error(`Step ${step.stepIndex + 1} failed: ${reason}`);
     }
 

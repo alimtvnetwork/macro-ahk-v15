@@ -10,6 +10,7 @@
  */
 
 import type { MessageRequest, OkResponse } from "../../shared/messages";
+import { logCaughtError } from "../bg-logger";
 import type { StoredProject } from "../../shared/project-types";
 import { rebuildNamespaceCache } from "../namespace-cache";
 import { slugify, toCodeName } from "../../lib/slug-utils";
@@ -199,7 +200,7 @@ export async function handleSaveProject(
 
     // ✅ Seed bound configs into project SQLite DB (moved off injection hot path)
     seedBoundConfigs(saved).catch((e) =>
-        console.error("[project-save:config-seed] %s", e instanceof Error ? e.message : String(e)),
+        logCaughtError("[project-save:config-seed]", "Config seeding failed", e),
     );
 
     return { isOk: true, project: saved };

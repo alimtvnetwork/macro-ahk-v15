@@ -17,6 +17,7 @@
 
 import type { Database as SqlJsDatabase } from "sql.js";
 import type { DbManager } from "../db-manager";
+import { logCaughtError } from "../bg-logger";
 
 const LEGACY_STORAGE_KEY = "marco_custom_prompts";
 
@@ -243,7 +244,7 @@ async function migrateFromStorageIfNeeded(): Promise<void> {
         markDirty();
         await chrome.storage.local.remove(LEGACY_STORAGE_KEY);
     } catch (err) {
-        console.error("[prompts] Migration error:", err);
+        logCaughtError("[prompts]", "Migration error", err);
     }
 }
 

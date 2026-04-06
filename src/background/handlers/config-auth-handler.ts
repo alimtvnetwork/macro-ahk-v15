@@ -14,6 +14,7 @@ import {
     resolveConfigCascade,
     getRemoteFetchStatus,
 } from "../remote-config-fetcher";
+import { logBgWarnError, logCaughtError } from "../bg-logger";
 import {
     buildCookieUrlCandidates,
     readCookieValueFromCandidates,
@@ -254,7 +255,7 @@ export async function handleGetToken(
     }
 
     if (sessionLookup.value !== null) {
-        console.error("[config-auth] GET_TOKEN: session cookie exists but no JWT could be derived");
+        logBgWarnError("[config-auth]", "GET_TOKEN: session cookie exists but no JWT could be derived");
         return {
             token: null,
             refreshed: false,
@@ -393,7 +394,7 @@ async function attemptAutoRefresh(
             return authToken;
         }
 
-        console.error("[config-auth] Auto-refresh returned no token");
+        logBgWarnError("[config-auth]", "Auto-refresh returned no token");
         return null;
     } catch (refreshError) {
         logRefreshError(refreshError);
@@ -436,7 +437,7 @@ export async function fetchAuthToken(
     }
 
     if (sessionCookieLookup.value !== null) {
-        console.error("[config-auth] Session cookie exists but auth-token exchange is disabled because the cookie is not a JWT");
+        logBgWarnError("[config-auth]", "Session cookie exists but auth-token exchange is disabled because the cookie is not a JWT");
     }
 
     return null;
@@ -688,7 +689,7 @@ async function readCookieValueByNameCandidates(
             const errorMessage = cookieError instanceof Error
                 ? cookieError.message
                 : String(cookieError);
-            console.error(`[config-auth] Cookie read failed (${cookieName}): ${errorMessage}`);
+            logCaughtError("[config-auth]", `Cookie read failed (${cookieName})`, cookieError);
         }
 
         if (value !== null) {
@@ -756,9 +757,5 @@ function buildMissingCookieMessage(
 
 /** Logs a refresh failure. */
 function logRefreshError(error: unknown): void {
-    const errorMessage = error instanceof Error
-        ? error.message
-        : String(error);
-
-    console.error(`[config-auth] Token refresh failed: ${errorMessage}`);
+    logCaughtError("[config-auth]", "Token refresh failed", error);
 }

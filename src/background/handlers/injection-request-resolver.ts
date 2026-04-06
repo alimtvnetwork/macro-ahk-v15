@@ -15,6 +15,7 @@ import { resolveScriptBindings, type SkippedScript } from "../script-resolver";
 import { ensureBuiltinScriptsExist } from "../builtin-script-guard";
 import { persistInjectionWarn } from "../injection-diagnostics";
 import { readAllProjects } from "./project-helpers";
+import { logBgWarnError } from "../bg-logger";
 
 /** Executable script plus its resolved config and theme JSON payloads. */
 export interface PreparedInjectionScript {
@@ -51,7 +52,7 @@ export async function resolveInjectionRequestScripts(
     const skipped: SkippedScript[] = [];
 
     if (mismatched > 0) {
-        console.error("[injection:resolve] ⚠ %d/%d scripts failed type check (missing 'id', 'code', or 'order'). These scripts will be SKIPPED silently unless fixed.", mismatched, scripts.length);
+        logBgWarnError("[injection:resolve]", `${mismatched}/${scripts.length} scripts failed type check (missing 'id', 'code', or 'order'). These scripts will be SKIPPED silently unless fixed.`);
         void persistInjectionWarn(
             "REQUEST_RESOLVER_MISMATCH",
             `[injection:resolve] ${mismatched}/${scripts.length} popup script payload(s) failed type check and were skipped`,
