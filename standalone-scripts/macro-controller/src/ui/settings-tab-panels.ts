@@ -296,7 +296,7 @@ export function buildGeneralPanel(
   });
 
   // ── Backdrop Opacity Slider ──
-  const { getBackdropOpacity, setBackdropOpacity } = await_import_panel_layout();
+  const currentBackdropOpacity = getBackdropOpacity();
   const bdRow = document.createElement('div');
   bdRow.style.cssText = 'margin-top:14px;margin-bottom:10px;';
   const bdLabel = document.createElement('div');
