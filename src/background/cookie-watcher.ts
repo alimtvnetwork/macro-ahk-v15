@@ -179,11 +179,7 @@ async function attemptProactiveRefresh(): Promise<string | null> {
 
         return null;
     } catch (refreshError) {
-        const errorMessage = refreshError instanceof Error
-            ? refreshError.message
-            : String(refreshError);
-
-        console.warn(`[cookie-watcher] Proactive refresh failed: ${errorMessage}`);
+        console.error("[cookie-watcher] Proactive refresh failed:", refreshError);
         return null;
     }
 }
