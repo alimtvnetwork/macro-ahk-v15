@@ -5,8 +5,14 @@
  * registry to actual handler functions, verifying real responses.
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { installChromeMock, resetMockStorage, setMockCookie } from "../mocks/chrome-storage";
+
+// Mock seeder to prevent auto-seeding default projects
+vi.mock("../../../src/background/default-project-seeder", () => ({
+    ensureDefaultProjectSingleScript: vi.fn(async () => {}),
+    registerInstallListener: vi.fn(),
+}));
 
 installChromeMock();
 
@@ -66,11 +72,11 @@ describe("Message Router — End-to-End Integration", () => {
     });
 
     it("routes GET_TOKEN with cookie and returns value", async () => {
-        setMockCookie("lovable-session-id.id", "my-token-value");
+        setMockCookie("lovable-session-id.id", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.test-sig");
 
         const response = (await routeMessage({ type: MessageType.GET_TOKEN })) as any;
 
-        expect(response.token).toBe("my-token-value");
+        expect(response.token).toBe("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.test-sig");
     });
 
     it("routes SAVE_PROJECT and creates project", async () => {

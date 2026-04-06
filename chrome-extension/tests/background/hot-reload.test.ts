@@ -11,6 +11,11 @@ import {
     resetMockStorage,
 } from "../mocks/chrome-storage";
 
+// Mock injection-cache to avoid SQLite/storage dependencies
+vi.mock("../../src/background/injection-cache", () => ({
+    syncCacheWithBuildId: vi.fn(async () => ({ cleared: 0 })),
+}));
+
 /* ------------------------------------------------------------------ */
 /*  Setup                                                              */
 /* ------------------------------------------------------------------ */
@@ -75,6 +80,13 @@ describe("Hot Reload — pollBuildMeta", () => {
         (globalThis as any).chrome.runtime.reload = () => {
             reloadCalled = true;
         };
+        // Re-mock injection-cache after resetModules
+        vi.doMock("../../src/background/injection-cache", () => ({
+            syncCacheWithBuildId: vi.fn(async () => ({ cleared: 0 })),
+        }));
+        // Override fetch after installChromeMock
+        fetchMock = vi.fn();
+        (globalThis as any).fetch = fetchMock;
 
         mockFetchOk({ buildId: "abc123" });
 
@@ -95,6 +107,11 @@ describe("Hot Reload — pollBuildMeta", () => {
         (globalThis as any).chrome.runtime.reload = () => {
             reloadCalled = true;
         };
+        vi.doMock("../../src/background/injection-cache", () => ({
+            syncCacheWithBuildId: vi.fn(async () => ({ cleared: 0 })),
+        }));
+        fetchMock = vi.fn();
+        (globalThis as any).fetch = fetchMock;
 
         mockFetchOk({ buildId: "build-1" });
         mockFetchOk({ buildId: "build-2" });
@@ -120,6 +137,11 @@ describe("Hot Reload — pollBuildMeta", () => {
         (globalThis as any).chrome.runtime.reload = () => {
             reloadCalled = true;
         };
+        vi.doMock("../../src/background/injection-cache", () => ({
+            syncCacheWithBuildId: vi.fn(async () => ({ cleared: 0 })),
+        }));
+        fetchMock = vi.fn();
+        (globalThis as any).fetch = fetchMock;
 
         // First poll sets baseline, second poll has same id
         mockFetchOk({ buildId: "same-id" });
@@ -147,6 +169,11 @@ describe("Hot Reload — pollBuildMeta", () => {
         (globalThis as any).chrome.runtime.reload = () => {
             reloadCalled = true;
         };
+        vi.doMock("../../src/background/injection-cache", () => ({
+            syncCacheWithBuildId: vi.fn(async () => ({ cleared: 0 })),
+        }));
+        fetchMock = vi.fn();
+        (globalThis as any).fetch = fetchMock;
 
         mockFetchNotFound();
 
@@ -166,6 +193,11 @@ describe("Hot Reload — pollBuildMeta", () => {
         (globalThis as any).chrome.runtime.reload = () => {
             reloadCalled = true;
         };
+        vi.doMock("../../src/background/injection-cache", () => ({
+            syncCacheWithBuildId: vi.fn(async () => ({ cleared: 0 })),
+        }));
+        fetchMock = vi.fn();
+        (globalThis as any).fetch = fetchMock;
 
         mockFetchError();
 
@@ -185,6 +217,11 @@ describe("Hot Reload — pollBuildMeta", () => {
         (globalThis as any).chrome.runtime.reload = () => {
             reloadCalled = true;
         };
+        vi.doMock("../../src/background/injection-cache", () => ({
+            syncCacheWithBuildId: vi.fn(async () => ({ cleared: 0 })),
+        }));
+        fetchMock = vi.fn();
+        (globalThis as any).fetch = fetchMock;
 
         mockFetchOk({ version: "1.0" });
 
@@ -204,6 +241,11 @@ describe("Hot Reload — pollBuildMeta", () => {
         (globalThis as any).chrome.runtime.reload = () => {
             reloadCalled = true;
         };
+        vi.doMock("../../src/background/injection-cache", () => ({
+            syncCacheWithBuildId: vi.fn(async () => ({ cleared: 0 })),
+        }));
+        fetchMock = vi.fn();
+        (globalThis as any).fetch = fetchMock;
 
         mockFetchOk({ buildId: "once" });
 
