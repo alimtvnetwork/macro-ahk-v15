@@ -512,7 +512,29 @@ async function executeBlobInjection(code: string): Promise<string> {
             reject(new Error("ISOLATED blob script failed to parse/execute"));
         }, { once: true });
 
-        const appendNode = (node: Node) => appendNodeToTarget(target, node);
+        // CRITICAL: Inlined — this function is serialized by chrome.scripting.executeScript.
+        // Outer-scope references are NOT available. See spec/02-app-issues/92-*.md
+        const appendNode = (node: Node): boolean => {
+            try {
+                Node.prototype.appendChild.call(target, node);
+                return true;
+            } catch {
+                try {
+                    Node.prototype.insertBefore.call(target, node, null);
+                    return true;
+                } catch {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        try {
+                            Element.prototype.insertAdjacentElement.call(target, "beforeend", node as Element);
+                            return true;
+                        } catch {
+                            return false;
+                        }
+                    }
+                    return false;
+                }
+            }
+        };
 
         const commentOk = appendNode(markerComment);
         const scriptOk = appendNode(script);
