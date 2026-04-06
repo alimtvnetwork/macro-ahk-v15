@@ -15,13 +15,15 @@ import { resolveScriptBindings, type SkippedScript } from "../script-resolver";
 import { ensureBuiltinScriptsExist } from "../builtin-script-guard";
 import { persistInjectionWarn } from "../injection-diagnostics";
 import { readAllProjects } from "./project-helpers";
-import { logBgWarnError } from "../bg-logger";
+import { logBgWarnError, BgLogTag } from "../bg-logger";
 
 /** Executable script plus its resolved config and theme JSON payloads. */
 export interface PreparedInjectionScript {
     injectable: InjectableScript;
     configJson: string | null;
     themeJson: string | null;
+    /** Where the script code came from — for injection diagnostics. */
+    codeSource: string | null;
 }
 
 /** Full resolution result from the request resolver. */
@@ -76,6 +78,7 @@ export async function resolveInjectionRequestScripts(
                 injectable,
                 configJson: null,
                 themeJson: null,
+                codeSource: null,
             })),
         ),
         skipped,
@@ -98,10 +101,11 @@ async function resolveProjectEntryScripts(
 
     return {
         prepared: sortPreparedScripts(
-            resolved.map(({ injectable, configJson, themeJson }) => ({
+            resolved.map(({ injectable, configJson, themeJson, codeSource }) => ({
                 injectable,
                 configJson,
                 themeJson,
+                codeSource: codeSource ?? null,
             })),
         ),
         skipped,
