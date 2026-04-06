@@ -326,7 +326,7 @@ async function attemptUserScriptFallback(
             }
         } else {
             userScriptTierLabel = "unavailable";
-            console.error("[injection:csp] userScripts.execute() not available, using legacy ISOLATED chain");
+            logBgWarnError("[injection:csp]", "userScripts.execute() not available, using legacy ISOLATED chain");
         }
     } else {
         userScriptTierLabel = "skipped(forceLegacyInjection=true)";
