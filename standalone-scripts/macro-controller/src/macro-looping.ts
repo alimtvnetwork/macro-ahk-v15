@@ -132,6 +132,7 @@ const DOMAIN_GUARD = 'domain-guard';
   mc.registerUI(uiManager);
   initNamespace();
   dualWrite('__mc', 'api.mc', mc);
+  installWindowFacade();
 
   // ── Bootstrap ──
   bootstrap({
