@@ -39,7 +39,7 @@ export function registerShortcutCommands(): void {
             if (shortcut) {
                 console.log("[Marco] ✅ Shortcut registered: %s → %s", RUN_SCRIPTS_COMMAND, shortcut);
             } else {
-                console.error("[Marco] ⚠️ Shortcut '%s' exists but has NO key binding assigned! Go to chrome://extensions/shortcuts to assign one.", RUN_SCRIPTS_COMMAND);
+                logBgWarnError("[shortcut]", `Shortcut '${RUN_SCRIPTS_COMMAND}' exists but has NO key binding assigned! Go to chrome://extensions/shortcuts to assign one.`);
             }
         } else {
             console.error("[Marco] ❌ Shortcut '%s' not found in manifest commands — check manifest.json", RUN_SCRIPTS_COMMAND);
