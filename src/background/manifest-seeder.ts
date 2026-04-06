@@ -43,8 +43,7 @@ export async function seedFromManifest(): Promise<SeedResult> {
     console.log("[manifest-seeder] Fetching seed-manifest.json from extension dist...");
     const manifest = await fetchManifest();
     if (!manifest) {
-        console.error("[manifest-seeder::seedFromManifest] ❌ seed-manifest.json not found or invalid — skipping. " +
-            "This means built-in scripts cannot be seeded from the manifest. " +
+        logBgWarnError("[manifest-seeder]", "seed-manifest.json not found or invalid — skipping. " +
             "Ensure the build pipeline runs compile-instruction + generate-seed-manifest.");
         return { scripts: 0, configs: 0, projects: 0, errors: ["seed-manifest.json not found or invalid"] };
     }
