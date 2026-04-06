@@ -31,7 +31,7 @@ import { seedFromManifest } from "./manifest-seeder";
 import { setBootStep, setBootPersistenceMode, finalizeBoot } from "./boot-diagnostics";
 import { configureUserScriptWorld } from "./csp-fallback";
 import { markInitialized, drainBuffer } from "./message-buffer";
-import { cacheScriptCode, getCachedScriptCode, purgeStaleEntries, syncCacheWithBuildId } from "./injection-cache";
+import { cacheScriptCode, getCachedScriptCode, purgeStaleEntries, syncCacheWithBuildId, invalidateCacheOnDeploy } from "./injection-cache";
 import { invalidateNamespaceCache } from "./namespace-cache";
 import { logCaughtError, BgLogTag} from "./bg-logger";
 
@@ -184,7 +184,9 @@ async function readCurrentBuildId(): Promise<string | null> {
 
         if (meta.freshStart === true) {
             clearAllLogsAndErrors();
-            console.log("[Marco] ✓ Fresh start: cleared all logs and errors");
+            // Also nuke the IndexedDB injection cache to prevent stale/legacy scripts
+            await invalidateCacheOnDeploy("freshStart");
+            console.log("[Marco] ✓ Fresh start: cleared all logs, errors, and injection cache");
         }
 
         return typeof meta.buildId === "string" && meta.buildId.length > 0
