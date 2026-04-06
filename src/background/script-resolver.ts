@@ -190,7 +190,7 @@ async function resolveDependencies(
                 continue;
             }
             if (depScript.isEnabled === false) {
-                console.error("[script-resolver] Dependency disabled: %s (required by %s)", depScript.name, script.name);
+                logBgWarnError("[script-resolver]", `Dependency disabled: ${depScript.name} (required by ${script.name})`);
                 continue;
             }
 
