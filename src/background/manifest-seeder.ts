@@ -94,7 +94,7 @@ export async function seedFromManifest(): Promise<SeedResult> {
     );
 
     if (scriptResult.errors.length > 0 || configResult.errors.length > 0) {
-        console.error("[manifest-seeder::seedFromManifest] Seed errors:", [...scriptResult.errors, ...configResult.errors]);
+        logBgWarnError("[manifest-seeder]", `Seed errors: ${JSON.stringify([...scriptResult.errors, ...configResult.errors])}`);
     }
 
     return {
