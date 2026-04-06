@@ -128,7 +128,7 @@ async function fetchManifest(): Promise<SeedManifest | null> {
     try {
         const resp = await fetch(url);
         if (!resp.ok) {
-            console.error("[manifest-seeder::fetchManifest] ❌ Fetch failed: HTTP %d for %s — file does not exist in extension dist", resp.status, url);
+            logBgWarnError("[manifest-seeder]", `Fetch failed: HTTP ${resp.status} for ${url} — file does not exist in extension dist`);
             return null;
         }
         const raw = await resp.text();
