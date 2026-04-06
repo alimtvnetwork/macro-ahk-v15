@@ -27,6 +27,7 @@ describe("buildMarcoSdkScript", () => {
             scriptId: "my-script",
             configId: "my-config",
             urlRuleId: "my-rule",
+            version: "1.0.0",
         });
 
         expect(result).toContain('"my-project"');
