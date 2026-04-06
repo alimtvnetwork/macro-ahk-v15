@@ -30,6 +30,8 @@ jobs:
       # ── Checkout ──────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # ── Extract version from branch name ──────────────────
       - name: Extract version
@@ -94,21 +96,83 @@ jobs:
           echo "=== Release assets ==="
           ls -lh release-assets/
 
+      # ── Generate changelog from commit history ───────────
+      - name: Generate changelog
+        id: changelog
+        run: |
+          VER="${{ steps.version.outputs.tag }}"
+
+          # Find the previous release tag (most recent tag before HEAD)
+          PREV_TAG=$(git tag --sort=-version:refname | grep -E '^v[0-9]' | head -1 2>/dev/null || true)
+
+          if [ -n "$PREV_TAG" ]; then
+            echo "Generating changelog: ${PREV_TAG}..HEAD"
+            RANGE="${PREV_TAG}..HEAD"
+          else
+            echo "No previous tag found — using full history"
+            RANGE=""
+          fi
+
+          # Build categorized changelog
+          {
+            echo "## Marco Extension ${VER}"
+            echo ""
+            echo "### What's Changed"
+            echo ""
+
+            # Features
+            FEATS=$(git log $RANGE --pretty=format:"- %s (%h)" --grep="^feat" -i 2>/dev/null || true)
+            if [ -n "$FEATS" ]; then
+              echo "#### ✨ Features"
+              echo "$FEATS"
+              echo ""
+            fi
+
+            # Fixes
+            FIXES=$(git log $RANGE --pretty=format:"- %s (%h)" --grep="^fix" -i 2>/dev/null || true)
+            if [ -n "$FIXES" ]; then
+              echo "#### 🐛 Bug Fixes"
+              echo "$FIXES"
+              echo ""
+            fi
+
+            # Refactors / chores / docs
+            OTHER=$(git log $RANGE --pretty=format:"- %s (%h)" --grep="^refactor\|^chore\|^docs\|^style\|^perf\|^test\|^ci\|^build" -i 2>/dev/null || true)
+            if [ -n "$OTHER" ]; then
+              echo "#### 🔧 Maintenance"
+              echo "$OTHER"
+              echo ""
+            fi
+
+            # Uncategorized (commits not matching conventional prefixes)
+            ALL=$(git log $RANGE --pretty=format:"%s" 2>/dev/null || true)
+            UNCATEGORIZED=$(echo "$ALL" | grep -ivE "^(feat|fix|refactor|chore|docs|style|perf|test|ci|build)" || true)
+            if [ -n "$UNCATEGORIZED" ]; then
+              echo "#### 📝 Other Changes"
+              echo "$UNCATEGORIZED" | while IFS= read -r line; do
+                HASH=$(git log $RANGE --pretty=format:"%h" --grep="^${line}$" -1 2>/dev/null || true)
+                echo "- ${line} (${HASH})"
+              done
+              echo ""
+            fi
+
+            echo "### Assets"
+            echo "- **marco-extension** — Chrome extension (load unpacked in \`chrome://extensions\`)"
+            echo "- **prompts** — AI prompt templates"
+            echo "- **macro-controller** — Standalone macro controller scripts"
+            echo "- **marco-sdk** — Marco SDK"
+            echo "- **xpath** — XPath utility scripts"
+          } > release-assets/RELEASE_NOTES.md
+
+          cat release-assets/RELEASE_NOTES.md
+
       # ── Create GitHub Release ─────────────────────────────
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: "Marco Extension ${{ steps.version.outputs.tag }}"
-          body: |
-            ## Marco Extension ${{ steps.version.outputs.tag }}
-
-            ### Assets
-            - **marco-extension** — Chrome extension (load unpacked in `chrome://extensions`)
-            - **prompts** — AI prompt templates
-            - **macro-controller** — Standalone macro controller scripts
-            - **marco-sdk** — Marco SDK
-            - **xpath** — XPath utility scripts
+          body_path: release-assets/RELEASE_NOTES.md
           files: release-assets/*
           draft: false
           prerelease: false
