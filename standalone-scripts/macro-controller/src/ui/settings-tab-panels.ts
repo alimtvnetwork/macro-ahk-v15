@@ -341,11 +341,3 @@ export function buildGeneralPanel(
 
   return { panel, inputs };
 }
-
-/** Lazy import to avoid circular dependency with panel-layout */
-function await_import_panel_layout(): { getBackdropOpacity: () => number; setBackdropOpacity: (v: number) => void } {
-  // Direct import is safe here since settings-tab-panels doesn't import panel-layout elsewhere
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const pl = require('../ui/panel-layout');
-  return { getBackdropOpacity: pl.getBackdropOpacity, setBackdropOpacity: pl.setBackdropOpacity };
-}
