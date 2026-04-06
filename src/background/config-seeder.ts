@@ -248,7 +248,7 @@ export function updateConfigValue(
         manager.markDirty();
         return true;
     } catch (e) {
-        console.error("[config-seeder] Update failed:", e);
+        logCaughtError("[config-seeder]", "Update failed", e);
         return false;
     }
 }

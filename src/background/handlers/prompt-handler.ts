@@ -244,7 +244,7 @@ async function migrateFromStorageIfNeeded(): Promise<void> {
         markDirty();
         await chrome.storage.local.remove(LEGACY_STORAGE_KEY);
     } catch (err) {
-        console.error("[prompts] Migration error:", err);
+        logCaughtError("[prompts]", "Migration error", err);
     }
 }
 
