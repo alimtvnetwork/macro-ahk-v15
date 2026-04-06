@@ -97,7 +97,7 @@ vi.mock('../ui/countdown', () => ({
 vi.mock('../ui/prompt-manager', () => ({
   PromptContext: {},
   sendToExtension: vi.fn(),
-  loadPromptsFromJson: vi.fn(),
+  loadPromptsFromJson: vi.fn(() => Promise.resolve()),
   getPromptsConfig: vi.fn(() => ({})),
   renderPromptsDropdown: vi.fn(),
   openPromptCreationModal: vi.fn(),
