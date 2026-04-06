@@ -136,8 +136,9 @@ export async function ensureBuiltinScriptsExist(
         }
 
         // Manifest returned 0 scripts — check if scripts are still missing
-        console.error(
-            "[builtin-guard] ⚠ seed-manifest.json returned 0 scripts — falling back to direct instruction.json seeding",
+        logBgWarnError(
+            "[builtin-guard]",
+            "seed-manifest.json returned 0 scripts — falling back to direct instruction.json seeding",
         );
         void persistInjectionWarn(
             "BUILTIN_GUARD_MANIFEST_EMPTY",
