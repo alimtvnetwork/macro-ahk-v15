@@ -59,11 +59,7 @@ export async function seedFromManifest(): Promise<SeedResult> {
         return { scripts: 0, configs: 0, projects: 0, errors: [`Unsupported schemaVersion ${sv} (max supported: ${SUPPORTED_SCHEMA_VERSIONS.max})`] };
     }
     if (sv < SUPPORTED_SCHEMA_VERSIONS.min) {
-        console.error(
-            "[manifest-seeder::seedFromManifest] ⚠ schemaVersion %d is older than min (%d) — proceeding with best-effort seeding",
-            sv,
-            SUPPORTED_SCHEMA_VERSIONS.min,
-        );
+        logBgWarnError("[manifest-seeder]", `schemaVersion ${sv} is older than min (${SUPPORTED_SCHEMA_VERSIONS.min}) — proceeding with best-effort seeding`);
     }
 
     const projectNames = manifest.projects.map((p) => `${p.name}(${p.scripts.length}s/${p.configs.length}c)`);
