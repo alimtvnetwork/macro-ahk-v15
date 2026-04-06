@@ -105,7 +105,7 @@ async function resolveScriptCode(script: StoredScript): Promise<ResolvedCode> {
         }
     }
 
-    console.error("[script-resolver] All filePath fetches failed for %s, falling back to embedded code", script.filePath);
+    logBgWarnError("[script-resolver]", `All filePath fetches failed for ${script.filePath}, falling back to embedded code`);
     return { code: script.code, source: "embedded" };
 }
 
