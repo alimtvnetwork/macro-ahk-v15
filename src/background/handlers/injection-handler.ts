@@ -385,8 +385,7 @@ async function injectSingleScript(
         logInjectionSuccess(script, projectId, resolvedCodeSource).catch(() => {});
         return buildSuccessResult(script.id, startTime, execResult.path, execResult.domTarget);
     } catch (injectionError) {
-        console.error("[injection] 4/4 EXECUTE  — \"%s\" ❌ failed: %s",
-            script.name, injectionError instanceof Error ? injectionError.message : String(injectionError));
+        logCaughtError("[injection]", `4/4 EXECUTE — "${script.name}" failed`, injectionError);
 
         // Fire-and-forget: don't block injection for logging
         logInjectionFailure(script, projectId, injectionError).catch(() => {});
