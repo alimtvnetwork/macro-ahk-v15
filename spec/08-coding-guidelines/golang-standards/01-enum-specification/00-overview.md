@@ -121,9 +121,9 @@ internal/enums/
 
 ## Cross-References
 
-- [Error Code Registry](../../11-imported/error-management/01-registry.md)
-- [Split DB Architecture](../../11-imported/00-overview.md)
-- [Coding Guidelines](../../.lovable/memory/index.md)
+- [Error Code Registry](../../../11-imported/error-management/01-error-handling/readme.md)
+- [Split DB Architecture](../../../11-imported/readme.md)
+- [Coding Guidelines](../../../.lovable/memory/index.md)
 
 ---
 
