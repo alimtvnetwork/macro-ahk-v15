@@ -98,8 +98,7 @@ async function injectJwtIntoTab(tabId: number, jwt: string): Promise<void> {
 
         console.log("[token-seeder] Seeded JWT into tab %d localStorage", tabId);
     } catch (seedError) {
-        const reason = seedError instanceof Error ? seedError.message : String(seedError);
-        console.error("[token-seeder] Failed to seed JWT: %s", reason);
+        logCaughtError("[token-seeder]", "Failed to seed JWT", seedError);
     }
 }
 

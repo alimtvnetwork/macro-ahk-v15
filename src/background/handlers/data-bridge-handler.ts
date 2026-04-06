@@ -59,9 +59,7 @@ function checkStoreSizeWarning(data: StoreData): void {
     const isOverThreshold = sizeBytes > WARN_TOTAL_SIZE_BYTES;
 
     if (isOverThreshold) {
-        console.error(
-            `[data-bridge] Store size ${sizeBytes} bytes exceeds warning threshold (${WARN_TOTAL_SIZE_BYTES})`,
-        );
+        logBgWarnError("[data-bridge]", `Store size ${sizeBytes} bytes exceeds warning threshold (${WARN_TOTAL_SIZE_BYTES})`);
     }
 }
 

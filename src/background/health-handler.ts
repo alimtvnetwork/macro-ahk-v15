@@ -97,7 +97,7 @@ async function checkStorageAvailability(): Promise<boolean> {
             ? storageError.message
             : String(storageError);
 
-        console.error(`[health] Storage check failed: ${errorMessage}`);
+        logCaughtError("[health]", "Storage check failed", storageError);
         return false;
     }
 }
