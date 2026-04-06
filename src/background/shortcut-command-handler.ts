@@ -88,10 +88,7 @@ async function runScriptsFromShortcut(): Promise<void> {
         const reason = runError instanceof Error ? runError.message : String(runError);
         const stack = runError instanceof Error ? runError.stack : undefined;
 
-        console.error("[Marco] Shortcut run failed: %s", reason);
-        if (stack) {
-            console.error("[Marco] Shortcut stack: %s", stack);
-        }
+        logCaughtError("[shortcut]", "Shortcut run failed", runError);
     }
 }
 
