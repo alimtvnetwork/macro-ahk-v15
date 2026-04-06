@@ -42,6 +42,7 @@ describe("buildMarcoSdkScript", () => {
             scriptId: "safe",
             configId: "",
             urlRuleId: "",
+            version: "1.0.0",
         });
 
         expect(result).toContain('has\\"quote');
