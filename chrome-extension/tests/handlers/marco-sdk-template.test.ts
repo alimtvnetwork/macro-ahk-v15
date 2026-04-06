@@ -110,6 +110,7 @@ describe("buildMarcoSdkScript", () => {
             scriptId: "s",
             configId: "",
             urlRuleId: "",
+            version: "1.0.0",
         });
 
         expect(result).toContain("Object.freeze(window.marco)");
