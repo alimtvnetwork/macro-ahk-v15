@@ -145,7 +145,7 @@ export async function cacheSet<T>(category: CacheCategory, value: T, subKey = ""
             };
         });
     } catch (err) {
-        console.error("[injection-cache] cacheSet error:", err);
+        logCaughtError("[injection-cache]", "cacheSet error", err);
     }
 }
 
