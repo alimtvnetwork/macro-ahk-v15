@@ -65,6 +65,7 @@ export function usePopupData() {
   const [projectData, setProjectData] = useState<ActiveProjectData | null>(null);
   const [status, setStatus] = useState<StatusData | null>(null);
   const [health, setHealth] = useState<HealthData | null>(null);
+  const [opfsStatus, setOpfsStatus] = useState<OpfsStatusData | null>(null);
   const [injections, setInjections] = useState<InjectionStatus | null>(null);
   const [scripts, setScripts] = useState<PopupScript[]>([]);
   const [loading, setLoading] = useState(true);
