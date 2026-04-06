@@ -44,6 +44,7 @@ import {
   Download,
   Loader2,
   History,
+  Trash2,
 } from "lucide-react";
 import { sendMessage } from "@/lib/message-client";
 import { toast } from "sonner";
