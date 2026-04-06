@@ -7,6 +7,7 @@
  */
 
 import type { UrlRule } from "../shared/project-types";
+import { logBgWarnError } from "./bg-logger";
 
 /* ------------------------------------------------------------------ */
 /*  Public API                                                         */
@@ -137,7 +138,7 @@ function checkExcludePattern(
 
         return regex.test(pathname);
     } catch {
-        console.error(`[url-matcher] Invalid excludePattern: ${excludePattern}`);
+        logBgWarnError("[url-matcher]", `Invalid excludePattern: ${excludePattern}`);
         return false;
     }
 }

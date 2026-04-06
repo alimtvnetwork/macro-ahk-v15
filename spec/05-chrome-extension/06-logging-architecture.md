@@ -1023,3 +1023,62 @@ These are added to the existing categories list: `API`, `DOM`, `CONFIG`, `AUTH`,
 - [x] USER_SCRIPT_ERROR capture flow documented with error handler injection code
 - [x] Schema migration strategy documented with backward-compatible ALTER TABLE approach
 - [x] 2 new log categories added (`PROJECT`, `MATCHING`)
+
+---
+
+## Background Error Pipeline & Exclusion Policy (v2.21.0)
+
+All caught errors in `src/background/` **MUST** flow through `src/background/bg-logger.ts`:
+
+1. **SQLite errors table** — via `handleLogError()` (fire-and-forget)
+2. **OPFS session files** — `events.log` + `errors.log` (via the same handler)
+3. **`console.error`** — LAST step, preserves full stack trace in DevTools
+
+### Exclusion Policy
+
+The following files retain bare `console.error` — **do NOT convert these**.
+
+#### Category 1: Recursion-Sensitive (logging pipeline itself)
+
+| File | Reason |
+|------|--------|
+| `bg-logger.ts` | The logger itself — `console.error` is step 3 |
+| `session-log-writer.ts` | Writes to OPFS session files — called BY the logger |
+| `handlers/logging-handler.ts` | `handleLogError()` — called BY the logger |
+| `db-manager.ts` | SQLite init/flush — called during logging |
+| `db-persistence.ts` | OPFS/storage persistence — called during logging |
+| `schema-migration.ts` | Runs during DB init before logger is bound |
+
+#### Category 2: Page-Context Serialized Code
+
+`console.error` inside string templates or `executeScript({ func })` callbacks running in the page's MAIN world.
+
+| File | Context |
+|------|---------|
+| `builtin-script-guard.ts` | Stub code string template |
+| `manifest-seeder.ts` | Stub code string template |
+| `handlers/injection-wrapper.ts` | Script wrapper string template |
+| `project-namespace-builder.ts` | Namespace builder string template |
+| `context-menu-handler.ts` | `executeScript({ func })` in tab |
+| `injection-diagnostics.ts` | `executeScript({ func })` — mirrors logs to tab console |
+| `handlers/injection-handler.ts` | `executeScript({ func })` — CSP warning in tab |
+
+#### Category 3: Own Persistence Pipeline
+
+Already persist via `persistInjectionError` / `persistInjectionWarn` before `console.error`.
+
+| File | Pipeline |
+|------|----------|
+| `auto-injector.ts` | `persistInjectionError` / `persistInjectionWarn` |
+| `spa-reinject.ts` | `persistInjectionWarn` / `persistInjectionError` |
+
+### Audit Command
+
+```bash
+grep -rn "console\.error" src/background/ --include="*.ts" \
+  | grep -v "bg-logger.ts" | grep -v "session-log-writer.ts" \
+  | grep -v "logging-handler.ts" | grep -v "db-manager.ts" \
+  | grep -v "db-persistence.ts" | grep -v "schema-migration.ts"
+```
+
+**Expected:** Only Category 2 and Category 3 files. Any other file is a violation.

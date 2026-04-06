@@ -10,6 +10,8 @@
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
+import { logCaughtError, logBgWarnError } from "./bg-logger";
+
 export interface RemoteConfigSettings {
     isEnabled: boolean;
     endpointUrl: string;
@@ -151,7 +153,7 @@ function handleFailedFetch(
     status: number,
 ): Record<string, unknown> | null {
     lastFetchError = `HTTP ${status}`;
-    console.error(`[remote-config] Fetch failed: HTTP ${status}`);
+    logBgWarnError("[remote-config]", `Fetch failed: HTTP ${status}`);
 
     return getCachedConfig();
 }
@@ -165,7 +167,7 @@ function handleFetchException(
         : String(error);
 
     lastFetchError = errorMessage;
-    console.error(`[remote-config] Fetch error: ${errorMessage}`);
+    logCaughtError("[remote-config]", "Fetch error", error);
 
     return getCachedConfig();
 }

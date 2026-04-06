@@ -9,6 +9,7 @@
 
 import { MessageType } from "../shared/messages";
 import { handleMessage } from "./message-router";
+import { logCaughtError, logBgWarnError } from "./bg-logger";
 
 const RUN_SCRIPTS_COMMAND = "run-scripts";
 
@@ -38,10 +39,10 @@ export function registerShortcutCommands(): void {
             if (shortcut) {
                 console.log("[Marco] ✅ Shortcut registered: %s → %s", RUN_SCRIPTS_COMMAND, shortcut);
             } else {
-                console.error("[Marco] ⚠️ Shortcut '%s' exists but has NO key binding assigned! Go to chrome://extensions/shortcuts to assign one.", RUN_SCRIPTS_COMMAND);
+                logBgWarnError("[shortcut]", `Shortcut '${RUN_SCRIPTS_COMMAND}' exists but has NO key binding assigned! Go to chrome://extensions/shortcuts to assign one.`);
             }
         } else {
-            console.error("[Marco] ❌ Shortcut '%s' not found in manifest commands — check manifest.json", RUN_SCRIPTS_COMMAND);
+            logBgWarnError("[shortcut]", `Shortcut '${RUN_SCRIPTS_COMMAND}' not found in manifest commands — check manifest.json`);
         }
 
         // Log all registered commands for cross-reference
@@ -58,7 +59,7 @@ async function runScriptsFromShortcut(): Promise<void> {
         const activeTabId = await getActiveTabId();
 
         if (activeTabId === null) {
-            console.error("[Marco] Shortcut: no active tab found — aborting");
+            logBgWarnError("[shortcut]", "No active tab found — aborting");
             return;
         }
 
@@ -67,7 +68,7 @@ async function runScriptsFromShortcut(): Promise<void> {
         const scripts = await getActiveProjectScripts();
 
         if (scripts.length === 0) {
-            console.error("[Marco] Shortcut: no scripts in active project — aborting");
+            logBgWarnError("[shortcut]", "No scripts in active project — aborting");
             return;
         }
 
@@ -84,13 +85,7 @@ async function runScriptsFromShortcut(): Promise<void> {
 
         console.log("[Marco] Shortcut: injection complete — %d results in %dms", resultCount, elapsed);
     } catch (runError) {
-        const reason = runError instanceof Error ? runError.message : String(runError);
-        const stack = runError instanceof Error ? runError.stack : undefined;
-
-        console.error("[Marco] Shortcut run failed: %s", reason);
-        if (stack) {
-            console.error("[Marco] Shortcut stack: %s", stack);
-        }
+        logCaughtError("[shortcut]", "Shortcut run failed", runError);
     }
 }
 
@@ -102,8 +97,7 @@ async function getActiveTabId(): Promise<number | null> {
 
         return typeof tabId === "number" ? tabId : null;
     } catch (err) {
-        console.error("[Marco] Shortcut: chrome.tabs.query failed: %s",
-            err instanceof Error ? err.message : String(err));
+        logCaughtError("[shortcut]", "chrome.tabs.query failed", err);
 
         return null;
     }
@@ -117,7 +111,7 @@ async function getActiveProjectScripts(): Promise<unknown[]> {
 
     const project = response?.activeProject;
     if (!project) {
-        console.error("[Marco] Shortcut: GET_ACTIVE_PROJECT returned no active project");
+        logBgWarnError("[shortcut]", "GET_ACTIVE_PROJECT returned no active project");
         return [];
     }
 
@@ -141,8 +135,7 @@ function sendInternalMessage<T>(message: Record<string, unknown>): Promise<T> {
         handleMessage(message, sender, (response: unknown) => {
             resolve(response as T);
         }).catch((err: unknown) => {
-            console.error("[Marco] Shortcut: internal message dispatch error: %s",
-                err instanceof Error ? err.message : String(err));
+            logCaughtError("[shortcut]", "Internal message dispatch error", err);
             reject(err);
         });
     });

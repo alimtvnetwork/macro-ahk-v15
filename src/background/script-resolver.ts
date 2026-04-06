@@ -13,6 +13,7 @@ import type { ScriptBindingResolved } from "../shared/types";
 import { STORAGE_KEY_ALL_SCRIPTS, STORAGE_KEY_ALL_CONFIGS } from "../shared/constants";
 import { getCachedScriptCode, cacheScriptCode } from "./injection-cache";
 import { persistInjectionWarn } from "./injection-diagnostics";
+import { logCaughtError, logBgWarnError } from "./bg-logger";
 
 /* ------------------------------------------------------------------ */
 /*  File-path code loading                                             */
@@ -75,8 +76,7 @@ async function resolveScriptCode(script: StoredScript): Promise<ResolvedCode> {
             const fetchT0 = performance.now();
             const response = await fetch(url);
             if (!response.ok) {
-                console.error("[script-resolver] filePath fetch failed (%s %s)",
-                    response.status, candidate.path);
+                logBgWarnError("[script-resolver]", `filePath fetch failed (${response.status} ${candidate.path})`);
                 continue;
             }
             const code = await response.text();
@@ -84,7 +84,7 @@ async function resolveScriptCode(script: StoredScript): Promise<ResolvedCode> {
             const totalMs = (performance.now() - t0).toFixed(1);
 
             if (!code || code.length < 10) {
-                console.error("[script-resolver] filePath returned empty/tiny response for %s", candidate.path);
+                logBgWarnError("[script-resolver]", `filePath returned empty/tiny response for ${candidate.path}`);
                 continue;
             }
 
@@ -95,18 +95,17 @@ async function resolveScriptCode(script: StoredScript): Promise<ResolvedCode> {
 
             cacheScriptCode(candidate.path, code).catch(() => {});
             if (candidate.path !== script.filePath) {
-                console.error("[script-resolver] Recovered %s via bundled fallback %s", script.filePath, candidate.path);
+                logBgWarnError("[script-resolver]", `Recovered ${script.filePath} via bundled fallback ${candidate.path}`);
                 cacheScriptCode(script.filePath, code).catch(() => {});
             }
 
             return { code, source: "fetch" };
         } catch (err) {
-            console.error("[script-resolver] filePath fetch error for %s: %s",
-                candidate.path, err instanceof Error ? err.message : String(err));
+            logCaughtError("[script-resolver]", `filePath fetch error for ${candidate.path}`, err);
         }
     }
 
-    console.error("[script-resolver] All filePath fetches failed for %s, falling back to embedded code", script.filePath);
+    logBgWarnError("[script-resolver]", `All filePath fetches failed for ${script.filePath}, falling back to embedded code`);
     return { code: script.code, source: "embedded" };
 }
 
@@ -187,11 +186,11 @@ async function resolveDependencies(
 
             const depScript = findScript(allScripts, depId);
             if (!depScript) {
-                console.error("[script-resolver] Dependency not found: %s (required by %s)", depId, script.name);
+                logBgWarnError("[script-resolver]", `Dependency not found: ${depId} (required by ${script.name})`);
                 continue;
             }
             if (depScript.isEnabled === false) {
-                console.error("[script-resolver] Dependency disabled: %s (required by %s)", depScript.name, script.name);
+                logBgWarnError("[script-resolver]", `Dependency disabled: ${depScript.name} (required by ${script.name})`);
                 continue;
             }
 
@@ -250,7 +249,7 @@ async function resolveOneBinding(
     const isMissingScript = script === null;
 
     if (isMissingScript) {
-        console.error("[injection:resolve] ⚠ Script not found: %s (store has %d scripts)", binding.scriptId, scripts.length);
+        logBgWarnError("[injection:resolve]", `Script not found: ${binding.scriptId} (store has ${scripts.length} scripts)`);
         logMissingScript(binding.scriptId);
         void persistInjectionWarn(
             "SCRIPT_SKIPPED_MISSING",
@@ -283,8 +282,7 @@ async function resolveOneBinding(
     const { code, source: codeSource } = await resolveScriptCode(script!);
 
     if (!code || code.trim().length === 0) {
-        console.error("[injection:resolve] ⚠ Script '%s' (id=%s) resolved with EMPTY code — skipping. filePath=%s, source=%s. Check IndexedDB cache or script store.",
-            script!.name, script!.id, script!.filePath ?? "(none)", codeSource);
+        logBgWarnError("[injection:resolve]", `Script '${script!.name}' (id=${script!.id}) resolved with EMPTY code — skipping. filePath=${script!.filePath ?? "(none)"}, source=${codeSource}`);
         void persistInjectionWarn(
             "SCRIPT_SKIPPED_EMPTY_CODE",
             `[injection:resolve] Script '${script!.name}' (id=${script!.id}) resolved with empty code and was skipped. filePath=${script!.filePath ?? "(none)"}, source=${codeSource}`,
@@ -480,7 +478,5 @@ async function readConfigStore(): Promise<StoredConfig[]> {
 
 /** Logs a warning for a missing script reference. */
 function logMissingScript(scriptId: string): void {
-    console.error(
-        `[script-resolver] Script not found in store: ${scriptId}`,
-    );
+    logBgWarnError("[script-resolver]", `Script not found in store: ${scriptId}`);
 }
