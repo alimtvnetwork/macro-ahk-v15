@@ -394,7 +394,7 @@ async function attemptAutoRefresh(
             return authToken;
         }
 
-        console.error("[config-auth] Auto-refresh returned no token");
+        logBgWarnError("[config-auth]", "Auto-refresh returned no token");
         return null;
     } catch (refreshError) {
         logRefreshError(refreshError);
