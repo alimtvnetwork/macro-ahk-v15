@@ -791,12 +791,7 @@ async function injectProjectNamespaces(tabId: number, allProjects: StoredProject
         try {
             const nsResult = await injectWithCspFallback(tabId, combinedNs, "MAIN");
             if (nsResult.isFallback) {
-                console.error(
-                    "[injection:ns] ⚠️ CRITICAL — %d namespaces injected via %s fallback (tab %d).\n" +
-                    "  → RiseupAsiaMacroExt.Projects.* will NOT be visible in the page console.\n" +
-                    "  → CSP on this page blocked MAIN world injection.",
-                    nsScriptParts.length, nsResult.world, tabId,
-                );
+                logBgWarnError("[injection:ns]", `CRITICAL — ${nsScriptParts.length} namespaces injected via ${nsResult.world} fallback (tab ${tabId}). RiseupAsiaMacroExt.Projects.* will NOT be visible in page console.`);
                 transitionHealth("DEGRADED", `Project namespaces fell back to ${nsResult.world} — not visible in MAIN world`);
             } else {
                 console.log("[injection:ns] ✅ Registered %d namespaces in single IPC call", nsScriptParts.length);
