@@ -271,8 +271,7 @@ async function seedMissingBuiltinsDirectly(
                     logBgWarnError("[builtin-guard:fallback]", `Script file ${scriptName} returned empty/tiny response (${code?.length ?? 0} chars) from ${scriptAbsUrl}`);
                 }
             } else {
-                console.error("[builtin-guard:fallback] ❌ Script file HTTP %d for %s — URL: %s",
-                    scriptResp.status, scriptName, scriptAbsUrl);
+                logBgWarnError("[builtin-guard:fallback]", `Script file HTTP ${scriptResp.status} for ${scriptName} — URL: ${scriptAbsUrl}`);
                 void persistInjectionWarn(
                     "BUILTIN_GUARD_SCRIPT_FILE_MISSING",
                     `[builtin-guard:fallback] Script file not found for ${scriptName}: HTTP ${scriptResp.status} at ${scriptAbsUrl}`,
