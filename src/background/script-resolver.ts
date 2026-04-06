@@ -186,7 +186,7 @@ async function resolveDependencies(
 
             const depScript = findScript(allScripts, depId);
             if (!depScript) {
-                console.error("[script-resolver] Dependency not found: %s (required by %s)", depId, script.name);
+                logBgWarnError("[script-resolver]", `Dependency not found: ${depId} (required by ${script.name})`);
                 continue;
             }
             if (depScript.isEnabled === false) {
