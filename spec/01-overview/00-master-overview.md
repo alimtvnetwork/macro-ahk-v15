@@ -105,7 +105,7 @@ The **Automator** is a **Chrome Extension + JavaScript** automation tool that co
 
 ### Step 1: Understand the Folder Policy (CRITICAL)
 
-- [ ] Read `/spec/11-folder-policy.md`
+- [ ] Read `/spec/01-overview/11-folder-policy.md`
 - [ ] **ONLY edit files in** `chrome-extension/`, `src/`, `standalone-scripts/`, `spec/`
 - [ ] **NEVER touch** `skipped/` — all AHK folders are archived there
 - [ ] **Failure risk if skipped**: AI edits archived folder → changes silently ignored or break stable code
@@ -122,7 +122,7 @@ The **Automator** is a **Chrome Extension + JavaScript** automation tool that co
 
 ### Step 3: Read the Architecture
 
-- [ ] Read this file (`spec/00-master-overview.md`) — you're here
+- [ ] Read this file (`spec/01-overview/00-master-overview.md`) — you're here
 - [ ] Read `/spec/07-chrome-extension/01-overview.md` — extension architecture
 - [ ] Read `/spec/07-chrome-extension/18-message-protocol.md` — message types
 - [ ] Read `/spec/03-data-and-api/data-schema.md` — API response shapes and credit formulas
