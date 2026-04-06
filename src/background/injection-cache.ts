@@ -16,6 +16,7 @@
  */
 
 import { EXTENSION_VERSION, STORAGE_KEY_LAST_BUILD_ID } from "../shared/constants";
+import { logCaughtError } from "./bg-logger";
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
