@@ -31,7 +31,7 @@ import { seedFromManifest } from "./manifest-seeder";
 import { setBootStep, setBootPersistenceMode, finalizeBoot } from "./boot-diagnostics";
 import { configureUserScriptWorld } from "./csp-fallback";
 import { markInitialized, drainBuffer } from "./message-buffer";
-import { cacheScriptCode, getCachedScriptCode, purgeStaleEntries, syncCacheWithBuildId } from "./injection-cache";
+import { cacheScriptCode, getCachedScriptCode, purgeStaleEntries, syncCacheWithBuildId, invalidateCacheOnDeploy } from "./injection-cache";
 import { invalidateNamespaceCache } from "./namespace-cache";
 import { logCaughtError, BgLogTag} from "./bg-logger";
 
