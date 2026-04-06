@@ -271,13 +271,11 @@ function copyProjectScripts(): Plugin {
 
         try {
           const instruction = JSON.parse(readFileSync(instructionPath, 'utf-8'));
+          const scriptDistDir = resolve(projectRootDir, 'dist');
 
-          // Per-project subfolder
           const projectDir = resolve(projectsBaseDir, folder.name);
           mkdirSync(projectDir, { recursive: true });
 
-          // Copy ALL dist/ artifacts into the project subfolder
-          const scriptDistDir = resolve(standaloneDir, folder.name, 'dist');
           if (existsSync(scriptDistDir)) {
             const distFiles = readdirSync(scriptDistDir).filter(
               (f) => !f.startsWith('.'),
@@ -288,6 +286,36 @@ function copyProjectScripts(): Plugin {
               copyFileSync(src, dest);
               console.log(`[copy-project-scripts]   + ${folder.name}/${distFile}`);
             }
+          }
+
+          const declaredAssets = [
+            ...(instruction.assets?.configs ?? []),
+            ...(instruction.assets?.templates ?? []),
+            ...(instruction.assets?.prompts ?? []),
+            ...(instruction.assets?.css ?? []),
+            ...(instruction.assets?.scripts ?? []),
+          ] as Array<{ file: string; key?: string }>;
+
+          for (const asset of declaredAssets) {
+            const dest = resolve(projectDir, asset.file);
+            if (existsSync(dest)) {
+              continue;
+            }
+
+            const source = resolveDeclaredAssetSource(
+              projectRootDir,
+              scriptDistDir,
+              asset.file,
+              asset.key,
+            );
+
+            if (!source) {
+              console.warn(`[copy-project-scripts] Missing declared asset for ${folder.name}: ${asset.file}`);
+              continue;
+            }
+
+            copyFileSync(source, dest);
+            console.log(`[copy-project-scripts]   + ${folder.name}/${asset.file} (declared asset)`);
           }
 
           copiedCount++;
