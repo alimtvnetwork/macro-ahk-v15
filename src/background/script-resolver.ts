@@ -101,8 +101,7 @@ async function resolveScriptCode(script: StoredScript): Promise<ResolvedCode> {
 
             return { code, source: "fetch" };
         } catch (err) {
-            console.error("[script-resolver] filePath fetch error for %s: %s",
-                candidate.path, err instanceof Error ? err.message : String(err));
+            logCaughtError("[script-resolver]", `filePath fetch error for ${candidate.path}`, err);
         }
     }
 
