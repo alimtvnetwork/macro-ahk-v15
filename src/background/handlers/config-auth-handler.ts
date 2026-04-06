@@ -437,7 +437,7 @@ export async function fetchAuthToken(
     }
 
     if (sessionCookieLookup.value !== null) {
-        console.error("[config-auth] Session cookie exists but auth-token exchange is disabled because the cookie is not a JWT");
+        logBgWarnError("[config-auth]", "Session cookie exists but auth-token exchange is disabled because the cookie is not a JWT");
     }
 
     return null;
