@@ -361,7 +361,7 @@ describe("ZIP Edge — JSZip failure handling", () => {
         expect(result.dataUrl).toBeNull();
 
         const hasErrorLog = consoleSpy.mock.calls.some(
-            (call) => String(call[0]).includes("string-error-value"),
+            (call) => call.some((arg: unknown) => String(arg).includes("string-error-value")),
         );
 
         expect(hasErrorLog).toBe(true);
