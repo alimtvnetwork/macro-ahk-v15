@@ -29,7 +29,7 @@ import { moveToWorkspace } from './workspace-management';
 import { setLoopInterval, destroyPanel } from './ui/ui-updaters';
 import { bootstrap } from './startup';
 import { timingStart, timingEnd } from './startup-timing';
-import { MacroController } from './core/MacroController';
+import { MacroController, installWindowFacade } from './core/MacroController';
 import { AuthManager } from './core/AuthManager';
 import { CreditManager } from './core/CreditManager';
 import { LoopEngine } from './core/LoopEngine';
