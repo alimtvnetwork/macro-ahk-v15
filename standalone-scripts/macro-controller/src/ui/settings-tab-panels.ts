@@ -311,7 +311,7 @@ export function buildGeneralPanel(
   bdSlider.type = 'range';
   bdSlider.min = '0';
   bdSlider.max = '100';
-  bdSlider.value = String(Math.round(getBackdropOpacity() * 100));
+  bdSlider.value = String(Math.round(currentBackdropOpacity * 100));
   bdSlider.style.cssText = 'flex:1;height:6px;accent-color:' + cPrimary + ';cursor:pointer;';
 
   const bdValueLabel = document.createElement('span');
