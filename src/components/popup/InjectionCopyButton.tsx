@@ -47,6 +47,18 @@ interface SessionLog {
   message?: string;
 }
 
+/** Chunk filenames that produce useless stack traces (minified build artifacts). */
+const CHUNK_STACK_PATTERN = /\b(chunk-[a-z0-9]+|assets\/[a-z0-9-]+)\.(js|mjs|cjs):\d+:\d+/i;
+
+/** Strip stack trace lines that only reference build chunks with no source value. */
+function cleanStackTrace(raw: string): string {
+  const lines = raw.split("\n");
+  const useful = lines.filter((line) => !CHUNK_STACK_PATTERN.test(line));
+  // If all lines were chunks, keep original first line for minimal context
+  if (useful.length === 0 && lines.length > 0) return lines[0];
+  return useful.join("\n");
+}
+
 function formatError(e: ErrorEntry, i: number): string {
   const ts = e.timestamp ?? "";
   const code = e.error_code ?? "UNKNOWN";
@@ -54,7 +66,8 @@ function formatError(e: ErrorEntry, i: number): string {
   const file = e.script_file ? ` [${e.script_file}]` : "";
   const script = e.script_id ? ` script=${e.script_id}` : "";
   const project = e.project_id ? ` project=${e.project_id}` : "";
-  const stack = e.stack_trace ? `\n      Stack: ${e.stack_trace}` : "";
+  const cleanedStack = e.stack_trace ? cleanStackTrace(e.stack_trace) : "";
+  const stack = cleanedStack ? `\n      Stack: ${cleanedStack}` : "";
   const ctx = e.context ? `\n      Context: ${e.context}` : "";
 
   return `  ${i + 1}. ${ts}  ${code}${file}${script}${project}\n      ${msg}${stack}${ctx}`;
