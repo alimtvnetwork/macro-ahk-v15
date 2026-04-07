@@ -67,7 +67,7 @@ function openDb(): Promise<IDBDatabase> {
 
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => {
-            logCaughtError(BgLogTag.INJECTION_CACHE, "IndexedDB open failed", request.error);
+            logCaughtError(BgLogTag.INJECTION_CACHE, `IndexedDB open failed\n  Path: indexedDB.open("${DB_NAME}", ${DB_VERSION})\n  Missing: IDBDatabase connection\n  Reason: ${request.error?.message ?? "unknown DOMException — browser may have storage quota exceeded or IndexedDB disabled"}`, request.error);
             reject(request.error);
         };
     });
