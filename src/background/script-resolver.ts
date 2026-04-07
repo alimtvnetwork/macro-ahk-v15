@@ -110,7 +110,7 @@ async function resolveScriptCode(script: StoredScript): Promise<ResolvedCode> {
 
             return { code, source: "fetch" };
         } catch (err) {
-            logCaughtError(BgLogTag.SCRIPT_RESOLVER, `filePath fetch error for ${candidate.path}`, err);
+            logCaughtError(BgLogTag.SCRIPT_RESOLVER, `filePath fetch error\n  Path: ${candidate.isAbsolute ? candidate.path : "chrome.runtime.getURL(\"" + candidate.path + "\")"}\n  Missing: Script code for "${script.name}"\n  Reason: ${err instanceof Error ? err.message : String(err)}`, err);
         }
     }
 
