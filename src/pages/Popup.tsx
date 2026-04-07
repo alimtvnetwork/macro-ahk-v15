@@ -65,6 +65,7 @@ const PopupPage = () => {
     handleDbImport,
     handleRun,
     handleReinject,
+    handleForceRun,
     lastRunResults,
     handleConfirmImport,
     handleCancelImport,
