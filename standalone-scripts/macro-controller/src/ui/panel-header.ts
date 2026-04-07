@@ -68,12 +68,6 @@ function _buildTitleElements(deps: PanelBuilderDeps, plCtx: PanelLayoutCtx) {
   title.style.cssText = 'font-weight:bold;color:#E0E0E0;font-size:14px;flex-shrink:0;white-space:nowrap;transform:translateY(-2px);';
   title.textContent = 'TS Macro';
 
-  const projectNameEl = document.createElement('div');
-  projectNameEl.id = 'loop-project-name';
-  projectNameEl.style.cssText = CSS_FONT_SIZE + tFontTiny + ';color:#ffffff;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;';
-  projectNameEl.title = 'Project name (from DOM XPath)';
-  projectNameEl.textContent = getDisplayProjectName();
-
   const wsNameEl = buildWorkspaceNameBadge(deps);
 
   const versionSpan = document.createElement('span');
@@ -98,7 +92,7 @@ function _buildTitleElements(deps: PanelBuilderDeps, plCtx: PanelLayoutCtx) {
   hideBtn.onclick = function(e: Event) { e.stopPropagation(); destroyPanel(); };
 
   return {
-    elements: { title, projectNameEl, wsNameEl, versionSpan, authBadge, panelToggleSpan, hideBtn },
+    elements: { title, wsNameEl, versionSpan, authBadge, panelToggleSpan, hideBtn },
     wsNameEl, authBadge, panelToggleSpan, hideBtn,
   };
 }
