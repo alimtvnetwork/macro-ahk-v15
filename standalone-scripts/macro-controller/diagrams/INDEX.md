@@ -14,6 +14,8 @@
 7. [Data Storage Schema](#7-data-storage-schema) — SQLite, IndexedDB, localStorage, and chrome.storage layers
 8. [Extension Lifecycle](#8-extension-lifecycle) — Install through page injection to runtime execution
 9. [Message Relay Architecture](#9-message-relay-architecture) — PostMessage and Chrome.Runtime channels between page, CS, and background
+10. [Injection Pipeline Workflow](#10-injection-pipeline-workflow) — Full Run Scripts pipeline from click to page execution
+11. [Copy Injection Logs Workflow](#11-copy-injection-logs-workflow) — Copy button data gathering and report generation
 
 ---
 
