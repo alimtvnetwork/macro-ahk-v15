@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: 'standalone-scripts/marco-sdk/dist',
     emptyOutDir: false,
-    sourcemap: 'inline',
+    sourcemap: mode === 'development' ? 'inline' : false,
     minify: mode !== 'development' ? 'esbuild' : false,
     lib: {
       entry: resolve(__dirname, 'standalone-scripts/marco-sdk/src/index.ts'),

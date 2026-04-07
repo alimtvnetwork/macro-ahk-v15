@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: 'standalone-scripts/xpath/dist',
     emptyOutDir: false,
-    sourcemap: 'inline',
+    sourcemap: mode === 'development' ? 'inline' : false,
     minify: mode !== 'development' ? 'esbuild' : false,
     lib: {
       entry: resolve(__dirname, 'standalone-scripts/xpath/src/index.ts'),
