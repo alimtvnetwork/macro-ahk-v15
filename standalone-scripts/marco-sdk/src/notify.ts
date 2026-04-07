@@ -112,9 +112,8 @@ function resolveColors(): Record<string, ToastColors> {
 
     try {
         const themeRoot = (window as any).__MARCO_THEME__ || {};
-        let key = "dark";
-        try { const s = localStorage.getItem("marco_theme_preset"); if (s) key = s; } catch { /* */ }
-        const theme = (themeRoot.presets && themeRoot.presets[key]) || themeRoot || {};
+        const darkPreset = themeRoot.presets && (themeRoot.presets.dark || themeRoot.presets[themeRoot.activePreset || "dark"]);
+        const theme = darkPreset || themeRoot || {};
         const TC = theme.colors || {};
         const TSt = TC.status || {};
         const TToast = TC.toast || {};
