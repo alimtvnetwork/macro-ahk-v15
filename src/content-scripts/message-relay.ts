@@ -151,7 +151,7 @@ function handlePageMessage(event: MessageEvent): void {
 
     if (!isAllowedType) {
         console.warn(
-            `[Marco Relay] Blocked disallowed message type: ${messageType}`,
+            `[Marco Relay] Blocked disallowed message type: "${messageType}" from source "${String(data.source ?? "unknown")}". Allowed types: ${[...ALLOWED_TYPES].join(", ")}`,
         );
         postResponseToPage(requestId, {
             isOk: false,
