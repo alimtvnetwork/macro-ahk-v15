@@ -284,7 +284,7 @@ export async function syncCacheWithBuildId(
 
         return { changed: true, cleared: clearResult.cleared };
     } catch (err) {
-        logCaughtError(BgLogTag.INJECTION_CACHE, "Build sync failed", err);
+        logCaughtError(BgLogTag.INJECTION_CACHE, `Build sync failed\n  Path: chrome.storage.local["${STORAGE_KEY_LAST_BUILD_ID}"]\n  Missing: Successful build ID comparison and cache invalidation\n  Reason: ${err instanceof Error ? err.message : String(err)}`, err);
         return { changed: false, cleared: 0 };
     }
 }
