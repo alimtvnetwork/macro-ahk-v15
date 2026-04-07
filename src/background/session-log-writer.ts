@@ -444,6 +444,7 @@ export interface SessionInfo {
 }
 
 /** Lists all available sessions with their most recent file timestamp. */
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export async function listSessionsWithTimestamps(): Promise<SessionInfo[]> {
     try {
         const root = await navigator.storage.getDirectory();
