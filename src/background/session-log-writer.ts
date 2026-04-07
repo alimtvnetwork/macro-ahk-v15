@@ -135,7 +135,7 @@ export async function initSessionLogDir(sid: string, ver: string): Promise<void>
             void pruneOldSessionLogs();
         } catch (err) {
             const absDir = `opfs-root/${LOGS_DIR_NAME}/${SESSION_PREFIX}${sid}`;
-            console.error(`[session-log-writer::initSessionDir] OPFS dir init failed at "${absDir}". Expected files: [${absDir}/${EVENTS_LOG}, ${absDir}/${ERRORS_LOG}, ${absDir}/${SCRIPTS_LOG}]`, err);
+            console.error(`[session-log-writer::initSessionDir] OPFS dir init failed\n  Path: ${absDir}\n  Missing: Session log files [${EVENTS_LOG}, ${ERRORS_LOG}, ${SCRIPTS_LOG}]\n  Reason: ${err instanceof Error ? err.message : String(err)} — directory or file handle creation failed`, err);
             sessionDir = null;
         }
     })();
