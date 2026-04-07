@@ -674,7 +674,7 @@ async function executeInTab(tabId: number, code: string): Promise<{ path: string
 
     if (result.isFallback) {
         logBgWarnError(
-            "[injection]",
+            BgLogTag.INJECTION,
             `Script executed via ${result.world} fallback (tab ${tabId}) — window.marco created in non-MAIN world, RiseupAsiaMacroExt.Projects.* may not be accessible from the page console.`,
         );
     }
