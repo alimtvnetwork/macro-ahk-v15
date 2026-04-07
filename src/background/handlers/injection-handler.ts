@@ -273,7 +273,7 @@ export async function handleInjectScripts(
     } catch { /* use default */ }
     if (totalMs > budgetMs) {
         logBgWarnError(
-            "[injection]",
+            BgLogTag.INJECTION,
             `PERFORMANCE BUDGET EXCEEDED — ${totalMs}ms (budget: ${budgetMs}ms) breakdown=${JSON.stringify(timings)}`,
         );
         void mirrorDiagnosticToTab(
