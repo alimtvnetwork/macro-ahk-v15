@@ -34,9 +34,14 @@ export function normalizePromptEntries(entries: Partial<PromptEntry & { order?: 
   return out;
 }
 
-/** Normalize excessive blank lines: collapse 3+ consecutive newlines to 2 (one blank line). */
+/** Normalize excessive blank lines: collapse 3+ consecutive newlines to 2 (one blank line).
+ *  Also normalizes \r\n to \n and collapses lines containing only whitespace. */
 export function normalizeNewlines(text: string): string {
-  return text.replace(/\n{3,}/g, '\n\n').trim();
+  return text
+    .replace(/\r\n/g, '\n')                    // Normalize Windows line endings
+    .replace(/\n[ \t]*\n[ \t]*\n/g, '\n\n')     // Collapse blank-ish lines (whitespace-only between newlines)
+    .replace(/\n{3,}/g, '\n\n')                  // Collapse 3+ consecutive newlines to 2
+    .trim();
 }
 
 // ── JSON parse with truncation recovery ──

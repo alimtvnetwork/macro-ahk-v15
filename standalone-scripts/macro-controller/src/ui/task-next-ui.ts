@@ -129,11 +129,11 @@ export function findNextTasksPrompt(deps: TaskNextDeps) {
     }
   }
 
-  // Last resort: use the first prompt that has text
-  if (entries.length > 0 && entries[0].text) {
-    log('Task Next: No NEXT_TASKS prompt found — using first available prompt: "' + entries[0].name + '"', 'warn');
-    return entries[0];
-  }
+  // Last resort: DO NOT fall back to entries[0] — this caused the regression where
+  // "Start Prompt" was incorrectly used as next task content.
+  // Instead, return null so the caller can show a proper error message.
+  log('Task Next: ❌ No prompt matched target slug "' + targetSlug + '" across ' + entries.length + ' entries. ' +
+    'Ensure a prompt with slug="next-tasks" or name="Next Tasks" exists. Returning null — aborting.', 'error');
   return null;
 }
 
