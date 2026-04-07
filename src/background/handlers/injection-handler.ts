@@ -411,7 +411,7 @@ async function executeCachedPayload(
  * executeScript call when possible. Scripts with CSS assets are injected
  * individually (CSS must precede their JS). Falls back to sequential on failure.
  */
-// eslint-disable-next-line max-lines-per-function, sonarjs/cognitive-complexity
+// eslint-disable-next-line max-lines-per-function
 async function injectAllScripts(
     tabId: number,
     scripts: Array<{ injectable: InjectableScript; configJson: string | null; themeJson: string | null }>,
