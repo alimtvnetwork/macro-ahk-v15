@@ -168,10 +168,10 @@ export async function ensureBuiltinScriptsExist(
             return true;
         }
 
-        logBgWarnError(BgLogTag.BUILTIN_GUARD, "Direct fallback also seeded 0 scripts");
+        logBgWarnError(BgLogTag.BUILTIN_GUARD, `Direct fallback also seeded 0 scripts\n  Path: chrome.storage.local["${STORAGE_KEY_ALL_SCRIPTS}"]\n  Missing: Any seeded script for [${missing.join(", ")}]\n  Reason: Both seed-manifest.json and per-script instruction.json fallback returned 0 scripts`);
         await persistInjectionError(
             "BUILTIN_GUARD_DIRECT_SEED_EMPTY",
-            `[builtin-guard] Direct instruction.json fallback seeded 0 scripts for: [${missing.join(", ")}]`,
+            `[builtin-guard] Direct instruction.json fallback seeded 0 scripts\n  Path: projects/scripts/<folder>/instruction.json\n  Missing: Seeded entries for [${missing.join(", ")}]\n  Reason: Both manifest and direct fallback failed to restore built-ins`,
             { contextDetail: "Both manifest and direct fallback failed to restore built-ins" },
         );
         return false;
