@@ -201,7 +201,7 @@ async function resolveDependencies(
 
             const depScript = findScript(allScripts, depId);
             if (!depScript) {
-                logBgWarnError(BgLogTag.SCRIPT_RESOLVER, `Dependency not found: ${depId} (required by ${script.name})`);
+                logBgWarnError(BgLogTag.SCRIPT_RESOLVER, `Dependency not found\n  Path: chrome.storage.local["${STORAGE_KEY_ALL_SCRIPTS}"]\n  Missing: Script with id="${depId}" (required by "${script.name}")\n  Reason: Dependency declared in script.dependencies but no matching script exists in storage`);
                 continue;
             }
             if (depScript.isEnabled === false) {
