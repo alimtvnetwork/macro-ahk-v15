@@ -58,7 +58,7 @@ export async function warmScriptCache(): Promise<{ warmed: number; failed: numbe
 
         console.log("[cache-warmer] ✅ Warmed %d scripts, %d failed", warmed, failed);
     } catch (err) {
-        logCaughtError(BgLogTag.CACHE_WARMER, "Warming aborted", err);
+        logCaughtError(BgLogTag.CACHE_WARMER, `Warming aborted\n  Path: chrome.storage.local["${STORAGE_KEY_ALL_SCRIPTS}"]\n  Missing: Successful script cache warming\n  Reason: ${err instanceof Error ? err.message : String(err)}`, err);
     }
 
     return { warmed, failed };
