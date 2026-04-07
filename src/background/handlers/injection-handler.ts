@@ -47,6 +47,20 @@ import { ensureBuiltinScriptsExist } from "../builtin-script-guard";
 import { mirrorDiagnosticToTab, mirrorPipelineLogsToTab } from "../injection-diagnostics";
 
 /* ------------------------------------------------------------------ */
+/*  Helpers                                                            */
+/* ------------------------------------------------------------------ */
+
+/** Checks whether the injection toast setting is enabled. */
+async function isInjectionToastEnabled(): Promise<boolean> {
+    try {
+        const { settings } = await handleGetSettings();
+        return settings.showInjectionToast !== false;
+    } catch {
+        return true; // default on
+    }
+}
+
+/* ------------------------------------------------------------------ */
 /*  Module-level caches                                                */
 /* ------------------------------------------------------------------ */
 
@@ -246,12 +260,14 @@ export async function handleInjectScripts(
     // ── Post-injection verification — confirm globals actually landed in MAIN world ──
     if (successCount > 0) {
         void verifyPostInjectionGlobals(msg.tabId).catch(() => {});
-        // ── Show injection success toast in the target tab ──
-        void showInjectionToastInTab(msg.tabId, successCount, execResults.length, totalMs).catch(() => {});
     }
 
-    // ── Show failure toast if any scripts failed ──
-    if (failCount > 0) {
+    // ── Show injection toasts if enabled ──
+    const toastEnabled = await isInjectionToastEnabled();
+    if (toastEnabled && successCount > 0) {
+        void showInjectionToastInTab(msg.tabId, successCount, execResults.length, totalMs).catch(() => {});
+    }
+    if (toastEnabled && failCount > 0) {
         const failedNames = execResults.filter(r => !r.isSuccess).map(r => r.scriptName ?? r.scriptId);
         void showInjectionFailureToastInTab(msg.tabId, failedNames, failCount, execResults.length, totalMs).catch(() => {});
     }

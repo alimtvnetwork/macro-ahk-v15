@@ -43,6 +43,7 @@ import { DEFAULT_CHATBOX_XPATH } from "@/shared/defaults";
 interface SettingsData {
   autoRunOnPageLoad: boolean;
   showNotifications: boolean;
+  showInjectionToast: boolean;
   defaultRunAt: "document_start" | "document_idle" | "document_end";
   debugMode: boolean;
   maxCycleCount: number;
@@ -56,6 +57,7 @@ interface SettingsData {
 const DEFAULT_SETTINGS: SettingsData = {
   autoRunOnPageLoad: true,
   showNotifications: true,
+  showInjectionToast: true,
   defaultRunAt: "document_idle",
   debugMode: false,
   maxCycleCount: 100,
@@ -316,6 +318,18 @@ export function SettingsView() {
           <Switch
             checked={settings.showNotifications}
             onCheckedChange={(v) => update("showNotifications", v)}
+          />
+        </SettingRow>
+
+        <Separator />
+
+        <SettingRow
+          label="Injection toast"
+          description="Show a toast in the target tab after script injection (success or failure)"
+        >
+          <Switch
+            checked={settings.showInjectionToast}
+            onCheckedChange={(v) => update("showInjectionToast", v)}
           />
         </SettingRow>
 
