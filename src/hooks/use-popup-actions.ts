@@ -161,13 +161,7 @@ function formatSkipReason(reason?: string): string {
 
   /** Force Run: bypasses the IndexedDB cache gate, rebuilds from scratch. */
   const handleForceRun = useCallback(async () => {
-    setRunLoading(true);
-    setLastRunResults([]);
-    try {
-      await handleRun({ forceReload: true });
-    } finally {
-      setRunLoading(false);
-    }
+    await handleRun({ forceReload: true });
   }, [handleRun]);
 
   const handleViewLogs = useCallback(async () => {
