@@ -99,7 +99,7 @@ const PopupPage = () => {
                 <Button
                   size="sm"
                   className="flex-1 h-9 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 min-w-0"
-                  onClick={handleRun}
+                  onClick={() => handleRun()}
                   disabled={runLoading || reinjectLoading}
                 >
                   {runLoading
