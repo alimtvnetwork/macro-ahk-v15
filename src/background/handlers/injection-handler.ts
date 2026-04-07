@@ -1565,17 +1565,27 @@ async function verifyPostInjectionGlobals(tabId: number): Promise<void> {
                 `Post-injection verification INCOMPLETE on tab ${tabId}: ` +
                 `sdk=${r.marcoSdk} ext=${r.extRoot} mc=${r.mcClass} instance=${r.mcInstance} ui=${r.uiContainer}\n` +
                 `Verify stack: ${r.verifyStack}`,
-            );
+        );
         }
+    } catch {
+        // Verification is best-effort — never block the pipeline
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Loading spinner toast                                              */
+/* ------------------------------------------------------------------ */
 
 /**
  * Shows a loading spinner toast while injection is in progress.
  */
+// eslint-disable-next-line max-lines-per-function
 async function showInjectionLoadingToast(tabId: number, scriptCount: number): Promise<void> {
     try {
         await chrome.scripting.executeScript({
             target: { tabId },
             world: "MAIN",
+            // eslint-disable-next-line max-lines-per-function
             func: (count: number, version: string) => {
                 const CONTAINER_ID = "__marco-inject-toast";
                 let container = document.getElementById(CONTAINER_ID);
@@ -1642,9 +1652,5 @@ async function showInjectionLoadingToast(tabId: number, scriptCount: number): Pr
         });
     } catch (e) {
         logCaughtError(BgLogTag.INJECTION, "showInjectionLoadingToast failed", e);
-    }
-}
-    } catch {
-        // Verification is best-effort — never block the pipeline
     }
 }
