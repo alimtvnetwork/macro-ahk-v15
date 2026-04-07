@@ -145,10 +145,10 @@ export async function ensureBuiltinScriptsExist(
             `[builtin-guard] seed-manifest.json returned 0 scripts (projects=${seedResult.projects}, errors=${seedResult.errors.length}). Falling back to instruction.json.`,
         );
     } catch (err) {
-        logCaughtError(BgLogTag.BUILTIN_GUARD, "Manifest reseed failed", err);
+        logCaughtError(BgLogTag.BUILTIN_GUARD, `Manifest reseed failed\n  Path: chrome.runtime.getURL("seed-manifest.json")\n  Missing: Successful reseed of built-in scripts [${missing.join(", ")}]\n  Reason: ${err instanceof Error ? err.message : String(err)}`, err);
         void persistInjectionError(
             "BUILTIN_GUARD_MANIFEST_RESEED_FAILED",
-            `[builtin-guard] Manifest reseed failed: ${reason}`,
+            `[builtin-guard] Manifest reseed failed\n  Path: seed-manifest.json\n  Missing: Built-in scripts [${missing.join(", ")}]\n  Reason: ${err instanceof Error ? err.message : String(err)}`,
             { contextDetail: `Missing built-ins: [${missing.join(", ")}]` },
         );
     }
