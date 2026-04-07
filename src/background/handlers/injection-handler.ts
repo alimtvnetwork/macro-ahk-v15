@@ -93,6 +93,12 @@ export async function handleInjectScripts(
 
     console.log("[injection] ── PIPELINE START ── tabId=%d, raw scripts=%d", msg.tabId, msg.scripts.length);
 
+    // Show loading spinner toast at start of injection
+    const toastEnabledEarly = await isInjectionToastEnabled();
+    if (toastEnabledEarly) {
+        void showInjectionLoadingToast(msg.tabId, msg.scripts.length).catch(() => {});
+    }
+
     // ✅ 15.2: Read all projects ONCE, pass to all consumers
     const allProjects = await time("readAllProjects", () =>
         readAllProjects().catch(() => [] as StoredProject[]));
