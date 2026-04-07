@@ -250,6 +250,12 @@ export async function handleInjectScripts(
         void showInjectionToastInTab(msg.tabId, successCount, execResults.length, totalMs).catch(() => {});
     }
 
+    // ── Show failure toast if any scripts failed ──
+    if (failCount > 0) {
+        const failedNames = execResults.filter(r => !r.isSuccess).map(r => r.scriptName ?? r.scriptId);
+        void showInjectionFailureToastInTab(msg.tabId, failedNames, failCount, execResults.length, totalMs).catch(() => {});
+    }
+
     return { results };
 }
 
