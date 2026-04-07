@@ -28,11 +28,12 @@ const UI_CACHE_KEY = 'dropdown_snapshot';
 export interface CachedPromptEntry {
   name: string;
   text: string;
+  id?: string;
+  slug?: string;
   category?: string;
   isDefault?: boolean;
   isFavorite?: boolean;
   order?: number;
-  id?: string;
   version?: string;
 }
 
