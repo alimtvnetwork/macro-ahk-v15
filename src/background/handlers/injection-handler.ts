@@ -45,6 +45,8 @@ import { hashSettingsKey, getSettingsNsCache, setSettingsNsCache } from "../sett
 import { recordInjectionTiming } from "../injection-timing-history";
 import { ensureBuiltinScriptsExist } from "../builtin-script-guard";
 import { mirrorDiagnosticToTab, mirrorPipelineLogsToTab } from "../injection-diagnostics";
+import { cacheGet, cacheSet, cacheDelete } from "../injection-cache";
+import type { CacheCategory } from "../injection-cache";
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
