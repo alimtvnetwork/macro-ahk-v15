@@ -43,6 +43,7 @@ import { DEFAULT_CHATBOX_XPATH } from "@/shared/defaults";
 interface SettingsData {
   autoRunOnPageLoad: boolean;
   showNotifications: boolean;
+  showInjectionToast: boolean;
   defaultRunAt: "document_start" | "document_idle" | "document_end";
   debugMode: boolean;
   maxCycleCount: number;
