@@ -85,7 +85,7 @@ async function resolveScriptCode(script: StoredScript): Promise<ResolvedCode> {
             const fetchT0 = performance.now();
             const response = await fetch(url);
             if (!response.ok) {
-                logBgWarnError(BgLogTag.SCRIPT_RESOLVER, `filePath fetch failed (${response.status} ${candidate.path})`);
+                logBgWarnError(BgLogTag.SCRIPT_RESOLVER, `filePath fetch failed\n  Path: ${candidate.isAbsolute ? candidate.path : "chrome.runtime.getURL(\"" + candidate.path + "\")"}\n  Missing: Script code for "${script.name}" (HTTP ${response.status})\n  Reason: Server returned ${response.status} — file may not exist in web_accessible_resources or dist/`);
                 continue;
             }
             const code = await response.text();
