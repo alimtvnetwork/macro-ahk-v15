@@ -104,10 +104,9 @@ export function logTimingSummary(): void {
 
   // Append version number for quick identification in console
   try {
-    // Dynamic import to avoid circular dependency — VERSION may not be available at module load
-    const ver = (typeof window !== 'undefined' && (window as Record<string, unknown>).RiseupAsiaMacroExt)
-      ? String(((window as Record<string, unknown>).RiseupAsiaMacroExt as Record<string, unknown>)?.Projects?.MacroController?.meta?.version || '?')
-      : '?';
+    const ext = (window as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>)
+      ?.RiseupAsiaMacroExt?.Projects?.MacroController?.meta;
+    const ver = ext?.version || '?';
     lines.push('│  Version: v' + ver + '                                                    │'.substring(0, 55) + '│');
   } catch {
     // Version unavailable — skip
