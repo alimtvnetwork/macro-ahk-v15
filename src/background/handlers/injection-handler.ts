@@ -771,7 +771,6 @@ function buildSkipMessage(reason: SkipReason, scriptName: string): string {
  * If MAIN world injection fails (CSP), we log a loud error and transition
  * health to DEGRADED so the user knows docs-style access won't work.
  */
-// eslint-disable-next-line max-lines-per-function
 async function bootstrapNamespaceRoot(tabId: number): Promise<void> {
     const bootstrapCode = `;(function(){
 if(!window.RiseupAsiaMacroExt){window.RiseupAsiaMacroExt={Projects:{}};}
