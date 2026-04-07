@@ -123,6 +123,22 @@ function buildInjectionReport(
     sections.push("  (no matching diagnostics)");
   }
 
+  // Post-injection verification
+  sections.push("");
+  sections.push("── POST-INJECTION VERIFICATION ───────────");
+  if (verification) {
+    const icon = (ok: boolean) => ok ? "✅" : "❌";
+    sections.push(`  window.marco (SDK)           : ${icon(verification.marcoSdk)}`);
+    sections.push(`  window.RiseupAsiaMacroExt     : ${icon(verification.extRoot)}`);
+    sections.push(`  window.MacroController (class): ${icon(verification.mcClass)}`);
+    sections.push(`  api.mc (singleton instance)   : ${icon(verification.mcInstance)}`);
+    sections.push(`  #macro-loop-container (UI)    : ${icon(verification.uiContainer)}`);
+    sections.push(`  [data-marco-injected] marker  : ${verification.markerEl ? "✅" : "⚠️ (not required)"}`);
+    sections.push(`  Verified at: ${verification.verifiedAt}`);
+  } else {
+    sections.push("  (no verification data — inject scripts first)");
+  }
+
   // Health details
   if (health && Array.isArray((health as { details?: string[] }).details)) {
     const details = (health as { details: string[] }).details;
