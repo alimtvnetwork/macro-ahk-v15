@@ -173,6 +173,9 @@ export function InjectionStatusPanel({ injections, scripts }: Props) {
             </code>
           </div>
 
+          {/* Post-injection verification badge */}
+          <VerificationBadge verification={injections.verification} />
+
           {/* Pipeline performance bar */}
           <PipelinePerformanceBar
             durationMs={injections.pipelineDurationMs}
