@@ -101,7 +101,7 @@ export function logBgError(
             type: MessageType.LOG_ERROR,
             level: "ERROR",
             source: "background",
-            category: tag.replace(/[\[\]]/g, "").toUpperCase(),
+            category: tag.replace(/[[\]]/g, "").toUpperCase(),
             errorCode,
             message,
             stackTrace,
