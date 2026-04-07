@@ -114,7 +114,7 @@ export async function ensureBuiltinScriptsExist(
 
     logBgWarnError(
         "[builtin-guard]",
-        `${missing.length} built-in script(s) missing from store: [${missing.join(", ")}] — reseeding from manifest`,
+        `${missing.length} built-in script(s) missing from store\n  Path: chrome.storage.local["${STORAGE_KEY_ALL_SCRIPTS}"]\n  Missing: Script entries for [${missing.join(", ")}]\n  Reason: Scripts referenced by projects but not found in storage — triggering reseed from manifest`,
     );
 
     // --- Stage 1: Try seed-manifest.json ---
