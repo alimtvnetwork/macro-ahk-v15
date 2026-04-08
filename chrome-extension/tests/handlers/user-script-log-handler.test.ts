@@ -130,7 +130,7 @@ describe("handleUserScriptLog", () => {
 
         expect(mockLogsDb.run).toHaveBeenCalledTimes(1);
         const insertArgs = mockLogsDb.run.mock.calls[0];
-        expect(insertArgs[1][6]).toBe("not-json{{{");
+        expect(insertArgs[1][7]).toBe("not-json{{{");
     });
 
     it("uses user-script as source in SQL insert", async () => {
