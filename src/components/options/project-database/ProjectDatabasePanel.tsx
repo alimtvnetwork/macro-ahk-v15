@@ -61,6 +61,7 @@ export function ProjectDatabasePanel({ projectId, projectSlug }: ProjectDatabase
   const [tables, setTables] = useState<TableInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showCreateDbForm, setShowCreateDbForm] = useState(false);
 
   // Create form state
   const [newTableName, setNewTableName] = useState("");
