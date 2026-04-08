@@ -14,8 +14,9 @@ import { MessageType } from "../../src/shared/messages";
 installChromeMock();
 
 /* Mock getCurrentSessionId so queryUnresolvedErrors doesn't short-circuit.
-   insertUserScriptError hardcodes SessionId = '' so we return '' to match. */
-vi.mock("../../src/background/handlers/logging-handler", () => ({
+   insertUserScriptError hardcodes SessionId = '' so we return '' to match.
+   Path must target the canonical source (src/), not the chrome-extension shim. */
+vi.mock("../../../src/background/handlers/logging-handler", () => ({
     getCurrentSessionId: () => "",
 }));
 
