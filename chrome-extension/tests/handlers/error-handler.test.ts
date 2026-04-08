@@ -13,6 +13,16 @@ import { MessageType } from "../../src/shared/messages";
 
 installChromeMock();
 
+/* Mock getCurrentSessionId so queryUnresolvedErrors doesn't short-circuit */
+const { getCurrentSessionId: _origGetCurrentSessionId } = await import(
+    "../../src/background/handlers/logging-handler"
+);
+import { vi } from "vitest";
+vi.spyOn(
+    await import("../../src/background/handlers/logging-handler"),
+    "getCurrentSessionId",
+).mockReturnValue("test-session");
+
 const {
     bindErrorDbManager,
     handleGetActiveErrors,

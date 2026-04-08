@@ -27,6 +27,8 @@ vi.mock("../../../src/background/handlers/logging-handler", () => ({
     getLogsDb: () => mockLogsDb,
     getErrorsDb: () => mockErrorsDb,
     markLoggingDirty: vi.fn(),
+    getCurrentSessionId: () => "test-session-1",
+    startSession: vi.fn().mockResolvedValue(1),
 }));
 
 import { handleUserScriptLog } from "@/background/handlers/user-script-log-handler";
