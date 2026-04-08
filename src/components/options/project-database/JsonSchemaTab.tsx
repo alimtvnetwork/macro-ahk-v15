@@ -329,6 +329,15 @@ export function JsonSchemaTab({ projectSlug, onMigrationComplete }: Props) {
       setDiffMode(true);
       toast.success("Diff view loaded");
     } catch (err) {
+      const errModel = createErrorModel(err, {
+        source: "Database",
+        operation: "LoadDiff",
+        projectName: projectSlug,
+        contextJson: JSON.stringify({ type: "GENERATE_SCHEMA_DOCS", project: projectSlug, format: "meta" }),
+        suggestedAction: "Ensure the project database is initialized before loading diff.",
+      });
+      setModalError(errModel);
+      setErrorModalOpen(true);
       toast.error(`Failed to load DB schema: ${String(err)}`);
     } finally {
       setLoadingDiff(false);
