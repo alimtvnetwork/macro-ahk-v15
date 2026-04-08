@@ -27,6 +27,7 @@ import { ErrorModal } from "./ErrorModal";
 import { createErrorModel, type ErrorModel } from "@/types/error-model";
 import { DEFAULT_PROJECT_DATABASES, DATABASE_KINDS, validateNamespace, type NamespaceDatabaseRequest } from "@/types/default-databases";
 import { CreateDatabaseForm } from "./CreateDatabaseForm";
+import { DefaultDatabasesStatus } from "./DefaultDatabasesStatus";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -248,6 +249,9 @@ export function ProjectDatabasePanel({ projectId, projectSlug }: ProjectDatabase
         </TabsList>
 
         <TabsContent value="tables" className="mt-3 space-y-4">
+          {/* Default databases status */}
+          <DefaultDatabasesStatus projectSlug={projectSlug} />
+
           {/* Actions bar */}
           <div className="flex items-center justify-end gap-2">
             <Button variant="ghost" size="sm" onClick={() => void refreshTables()} className="h-7 text-xs">
