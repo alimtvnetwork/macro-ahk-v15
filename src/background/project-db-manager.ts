@@ -107,7 +107,73 @@ export async function initProjectDb(slug: string, extraSchema?: string): Promise
     const db = await tryLoadDb(sql, slug, schema);
     projectDbs.set(slug, db);
 
+    // Ensure default databases (KV, Meta) exist on every project init
+    ensureDefaultDatabases(db, slug);
+
     return buildProjectManager(slug);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Default database bootstrapping                                     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Converts a DefaultDatabaseDef column list into a CREATE TABLE IF NOT EXISTS
+ * SQL statement and seeds the ProjectDatabases registry row.
+ */
+function ensureDefaultDatabases(db: SqlJsDatabase, slug: string): void {
+    for (const def of DEFAULT_PROJECT_DATABASES) {
+        // Create each table from the definition
+        for (const tableDef of def.schema.tables) {
+            const ddl = buildCreateTableSql(tableDef);
+            try {
+                db.run(ddl);
+            } catch (err) {
+                console.warn(
+                    `[project-db] Failed to create default table "${tableDef.TableName}" ` +
+                    `for project "${slug}": ${err instanceof Error ? err.message : String(err)}`,
+                );
+            }
+        }
+
+        // Register in ProjectDatabases if that table exists
+        try {
+            const existing = db.exec(
+                `SELECT COUNT(*) FROM ProjectDatabases WHERE DatabaseName = '${def.databaseName}'`,
+            );
+            const count = existing.length > 0 ? (existing[0].values[0][0] as number) : 0;
+            if (count === 0) {
+                db.run(
+                    `INSERT INTO ProjectDatabases (DatabaseName, Namespace, DatabaseKindId, IsDefault, Description)
+                     VALUES (?, 'default', ?, 1, ?)`,
+                    [def.databaseName, def.databaseKindId, def.description],
+                );
+            }
+        } catch {
+            // ProjectDatabases table may not exist yet if MetaTables schema hasn't run
+        }
+    }
+
+    console.log(`[project-db] Default databases ensured for project "${slug}"`);
+}
+
+/** Builds a CREATE TABLE IF NOT EXISTS statement from a table definition. */
+function buildCreateTableSql(
+    tableDef: DefaultDatabaseDef["schema"]["tables"][number],
+): string {
+    const cols = [
+        "Id INTEGER PRIMARY KEY AUTOINCREMENT",
+        ...tableDef.Columns.map((c) => {
+            let col = `${c.Name} ${c.Type}`;
+            if (!c.Nullable) col += " NOT NULL";
+            if (c.Unique) col += " UNIQUE";
+            if (c.Default !== undefined) col += ` DEFAULT ${c.Default}`;
+            return col;
+        }),
+        "CreatedAt TEXT NOT NULL DEFAULT (datetime('now'))",
+        "UpdatedAt TEXT NOT NULL DEFAULT (datetime('now'))",
+    ];
+    return `CREATE TABLE IF NOT EXISTS ${tableDef.TableName} (${cols.join(", ")});`;
 }
 
 async function tryLoadDb(sql: SqlJs, slug: string, schema: string): Promise<SqlJsDatabase> {
