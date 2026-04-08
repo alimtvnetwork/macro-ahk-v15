@@ -27,19 +27,19 @@ curl -fsSL https://github.com/riseup-asia/macro-ahk/releases/latest/download/ins
 **Windows (PowerShell):**
 
 ```powershell
-.\install-extension.ps1 -InstallDir "D:\marco-extension\v2.112.0"
+.\install.ps1 -InstallDir "D:\marco-extension\v2.115.0"
 ```
 
 **Specific version + custom directory:**
 
 ```powershell
-.\install-extension.ps1 -Version v2.112.0 -InstallDir "D:\marco-extension\v2.112.0"
+.\install.ps1 -Version v2.115.0 -InstallDir "D:\marco-extension\v2.115.0"
 ```
 
 **Linux / macOS:**
 
 ```bash
-./install-extension.sh --version v2.112.0 --dir ~/marco-extension/v2.112.0
+./install.sh --version v2.115.0 --dir ~/marco-extension/v2.115.0
 ```
 
 ### Installer Options
