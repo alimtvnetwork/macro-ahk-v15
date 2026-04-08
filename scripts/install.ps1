@@ -90,4 +90,4 @@ Write-Host ""
 Write-Host "  To update later, re-run this script -- it replaces the folder."
 Write-Host ""
 Write-Host "  Example with custom directory:" -ForegroundColor DarkGray
-Write-Host "    .\install-extension.ps1 -InstallDir `"D:\marco-extension\$Version`"" -ForegroundColor DarkGray
+Write-Host "    .\install.ps1 -InstallDir `"D:\marco-extension\$Version`"" -ForegroundColor DarkGray
