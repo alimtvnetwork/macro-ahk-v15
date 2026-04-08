@@ -532,6 +532,7 @@ function handleRenameProgress(
  */
 export function removeBulkRenameDialog(): void {
   cancelRename();
+  _currentInputs = null;
   const d = document.getElementById('ahk-loop-rename-dialog');
   if (d) {
     if (typeof (d as DraggableElement).__cleanupDrag === 'function') {
