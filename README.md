@@ -2,7 +2,7 @@
 
 > **Browser automation for workspace management, credit monitoring, and AI-driven macro execution** — built as a Manifest V3 Chrome extension with a modular standalone script architecture.
 
-**Current Version:** v2.112.0 | **Macro Controller:** v7.41
+**Current Version:** v2.115.0 | **Macro Controller:** v7.41
 
 ---
 
@@ -13,13 +13,13 @@
 **Windows (PowerShell):**
 
 ```powershell
-irm https://github.com/riseup-asia/macro-ahk/releases/latest/download/install-extension.ps1 | iex
+irm https://github.com/riseup-asia/macro-ahk/releases/latest/download/install.ps1 | iex
 ```
 
 **Linux / macOS (Bash):**
 
 ```bash
-curl -fsSL https://github.com/riseup-asia/macro-ahk/releases/latest/download/install-extension.sh | bash
+curl -fsSL https://github.com/riseup-asia/macro-ahk/releases/latest/download/install.sh | bash
 ```
 
 ### Custom Directory Install
@@ -27,19 +27,19 @@ curl -fsSL https://github.com/riseup-asia/macro-ahk/releases/latest/download/ins
 **Windows (PowerShell):**
 
 ```powershell
-.\install-extension.ps1 -InstallDir "D:\marco-extension\v2.112.0"
+.\install.ps1 -InstallDir "D:\marco-extension\v2.115.0"
 ```
 
 **Specific version + custom directory:**
 
 ```powershell
-.\install-extension.ps1 -Version v2.112.0 -InstallDir "D:\marco-extension\v2.112.0"
+.\install.ps1 -Version v2.115.0 -InstallDir "D:\marco-extension\v2.115.0"
 ```
 
 **Linux / macOS:**
 
 ```bash
-./install-extension.sh --version v2.112.0 --dir ~/marco-extension/v2.112.0
+./install.sh --version v2.115.0 --dir ~/marco-extension/v2.115.0
 ```
 
 ### Installer Options
@@ -48,22 +48,22 @@ curl -fsSL https://github.com/riseup-asia/macro-ahk/releases/latest/download/ins
 
 | Flag | Description | Example |
 |------|-------------|---------|
-| `-Version` | Pin a specific release | `-Version v2.112.0` |
-| `-InstallDir` | Custom install directory | `-InstallDir D:\marco-extension\v2.112.0` |
+| `-Version` | Pin a specific release | `-Version v2.115.0` |
+| `-InstallDir` | Custom install directory | `-InstallDir D:\marco-extension\v2.115.0` |
 | `-Repo` | Override GitHub repository | `-Repo riseup-asia/macro-ahk` |
 
 **Linux / macOS (Bash):**
 
 | Flag | Description | Example |
 |------|-------------|---------|
-| `--version` | Pin a specific release | `--version v2.112.0` |
-| `--dir` | Custom install directory | `--dir ~/marco-extension/v2.112.0` |
+| `--version` | Pin a specific release | `--version v2.115.0` |
+| `--dir` | Custom install directory | `--dir ~/marco-extension/v2.115.0` |
 | `--repo` | Override GitHub repository | `--repo riseup-asia/macro-ahk` |
 
 ### Manual Install
 
 1. Download `marco-extension-v{VERSION}.zip` from [Releases](https://github.com/riseup-asia/macro-ahk/releases)
-2. Extract to a folder (e.g., `D:\marco-extension\v2.112.0`)
+2. Extract to a folder (e.g., `D:\marco-extension\v2.115.0`)
 3. Open `chrome://extensions` (or `edge://extensions`)
 4. Enable **Developer mode** (toggle in top-right)
 5. Click **Load unpacked** and select the extracted folder

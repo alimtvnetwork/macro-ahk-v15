@@ -2,9 +2,9 @@
 # Marco Extension — Download & Install Helper (PowerShell)
 #
 # Usage:
-#   irm https://github.com/<OWNER>/<REPO>/releases/latest/download/install-extension.ps1 | iex
+#   irm https://github.com/<OWNER>/<REPO>/releases/latest/download/install.ps1 | iex
 #   — or —
-#   .\install-extension.ps1 [-Version v2.112.0] [-InstallDir "D:\marco-extension\v2.112.0"]
+#   .\install.ps1 [-Version v2.115.0] [-InstallDir "D:\marco-extension\v2.115.0"]
 #
 # Default install directory:
 #   $HOME\marco-extension\<version>\
@@ -90,4 +90,4 @@ Write-Host ""
 Write-Host "  To update later, re-run this script -- it replaces the folder."
 Write-Host ""
 Write-Host "  Example with custom directory:" -ForegroundColor DarkGray
-Write-Host "    .\install-extension.ps1 -InstallDir `"D:\marco-extension\$Version`"" -ForegroundColor DarkGray
+Write-Host "    .\install.ps1 -InstallDir `"D:\marco-extension\$Version`"" -ForegroundColor DarkGray

@@ -3,9 +3,9 @@
 # Marco Extension — Download & Install Helper
 #
 # Usage:
-#   curl -fsSL https://github.com/<OWNER>/<REPO>/releases/latest/download/install-extension.sh | bash
+#   curl -fsSL https://github.com/<OWNER>/<REPO>/releases/latest/download/install.sh | bash
 #   — or —
-#   ./install-extension.sh [--version v2.112.0] [--dir ~/marco-extension/v2.112.0]
+#   ./install.sh [--version v2.115.0] [--dir ~/marco-extension/v2.115.0]
 #
 # Default install directory:
 #   $HOME/marco-extension/<version>/
@@ -32,7 +32,7 @@ while [[ $# -gt 0 ]]; do
     --dir|-d)     INSTALL_DIR="$2"; shift 2 ;;
     --repo|-r)    REPO="$2"; shift 2 ;;
     --help|-h)
-      echo "Usage: install-extension.sh [--version vX.Y.Z] [--dir PATH] [--repo owner/repo]"
+      echo "Usage: install.sh [--version vX.Y.Z] [--dir PATH] [--repo owner/repo]"
       exit 0
       ;;
     *) echo "Unknown option: $1"; exit 1 ;;
@@ -101,4 +101,4 @@ echo ""
 echo "  To update later, re-run this script -- it replaces the folder."
 echo ""
 echo "  Example with custom directory:"
-echo "    ./install-extension.sh --dir ~/marco-extension/${VERSION}"
+echo "    ./install.sh --dir ~/marco-extension/${VERSION}"

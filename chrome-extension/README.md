@@ -2,6 +2,24 @@
 
 Browser automation for workspace and credit management.
 
+## Quick Install
+
+**Windows (PowerShell):**
+
+```powershell
+irm https://github.com/riseup-asia/macro-ahk/releases/latest/download/install.ps1 | iex
+```
+
+**Linux / macOS (Bash):**
+
+```bash
+curl -fsSL https://github.com/riseup-asia/macro-ahk/releases/latest/download/install.sh | bash
+```
+
+See the [root README](../README.md) for all installer options and manual install steps.
+
+---
+
 ## Development
 
 ```bash
