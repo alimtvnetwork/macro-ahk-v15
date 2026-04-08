@@ -19,7 +19,7 @@ irm https://github.com/riseup-asia/macro-ahk/releases/latest/download/install.ps
 **Linux / macOS (Bash):**
 
 ```bash
-curl -fsSL https://github.com/riseup-asia/macro-ahk/releases/latest/download/install-extension.sh | bash
+curl -fsSL https://github.com/riseup-asia/macro-ahk/releases/latest/download/install.sh | bash
 ```
 
 ### Custom Directory Install

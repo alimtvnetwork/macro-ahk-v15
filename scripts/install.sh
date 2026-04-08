@@ -3,7 +3,7 @@
 # Marco Extension — Download & Install Helper
 #
 # Usage:
-#   curl -fsSL https://github.com/<OWNER>/<REPO>/releases/latest/download/install-extension.sh | bash
+#   curl -fsSL https://github.com/<OWNER>/<REPO>/releases/latest/download/install.sh | bash
 #   — or —
 #   ./install.sh [--version v2.115.0] [--dir ~/marco-extension/v2.115.0]
 #

@@ -2,7 +2,7 @@
 # Marco Extension — Download & Install Helper (PowerShell)
 #
 # Usage:
-#   irm https://github.com/<OWNER>/<REPO>/releases/latest/download/install-extension.ps1 | iex
+#   irm https://github.com/<OWNER>/<REPO>/releases/latest/download/install.ps1 | iex
 #   — or —
 #   .\install.ps1 [-Version v2.115.0] [-InstallDir "D:\marco-extension\v2.115.0"]
 #
