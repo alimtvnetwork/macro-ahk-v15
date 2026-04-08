@@ -66,8 +66,20 @@ export function ProjectDatabasePanel({ projectId, projectSlug }: ProjectDatabase
   const [newColumns, setNewColumns] = useState<ColumnDefinition[]>([
     { name: "", type: "TEXT" },
   ]);
+  const [modalError, setModalError] = useState<ErrorModel | null>(null);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
 
-  const refreshTables = useCallback(async () => {
+  const showError = useCallback((err: unknown, operation: string, context?: Record<string, unknown>) => {
+    const errModel = createErrorModel(err, {
+      source: "Database",
+      operation,
+      projectName: projectSlug,
+      contextJson: context ? JSON.stringify(context) : undefined,
+      suggestedAction: "Ensure the project slug is set. Try selecting a project from the project list first.",
+    });
+    setModalError(errModel);
+    setErrorModalOpen(true);
+  }, [projectSlug]);
     setLoading(true);
     try {
       const result = await sendMessage<{ isOk: boolean; tables?: TableInfo[] }>({
