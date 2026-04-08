@@ -129,12 +129,12 @@ function buildDropdownHeader(ctx: PromptContext, taskNextDeps: TaskNextDeps): HT
 /** Build the manual "Load" button for refreshing prompts from DB. */
 function buildLoadButton(ctx: PromptContext, taskNextDeps: TaskNextDeps): HTMLElement {
   const btn = document.createElement('span');
-  btn.textContent = '🔄 Load';
+  btn.textContent = '↻ Load';
   btn.title = 'Reload prompts from database';
-  btn.style.cssText = 'cursor:pointer;padding:2px 6px;border-radius:4px;font-size:9px;color:' + cPrimaryLight + ';background:rgba(124,58,237,0.15);';
+  btn.style.cssText = 'cursor:pointer;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:600;color:#fff;background:' + cPrimary + ';border:1px solid rgba(255,255,255,0.1);';
 
-  btn.onmouseover = function() { btn.style.background = 'rgba(124,58,237,0.3)'; };
-  btn.onmouseout = function() { btn.style.background = 'rgba(124,58,237,0.15)'; };
+  btn.onmouseover = function() { btn.style.background = cPrimaryLight; btn.style.transform = 'scale(1.05)'; };
+  btn.onmouseout = function() { btn.style.background = cPrimary; btn.style.transform = ''; };
 
   btn.onclick = function(e: Event) {
     e.stopPropagation();
