@@ -351,6 +351,7 @@ export function ProjectDatabasePanel({ projectId, projectSlug }: ProjectDatabase
           />
         </TabsContent>
       </Tabs>
+      <ErrorModal error={modalError} open={errorModalOpen} onOpenChange={setErrorModalOpen} />
     </div>
   );
 }
