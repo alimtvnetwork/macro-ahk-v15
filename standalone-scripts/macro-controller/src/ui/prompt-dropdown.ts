@@ -129,12 +129,12 @@ function buildDropdownHeader(ctx: PromptContext, taskNextDeps: TaskNextDeps): HT
 /** Build the manual "Load" button for refreshing prompts from DB. */
 function buildLoadButton(ctx: PromptContext, taskNextDeps: TaskNextDeps): HTMLElement {
   const btn = document.createElement('span');
-  btn.textContent = '🔄 Load';
+  btn.textContent = '↻ Load';
   btn.title = 'Reload prompts from database';
-  btn.style.cssText = 'cursor:pointer;padding:2px 6px;border-radius:4px;font-size:9px;color:' + cPrimaryLight + ';background:rgba(124,58,237,0.15);';
+  btn.style.cssText = 'cursor:pointer;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:600;color:#fff;background:' + cPrimary + ';border:1px solid rgba(255,255,255,0.1);';
 
-  btn.onmouseover = function() { btn.style.background = 'rgba(124,58,237,0.3)'; };
-  btn.onmouseout = function() { btn.style.background = 'rgba(124,58,237,0.15)'; };
+  btn.onmouseover = function() { btn.style.background = cPrimaryLight; btn.style.transform = 'scale(1.05)'; };
+  btn.onmouseout = function() { btn.style.background = cPrimary; btn.style.transform = ''; };
 
   btn.onclick = function(e: Event) {
     e.stopPropagation();
@@ -152,6 +152,10 @@ function handleLoadClick(btn: HTMLElement, ctx: PromptContext, taskNextDeps: Tas
   forceLoadFromDb().then(function() {
     log('[PromptDropdown] Manual load complete — re-rendering', 'success');
     renderPromptsDropdown(ctx, taskNextDeps);
+  }).catch(function(err: unknown) {
+    log('[PromptDropdown] Manual load failed: ' + (err instanceof Error ? err.message : String(err)), 'error');
+    btn.textContent = '↻ Load';
+    btn.style.pointerEvents = '';
   });
 }
 
@@ -260,9 +264,50 @@ function _rebindDropdownListeners(
   taskNextDeps: TaskNextDeps,
 ): void {
   _cleanupTaskNextSubs();
+  _rebindHeader(promptsDropdown, ctx, taskNextDeps);
+  _rebindTaskNextSubmenu(promptsDropdown, ctx, taskNextDeps);
   _rebindFilterChips(promptsDropdown, entries, ctx, taskNextDeps);
   _rebindPromptItems(promptsDropdown, entries, promptsCfg, ctx, taskNextDeps);
   _rebindAddButton(promptsDropdown, ctx, taskNextDeps);
+}
+
+/** Re-attach the Load button handler in the dropdown header. */
+function _rebindHeader(container: HTMLElement, ctx: PromptContext, taskNextDeps: TaskNextDeps): void {
+  // Header is the first child — find Load button inside it
+  const header = container.firstElementChild as HTMLElement;
+  if (!header) return;
+  // Replace the old Load button with a fresh one
+  const oldLoadBtn = header.querySelector('span[title="Reload prompts from database"]') as HTMLElement;
+  if (oldLoadBtn) {
+    const newLoadBtn = buildLoadButton(ctx, taskNextDeps);
+    oldLoadBtn.replaceWith(newLoadBtn);
+  }
+}
+
+/** Rebuild the Task Next submenu after snapshot restore. */
+function _rebindTaskNextSubmenu(container: HTMLElement, ctx: PromptContext, taskNextDeps: TaskNextDeps): void {
+  // Find the Task Next item in the dropdown (second child after header)
+  for (const child of Array.from(container.children)) {
+    const el = child as HTMLElement;
+    if (el.textContent?.includes('Task Next')) {
+      // Remove old static item and re-render the submenu in its place
+      const parent = el.parentElement;
+      if (parent) {
+        const idx = Array.from(parent.children).indexOf(el);
+        el.remove();
+        // Build fresh Task Next submenu
+        const tempContainer = document.createElement('div');
+        renderTaskNextSubmenu(tempContainer, ctx, taskNextDeps);
+        const newItem = tempContainer.firstElementChild;
+        if (newItem && parent.children[idx]) {
+          parent.insertBefore(newItem, parent.children[idx]);
+        } else if (newItem) {
+          parent.appendChild(newItem);
+        }
+      }
+      break;
+    }
+  }
 }
 
 /** Remove stale Task Next sub-menus from DOM. */
@@ -523,31 +568,37 @@ function renderPromptItem(
 ): HTMLElement {
   const item = document.createElement('div');
   item.setAttribute('data-prompt-idx', String(idx));
-  item.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:6px 8px;cursor:pointer;font-size:10px;color:#c9a8ef;border-bottom:1px solid rgba(124,58,237,0.15);';
+  const hasText = Boolean(p.text);
+  item.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:6px 8px;cursor:pointer;font-size:10px;color:' + (hasText ? '#c9a8ef' : '#6b5a8a') + ';border-bottom:1px solid rgba(124,58,237,0.15);' + (hasText ? '' : 'opacity:0.6;');
   item.onmouseover = function() { (this as HTMLElement).style.background = cBtnMenuHover; };
   item.onmouseout = function() { (this as HTMLElement).style.background = 'transparent'; };
 
   const badge = document.createElement('span');
   badge.textContent = String(idx + 1);
-  badge.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:3px;background:' + cPrimary + ';color:' + cPanelFg + ';font-size:8px;font-weight:700;margin-right:6px;flex-shrink:0;';
+  badge.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:3px;background:' + (hasText ? cPrimary : 'rgba(124,58,237,0.3)') + ';color:' + cPanelFg + ';font-size:8px;font-weight:700;margin-right:6px;flex-shrink:0;';
   item.appendChild(badge);
 
   const nameSpan = document.createElement('span');
-  nameSpan.textContent = p.name;
+  nameSpan.textContent = p.name + (hasText ? '' : ' (text not loaded)');
   nameSpan.style.cssText = 'flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
-  nameSpan.title = p.text || '';
+  nameSpan.title = p.text || 'Prompt text not available — click Load to refresh';
   item.appendChild(nameSpan);
 
   const actions = document.createElement('span');
   actions.style.cssText = 'display:flex;align-items:center;gap:2px;margin-left:4px;flex-shrink:0;';
 
-  if (p.text) {
+  if (hasText) {
     appendPromptActions(actions, p, promptsDropdown, promptsCfg, ctx, taskNextDeps);
     item.onclick = function(e: Event) {
       if (actions.contains(e.target as Node)) return;
       log('Prompt clicked: "' + p.name + '" (' + p.text.length + ' chars)', 'info');
       pasteIntoEditor(p.text, promptsCfg, getByXPathAsElement);
       promptsDropdown.style.display = 'none';
+    };
+  } else {
+    // Prompt text not loaded — show a helpful message on click
+    item.onclick = function() {
+      showPasteToast('⚠️ Prompt text not loaded — click ↻ Load to refresh', true);
     };
   }
   item.appendChild(actions);
