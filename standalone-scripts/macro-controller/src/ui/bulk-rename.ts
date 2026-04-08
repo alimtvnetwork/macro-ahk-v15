@@ -241,7 +241,7 @@ function _createRenameTitleBar(panel: HTMLElement, count: number): HTMLElement {
   const closeBtnTitle = document.createElement('span');
   closeBtnTitle.style.cssText = 'cursor:pointer;color:#94a3b8;font-size:14px;padding:0 4px;';
   closeBtnTitle.textContent = '✕';
-  closeBtnTitle.onclick = function () { removeBulkRenameDialog(); };
+  closeBtnTitle.onclick = function () { if (_currentInputs) { _autoSave(_currentInputs); } removeBulkRenameDialog(); };
   titleBar.appendChild(titleText);
   titleBar.appendChild(closeBtnTitle);
 
