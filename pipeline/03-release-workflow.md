@@ -11,10 +11,20 @@ Steps 1–11 are identical to the CI workflow (lint → test → build).
 After build, the release adds:
 
 ```
-12. Package assets   → Create ZIP files for each component
-13. Generate notes   → Auto-generate release notes from git history
-14. GitHub Release    → Create tagged release with all assets
+12. Strip source maps → Delete all .map files from chrome-extension/dist
+13. Package assets    → Create ZIP files for each component
+14. Generate notes    → Auto-generate release notes from git history
+15. GitHub Release     → Create tagged release with all assets
 ```
+
+## Source Map Removal
+
+Source maps are **never shipped in release assets**. This is enforced at two levels:
+
+1. **Build config** — `vite.config.extension.ts` sets `sourcemap: false` in production mode
+2. **Release safety net** — The workflow runs `find chrome-extension/dist -name '*.map' -delete` before zipping, catching any maps that might slip through config changes
+
+Standalone scripts (SDK, XPath, Macro Controller) also default to `sourcemap: false` in production mode via their respective Vite configs.
 
 ## Release Assets Produced
 
