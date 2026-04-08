@@ -262,23 +262,30 @@ export function ProjectDatabasePanel({ projectId, projectSlug }: ProjectDatabase
       </div>
 
       {/* Database usage progress bar */}
-      <div className="flex items-center gap-2">
-        <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-300 ${
-              userDbCount >= MAX_USER_DATABASES
-                ? "bg-destructive"
-                : userDbCount >= MAX_USER_DATABASES * 0.8
-                  ? "bg-yellow-500"
-                  : "bg-primary"
-            }`}
-            style={{ width: `${Math.min((userDbCount / MAX_USER_DATABASES) * 100, 100)}%` }}
-          />
-        </div>
-        <span className="text-[10px] text-muted-foreground whitespace-nowrap">
-          {Math.round((userDbCount / MAX_USER_DATABASES) * 100)}%
-        </span>
-      </div>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="flex items-center gap-2 cursor-default">
+            <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-300 ${
+                  userDbCount >= MAX_USER_DATABASES
+                    ? "bg-destructive"
+                    : userDbCount >= MAX_USER_DATABASES * 0.8
+                      ? "bg-yellow-500"
+                      : "bg-primary"
+                }`}
+                style={{ width: `${Math.min((userDbCount / MAX_USER_DATABASES) * 100, 100)}%` }}
+              />
+            </div>
+            <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+              {Math.round((userDbCount / MAX_USER_DATABASES) * 100)}%
+            </span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" className="text-xs">
+          {userDbCount} of {MAX_USER_DATABASES} user databases used
+        </TooltipContent>
+      </Tooltip>
 
       <Tabs defaultValue="tables" className="w-full">
         <TabsList className="h-7">
