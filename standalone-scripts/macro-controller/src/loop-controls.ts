@@ -8,7 +8,7 @@
  */
 
 import { log, logSub } from './logging';
-import { nsCallTyped, nsReadTyped, type NsPathMap } from './api-namespace';
+import { nsCallTyped, nsReadTyped } from './api-namespace';
 
 const NS_UPDATE_START_STOP: '_internal.updateStartStopBtn' = '_internal.updateStartStopBtn';
 import { showToast, setStopLoopCallback } from './toast';
