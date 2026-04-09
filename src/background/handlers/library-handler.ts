@@ -473,67 +473,47 @@ export interface LibraryExport {
     }>;
 }
 
-export async function handleExportLibrary(): Promise<{ bundle: LibraryExport }> {
-    const db = getDb();
-
-    // Export assets
-    const assetStmt = db.prepare("SELECT * FROM SharedAsset ORDER BY Name ASC");
+function exportAssets(db: SqlJsDatabase): LibraryExport["assets"] {
+    const stmt = db.prepare("SELECT * FROM SharedAsset ORDER BY Name ASC");
     const assets: LibraryExport["assets"] = [];
-    while (assetStmt.step()) {
-        const row = assetStmt.getAsObject() as unknown as SharedAsset;
+    while (stmt.step()) {
+        const row = stmt.getAsObject() as unknown as SharedAsset;
         let content: unknown;
-        try {
-            content = JSON.parse(row.ContentJson);
-        } catch {
-            content = row.ContentJson;
-        }
-        assets.push({
-            type: row.Type,
-            slug: row.Slug,
-            name: row.Name,
-            version: row.Version,
-            content,
-        });
+        try { content = JSON.parse(row.ContentJson); } catch { content = row.ContentJson; }
+        assets.push({ type: row.Type, slug: row.Slug, name: row.Name, version: row.Version, content });
     }
-    assetStmt.free();
+    stmt.free();
+    return assets;
+}
 
-    // Export groups with members
-    const groupStmt = db.prepare("SELECT * FROM ProjectGroup ORDER BY Name ASC");
+function exportGroups(db: SqlJsDatabase): LibraryExport["groups"] {
+    const stmt = db.prepare("SELECT * FROM ProjectGroup ORDER BY Name ASC");
     const groups: LibraryExport["groups"] = [];
-    while (groupStmt.step()) {
-        const row = groupStmt.getAsObject() as unknown as ProjectGroup;
-        const memberResult = db.exec(
-            "SELECT ProjectId FROM ProjectGroupMember WHERE GroupId = ?",
-            [row.Id],
-        );
-        const memberProjectIds = memberResult.length > 0
-            ? memberResult[0].values.map((v) => v[0] as number)
-            : [];
-
+    while (stmt.step()) {
+        const row = stmt.getAsObject() as unknown as ProjectGroup;
+        const memberResult = db.exec("SELECT ProjectId FROM ProjectGroupMember WHERE GroupId = ?", [row.Id]);
+        const memberProjectIds = memberResult.length > 0 ? memberResult[0].values.map((v) => v[0] as number) : [];
         let sharedSettings: unknown = null;
         if (row.SharedSettingsJson) {
-            try {
-                sharedSettings = JSON.parse(row.SharedSettingsJson);
-            } catch {
-                sharedSettings = row.SharedSettingsJson;
-            }
+            try { sharedSettings = JSON.parse(row.SharedSettingsJson); } catch { sharedSettings = row.SharedSettingsJson; }
         }
-
-        groups.push({
-            name: row.Name,
-            sharedSettings,
-            memberProjectIds,
-        });
+        groups.push({ name: row.Name, sharedSettings, memberProjectIds });
     }
-    groupStmt.free();
+    stmt.free();
+    return groups;
+}
 
+export async function handleExportLibrary(): Promise<{ bundle: LibraryExport }> {
+    const db = getDb();
     return {
         bundle: {
             exportVersion: "1.0",
             exportedAt: new Date().toISOString(),
-            assets,
-            groups,
+            assets: exportAssets(db),
+            groups: exportGroups(db),
         },
+    };
+}
     };
 }
 
