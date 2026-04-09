@@ -813,6 +813,7 @@ export function LibraryView() {
         onSync={handleSync}
         onDelete={handleDelete}
         onLinkStateChange={handleLinkStateChange}
+        onRefresh={loadData}
       />
     );
   }
