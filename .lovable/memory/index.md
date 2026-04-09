@@ -1,10 +1,10 @@
 # Memory: index.md
-Updated: just now
+Updated: 2026-04-09
 
 # Project Memory
 
 ## Core
-Rise Up Macro Chrome extension + standalone scripts. Extension v2.115.0, Macro Controller v7.41.
+Rise Up Macro Chrome extension + standalone scripts. Extension v2.128.0, Macro Controller v7.41.
 Never modify files in `skipped/` folders — read-only archives.
 Never modify `.release/` folder — keep out of reach.
 Version bump (at least minor) on every code change across all version files.
@@ -17,12 +17,10 @@ All ERROR logs MUST include exact file path, what was missing, and reasoning —
 CODE RED: Every file/path error MUST log exact path + missing item + reason. No generic "file not found". No exceptions.
 Dark-only theme enforced — never add light mode or theme toggle.
 Auth token utilities live in SDK (AuthTokenUtils static class on marco.authUtils). Controller delegates to SDK at runtime.
-Error logs MUST use RiseupAsiaMacroExt.Logger.error(fn, msg, err) — never bare log() for errors. Every catch must log.
-No `any` types in macro-controller src/ (tests excluded). All params typed via globals.d.ts interfaces.
 
 ## Memories
 - [Reliability report v3](mem://workflow/reliability-report-v3) — AI handoff success at 91%, failure map, corrective actions
-- [Versioning policy](mem://workflow/versioning-policy) — Unified version across manifest, constants.ts, standalone scripts
+- [Versioning policy](mem://workflow/version-synchronization-v3) — Unified v2.128.0 across manifest, constants.ts, standalone scripts, xpath
 - [Suggestions convention](mem://workflow/suggestions-convention) — Single-file tracker at .lovable/memory/suggestions/
 - [Skipped folders policy](mem://constraints/skipped-folders) — Never edit skipped/ or .release/ folders
 - [v1.72.3 RCA & Fix Reference](mem://audit/v1.72.3-vs-current-audit-report) — Root cause analysis for broken prompts, injection, next buttons; fix recipes for future regressions
@@ -30,7 +28,6 @@ No `any` types in macro-controller src/ (tests excluded). All params typed via g
 - [v2.112.0 Stale Prompt Text RCA](mem://audit/v2.112.0-stale-prompt-text-rca) — Root cause: hardcoded fallback texts were stale summaries; computeBundledVersion excluded text length from hash
 - [Sourcemap strategy](mem://architecture/sourcemap-strategy) — Dev (-d) = inline source maps; production (default) = no source maps
 - [Error logging requirements](mem://standards/error-logging-requirements) — All errors must include exact path, missing item, and reasoning for AI diagnosis
-- [Error logging via namespace logger](mem://standards/error-logging-via-namespace-logger) — All errors use RiseupAsiaMacroExt.Logger, every catch logs, no any types
 - [File path error logging code-red](mem://constraints/file-path-error-logging-code-red) — CODE RED: every file/path error must log exact path, missing item, reason — no exceptions
 - [Dark-only theme](mem://preferences/dark-only-theme) — Always dark theme, no toggle, reduced overlay opacity (40%)
 - [Rename preset persistence](mem://features/macro-controller/rename-preset-persistence) — Rename presets saved to project-scoped IndexedDB via generic ProjectKvStore, auto-save on Apply/Close

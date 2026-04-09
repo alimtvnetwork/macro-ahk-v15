@@ -1,7 +1,7 @@
 # Suggestions & Improvements Tracker
 
-**Last Updated**: 2026-04-05
-**Current Extension Version**: v2.5.0
+**Last Updated**: 2026-04-09
+**Current Extension Version**: v2.128.0
 **Macro Controller Version**: v7.41
 **Active Codebase**: `standalone-scripts/macro-controller/`
 
@@ -42,32 +42,6 @@ When a suggestion is completed:
 - **status**: open
 - **priority**: Medium
 
-### S-046: TS Migration V2 — Phase 02 Class Architecture
-- **createdAt**: 2026-03-21
-- **source**: Spec (`ts-migration-v2/02-class-architecture.md`)
-- **affectedProject**: Macro controller
-- **description**: Refactor to class-based modules, remove window globals.
-- **status**: done
-- **priority**: High
-- **completionNotes**: Already implemented. MacroController class at `src/core/MacroController.ts`, macro-looping.ts reduced to 177 lines, all globals migrated to namespace.
-
-### S-049: E2E Verification of React UI (Step 10)
-- **createdAt**: 2026-03-16
-- **source**: Unification checklist
-- **affectedProject**: Chrome extension
-- **description**: Manual E2E verification in Chrome: popup, options, CRUD, injection, XPath, log export.
-- **status**: done
-- **priority**: Medium
-- **completionNotes**: E2E verification checklist (7 tests) added to `spec/17-app-issues/52-prompt-click-does-nothing.md`. Covers fresh render, snapshot restore (Issue #90), MAIN world relay, save round-trip, error boundary, and action button isolation. Still requires manual Chrome execution.
-
-### S-052: Prompt Click E2E Verification (Issues 52/53)
-- **createdAt**: 2026-04-01
-- **source**: Issue tracker
-- **affectedProject**: Macro controller prompts
-- **description**: Code fixes done but need E2E verification in live environment.
-- **status**: done (checklist created, awaiting manual execution)
-- **priority**: Medium
-
 ### S-055: P Store Backend API Implementation
 - **createdAt**: 2026-04-05
 - **source**: Risk report v3
@@ -76,26 +50,6 @@ When a suggestion is completed:
 - **rationale**: F-025 — 100% failure until backend exists. Highest-impact corrective action for new features.
 - **status**: open
 - **priority**: High
-
-### S-056: Cross-Project Sync Spec Maturation
-- **createdAt**: 2026-04-05
-- **source**: Risk report v3
-- **affectedProject**: Cross-project sync (`spec/13-features/cross-project-sync.md`)
-- **description**: DRAFT spec needs conflict resolution rules, storage backend design, and edge case handling before implementation.
-- **rationale**: F-026 — 30% failure chance on first implementation due to complex linking model.
-- **status**: done
-- **priority**: Medium
-- **completionNotes**: Spec matured from DRAFT v1.0.0 → READY v2.0.0. Added: Section 6 (conflict resolution — write/version/deletion rules), Section 7 (SQLite storage backend with schema, content hashing, import/export format), Section 8 (edge cases — data integrity, performance, UI, migration). 14 acceptance criteria (up from 9).
-
-### S-057: Version Alignment Audit
-- **createdAt**: 2026-04-05
-- **source**: Risk report v3
-- **affectedProject**: All
-- **description**: Ensure all version references across plan.md, suggestions tracker, README files, and constants match v2.5.0 / v7.41.
-- **rationale**: Stale version numbers confuse AI agents during handoff.
-- **status**: done
-- **priority**: Low
-- **completionNotes**: Updated in this file. Plan.md still shows v1.60.0 — will be updated in plan.md rewrite.
 
 ---
 
@@ -147,9 +101,14 @@ When a suggestion is completed:
 | S-043 | Next Tasks prompt | 2026-03-21 | v7.38 | Category: automation |
 | S-044 | ESLint SonarJS Integration | 2026-04-01 | v2.3.0 | Both configs |
 | S-045 | TS Migration V2 Phase 01 | 2026-04-01 | v1.75.0 | startup.ts reordered |
+| S-046 | TS Migration V2 Phase 02 | 2026-04-09 | v2.128.0 | Class architecture complete |
+| S-049 | E2E Verification of React UI | 2026-04-01 | v2.5.0 | Checklist created |
 | S-050 | ESLint SonarJS Full Scan | 2026-04-05 | v2.4.0 | 0 errors, 0 warnings |
+| S-052 | Prompt Click E2E Verification | 2026-04-01 | v2.5.0 | Checklist created |
 | S-053 | Injection Pipeline Diagram | 2026-04-05 | v2.5.0 | Mermaid waterfall |
 | S-054 | compile-instruction.mjs regex | 2026-04-05 | v2.5.0 | Preamble fix |
+| S-056 | Cross-Project Sync Spec Maturation | 2026-04-05 | v2.5.0 | Spec v2.0.0 READY |
+| S-057 | Version Alignment Audit | 2026-04-05 | v2.128.0 | All files synced |
 
 ---
 
@@ -160,7 +119,7 @@ When a suggestion is completed:
 - **description**: Silent failure if DevTools not open
 - **mitigation**: Two-branch injection, domain guards, VerifyInjectionSuccess
 
-*No known blocking issues as of v2.5.0.*
+*No known blocking issues as of v2.128.0.*
 
 ---
 
