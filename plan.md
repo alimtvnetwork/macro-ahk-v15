@@ -104,7 +104,7 @@ Spec: `spec/13-features/cross-project-sync.md`
 | **Cross-Project Sync** | Phase 1: data layer (4 tables, migration v7, 22 message types, sync engine). Phase 2: Library UI (AssetCard, SyncBadge, PromoteDialog). 45 unit tests. |
 | **UI Polish** | Tailwind hover micro-interactions (Task 4.1), direction-aware view transitions (Task 4.2) |
 | **Build & Docs** | Build verification (Task 2.1), CDP injection docs (Task 3.1), AI onboarding checklist (Task 3.2), LLM guide updated |
-| **Code Quality** | ESLint 1390 → 0 issues, SonarJS integration, TS migration v2 (6 phases), error logging spec (16 swallowed errors inventoried) |
+| **Code Quality** | ESLint 1390 → 0 issues, SonarJS integration, TS migration v2 (6 phases), error logging T1–T5 complete (86 log migrations, 48 silent catches fixed, 11 `any` eliminated, 8 explicit API interfaces), `logError`/`logDebug`/`logConsole`/`logStackTrace` helpers |
 | **Specs Matured** | S-056 Cross-Project Sync (READY v2.0.0), S-052 Prompt Click verification checklist, error logging & type safety spec |
 | **Issues Resolved** | #76–#90: cookie binding, hot-reload, globals migration, auth bridge, injection pipeline, IndexedDB cache, prompt click fix |
 
