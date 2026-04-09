@@ -17,7 +17,7 @@ import { logError } from './error-utils';
 import { showToast } from './toast';
 
 import type { MacroController } from './core/MacroController';
-import type { ControllerState } from './shared-state-runtime';
+import type { ControllerState } from './types/config-types';
 import type { DiagnosticDump } from './types/credit-types';
 import type { RenameHistoryEntry } from './types/workspace-types';
 import type { AutoAttachGroupRuntime } from './types/ui-types';
