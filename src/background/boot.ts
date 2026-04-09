@@ -38,6 +38,18 @@ import { logCaughtError, BgLogTag} from "./bg-logger";
 const BUILD_META_URL = "build-meta.json";
 
 /* ------------------------------------------------------------------ */
+/*  Boot-ready gate                                                    */
+/* ------------------------------------------------------------------ */
+
+let resolveBootReady: () => void;
+
+/** Resolves when boot has bound all handlers. Await in listeners
+ *  that depend on DbManager (e.g. onInstalled seeder). */
+export const bootReady: Promise<void> = new Promise((r) => {
+    resolveBootReady = r;
+});
+
+/* ------------------------------------------------------------------ */
 /*  Boot                                                               */
 /* ------------------------------------------------------------------ */
 
@@ -69,6 +81,7 @@ export async function boot(): Promise<void> {
         step = "bind-handlers";
         setBootStep(step);
         bindAllHandlers(manager);
+        resolveBootReady();
 
         step = "rehydrate-state";
         setBootStep(step);

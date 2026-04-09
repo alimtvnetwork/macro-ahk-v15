@@ -392,7 +392,43 @@ When a rule must be suppressed:
 
 ---
 
-## 9. Dashboard & Reporting
+## 9. Build Artifact Policies
+
+### 9.1 Source Map Exclusion (Mandatory)
+
+Source maps (`.map` files) **MUST NOT** be included in any release or production build artifact.
+
+| Policy | Details |
+|--------|---------|
+| **Vite config** | Set `build.sourcemap: false` in all production Vite configs |
+| **CI/CD enforcement** | Release pipeline MUST delete `.map` files before packaging: `find dist -name '*.map' -delete` |
+| **Dev builds only** | Source maps are permitted only in local dev builds (inline via `-d` flag) |
+| **Verification** | Release pipeline MUST log the count of removed `.map` files for audit |
+
+**Rationale:** Source maps expose internal code structure, file paths, and variable names. They increase archive size and provide no value to end users.
+
+**Enforcement in CI/CD:**
+
+```bash
+# In release pipeline — after build, before packaging
+MAP_COUNT=$(find dist -name '*.map' | wc -l | tr -d ' ')
+find dist -name '*.map' -delete
+echo "Removed ${MAP_COUNT} source map files"
+```
+
+### 9.2 Build Artifact Verification
+
+Before packaging any release asset, the pipeline MUST verify:
+
+| Check | Command | Purpose |
+|-------|---------|---------|
+| No `.map` files | `find dist -name '*.map' -exec false {} +` | Source map exclusion |
+| No `.ts` source files | `find dist -name '*.ts' ! -name '*.d.ts' -exec false {} +` | No raw TypeScript in dist |
+| Version file present | `test -f dist/VERSION` | Version traceability |
+
+---
+
+## 10. Dashboard & Reporting
 
 | Metric | Source | Frequency |
 |--------|--------|-----------|
@@ -404,7 +440,7 @@ When a rule must be suppressed:
 
 ---
 
-## 10. Integration Checklist
+## 11. Integration Checklist
 
 | # | Task | Status |
 |---|------|--------|
