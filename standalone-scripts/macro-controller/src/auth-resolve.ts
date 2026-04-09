@@ -294,8 +294,8 @@ export function getBearerTokenFromCookie(): string {
     cookieDiagState.lastAt = now;
     logCookieDiagnostics(fn, cookies, sessionNames, rawCookie, result.hasTarget);
   } catch (e: unknown) {
-    logError('fn', EXCEPTION reading cookies: ' + toErrorMessage(e));
-    logError('fn', This may happen in sandboxed iframes or restricted contexts);
+    logError('readCookies', 'EXCEPTION reading cookies: ' + toErrorMessage(e));
+    logError('readCookies', 'This may happen in sandboxed iframes or restricted contexts');
   }
 
   return '';
