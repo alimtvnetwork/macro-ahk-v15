@@ -297,7 +297,11 @@ async function executeMove(
       return;
     }
 
-    log('Move response: ' + resp.status + label, resp.ok ? 'success' : 'error');
+    if (resp.ok) {
+      log('Move response: ' + resp.status + label, 'success');
+    } else {
+      logError('ws-move', 'Move response: ' + resp.status + label);
+    }
 
     if (!resp.ok) {
       const bodyPreview = JSON.stringify(resp.data).substring(0, 500);
