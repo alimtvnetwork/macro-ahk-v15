@@ -404,6 +404,8 @@ const OptionsPage = () => {
                 </div>
               ) : selection.section === "storage" ? (
                 <StorageBrowserView />
+              ) : selection.section === "library" ? (
+                <LibraryView />
               ) : selection.section === "api" ? (
                 <ApiExplorerView />
               ) : selection.section === "settings" ? (
