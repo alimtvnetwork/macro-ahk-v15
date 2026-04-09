@@ -37,6 +37,14 @@ vi.mock("../../src/background/db-manager", () => ({
     initDatabases: vi.fn().mockResolvedValue({}),
 }));
 
+vi.mock("../../src/background/injection-cache", () => ({
+    invalidateCacheOnDeploy: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock("../../src/background/cache-warmer", () => ({
+    warmScriptCache: vi.fn().mockResolvedValue({ hit: 0, miss: 0 }),
+}));
+
 installChromeMock();
 
 /* ------------------------------------------------------------------ */
