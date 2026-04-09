@@ -809,7 +809,6 @@ export function LibraryView() {
         onDelete={handleDelete}
         onLinkStateChange={handleLinkStateChange}
       />
-      />
     );
   }
 
