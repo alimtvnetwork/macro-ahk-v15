@@ -10,6 +10,7 @@
  */
 
 import { createAuthApi } from "./auth";
+import { AuthTokenUtils } from "./auth-token-utils";
 import { createCookiesApi } from "./cookies";
 import { createNotifyApi } from "./notify";
 import { createConfigApi, notifyConfigChange } from "./config";
@@ -25,6 +26,7 @@ import { createApiModule } from "./api";
 
 const marco = Object.freeze({
     auth: Object.freeze(createAuthApi()),
+    authUtils: Object.freeze(AuthTokenUtils),
     cookies: Object.freeze(createCookiesApi()),
     config: Object.freeze(createConfigApi()),
     xpath: Object.freeze(createXPathApi()),
