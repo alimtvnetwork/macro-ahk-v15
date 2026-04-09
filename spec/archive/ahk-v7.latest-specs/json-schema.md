@@ -1,4 +1,4 @@
-# JSON-schema.md — Automator v7.9.21 Data Reference
+# json-schema.md — Automator v7.9.21 Data Reference
 
 ## 1. API Response Schema
 
@@ -317,7 +317,7 @@ Last 20 executed JS commands (FIFO, newest first):
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `BrowserExe` | string | `chrome.exe` | Target browser executable |
-| `ScriptVersion` | string | `7.9.21` | Must match `AHK_BUILD_VERSION` in Automator.ahk |
+| `ScriptVersion` | string | `7.18` | Auto-synced from `AHK_BUILD_VERSION` on startup (read-only in practice) |
 | `Debug` | 0\|1 | `1` | Verbose logging |
 | `ConfigWatchIntervalMs` | number | `2000` | Config hot-reload poll (0 = disabled) |
 

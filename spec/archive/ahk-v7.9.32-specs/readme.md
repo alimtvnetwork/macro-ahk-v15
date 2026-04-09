@@ -65,7 +65,7 @@ Browser automation for lovable.dev using AutoHotkey v2 + JavaScript injection.
 ## File Structure
 
 ```
-marco-script-ahk-v7.latest/
+marco-script-ahk-v7.0/
 ├── Automator.ahk               # Main entry point (AHK v2)
 ├── combo.js                    # ComboSwitch embedded script
 ├── macro-looping.js            # MacroLoop embedded script
@@ -74,9 +74,9 @@ marco-script-ahk-v7.latest/
 ├── test-xpath-examples.md      # XPath testing reference
 │
 ├── specs/                      # 📁 All documentation
-│   ├── README.md               # This file
-│   ├── SPEC.md                 # Technical specification
-│   ├── MEMORY.md               # AI learning document
+│   ├── readme.md               # This file
+│   ├── spec.md                 # Technical specification
+│   ├── memory.md               # AI learning document
 │   ├── spec-issues-v6.55.md    # v6.55 issue tracker
 │   ├── spec-issues-v6.56.md    # v6.56 issue tracker
 │   ├── spec-issues-v7.4.md     # v7.4 issue tracker

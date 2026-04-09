@@ -1,4 +1,4 @@
-# MEMORY.md - Automator v7.5 Learning Document
+# memory.md - Automator v7.5 Learning Document
 
 ## Project Evolution
 
@@ -255,8 +255,8 @@ combo.js uses placeholders replaced by AHK:
 
 ### Modified Files
 - `marco-script-ahk-v4/Includes/Combo.ahk` - Removed ALL DevTools opening logic
-- `marco-script-ahk-v4/SPEC.md` - Documented fix + troubleshooting
-- `marco-script-ahk-v4/MEMORY.md` - This section
+- `marco-script-ahk-v4/spec.md` - Documented fix + troubleshooting
+- `marco-script-ahk-v4/memory.md` - This section
 
 ### Key Takeaway
 **AHK MUST NEVER OPEN DEVTOOLS!**
@@ -413,8 +413,8 @@ JS communicates state back to AHK via temporary `document.title` markers:
 | Automator.ahk | Version bump to 5.2 |
 | AutoLoop.ahk | Version bump to 5.2 |
 | config.ini | Version bump to 5.2 |
-| SPEC.md | Documented fast path, backoff retry, version comparison |
-| README.md | Version bump to 5.2 |
+| spec.md | Documented fast path, backoff retry, version comparison |
+| readme.md | Version bump to 5.2 |
 
 ### MutationObserver UI Persistence (combo.js)
 Injected UI panels (ComboSwitch controller, MacroLoop panel) survive SPA navigation and React re-renders:
@@ -482,9 +482,9 @@ All `pollForElement()` calls now use descriptors instead of raw XPaths, with 5-m
 | MacroLoop.ahk | Page validation + devToolsOpened reset in ToggleMacroLoop |
 | Automator.ahk | Version bump to 5.3 |
 | config.ini | Version bump to 5.3 |
-| README.md | Version bump to 5.3 |
-| SPEC.md | Version bump to 5.3, documented multi-method XPath |
-| MEMORY.md | This section |
+| readme.md | Version bump to 5.3 |
+| spec.md | Version bump to 5.3, documented multi-method XPath |
+| memory.md | This section |
 9. ~~**Visual retry indicator** - show "Retrying (2/3)..." in credit status display during backoff~~ ✅ Done
 
 ## V5.4 Changes (2026-02-18) - Escape Hotkey & LogKeyPress Fix
@@ -528,7 +528,7 @@ Esc pressed: exiting app     ← App died here, never reached injection
 | Automator.ahk | ALL hotkeys now use `$` prefix, `$Esc::`, version strings updated to 5.4 |
 | Utils.ahk | Added `skipFrames` param to `GetCallerInfo()`, LogKeyPress uses `skipFrames=6` with `callerOverride` |
 | config.ini | Version bump to 5.4 |
-| MEMORY.md | This section |
+| memory.md | This section |
 
 ### Key Learning: `$` Prefix for AHK Hotkeys
 When AHK scripts send keys programmatically (e.g., `Send("{Escape}")`), those synthetic keypresses can trigger AHK's own hotkeys. The `$` prefix forces the hotkey to use the keyboard hook, so only **physical** key presses activate it. **ALWAYS use `$` prefix on ALL hotkeys** to prevent self-triggering from any `Send()` call anywhere in the codebase.
@@ -579,7 +579,7 @@ Changed from `> [funcName] message` to `funcName: message` for consistency with 
 | combo.js | Full XPath in findByXPath/findElement, cleaner logSub format |
 | macro-looping.js | Full XPath in findElement Method 1 |
 | config.ini | Version bump to 5.6 |
-| MEMORY.md | This section |
+| memory.md | This section |
 
 ## V6.1 Changes (2026-02-18) - Delegate Fix & DevTools Collision
 
@@ -608,7 +608,7 @@ When Chrome DevTools console is focused, `Ctrl+L` does NOT focus the address bar
 | macro-looping.js | Removed duplicate state object (lines 265-271) |
 | MacroLoop.ahk | Step 0: close DevTools before URL read; clear title markers on poll start |
 | config.ini | Version bump to 6.1 |
-| MEMORY.md | This section |
+| memory.md | This section |
 
 ## V6.2 Changes (2026-02-19) - Return-to-Project & Progress Bar Detection
 
@@ -631,7 +631,7 @@ Any sequence that calls InjectJS (which opens DevTools) followed by GetCurrentUr
 | macro-looping.js | Configurable dialog wait via TIMING.DIALOG_WAIT |
 | Config.ahk | Load DialogWaitMs from config.ini |
 | config.ini | Added DialogWaitMs=2000, version bump to 6.2 |
-| MEMORY.md | This section |
+| memory.md | This section |
 
 ## V6.45 Changes (2026-02-19) - Toggle-Close Fix, Double-Confirm & Prompt Guard
 
@@ -690,7 +690,7 @@ Workspace name now displays in the status bar in BOTH running and stopped states
 |-------|---------|---------|
 | `PromptActiveXPath` | [MacroLoop] | XPath of the prompt form area — skip cycles when user is typing |
 | `WorkspaceNameXPath` | [MacroLoop] | Updated to `/html/body/div[6]/...` (was div[7]) |
-| `ScriptVersion=6.45` | [General] | Single source of truth for all version strings |
+| `ScriptVersion=6.45` | [General] | Display version (auto-synced from `AHK_BUILD_VERSION` on startup) |
 
 ### Cycle Flow (v6.45)
 ```
@@ -711,8 +711,8 @@ runCycle()
 | MacroLoop.ahk | Injects PromptActiveXPath placeholder |
 | Config.ahk | Reads PromptActiveXPath from config.ini |
 | config.ini | Added PromptActiveXPath, updated WorkspaceNameXPath, ScriptVersion=6.45 |
-| SPEC.md | Documented v6.45 features, cycle flow, version comparison table |
-| MEMORY.md | This section |
+| spec.md | Documented v6.45 features, cycle flow, version comparison table |
+| memory.md | This section |
 
 ### Key Learnings
 1. **Always check dialog state before clicking toggle buttons** — inspect `aria-expanded` / `data-state` attributes to avoid accidental close
@@ -740,7 +740,7 @@ Elements inside Radix UI popovers (rendered as `div[N]` portals appended to `<bo
 | File | Changes |
 |------|---------|
 | macro-looping.js | `refreshStatus()` rewritten: one-time dialog open/close with caching |
-| MEMORY.md | This section, corrected v6.45 passive refresh documentation |
+| memory.md | This section, corrected v6.45 passive refresh documentation |
 
 ## V6.47 Changes (2026-02-19) - Workspace Auto-Check, Credit on Change, Default 50s Loop
 
@@ -813,8 +813,8 @@ The `__WS_CHECK_INTERVAL_MS__` placeholder in `macro-looping.js` is wired throug
 | Config.ahk | Added `loopWsCheckIntervalMs` read from `[MacroLoop] WorkspaceCheckIntervalMs`, logged in startup SubLog |
 | MacroLoop.ahk | Added `loopWsCheckIntervalMs` to globals, added `__WS_CHECK_INTERVAL_MS__` StrReplace |
 | config.ini | Added `WorkspaceCheckIntervalMs=5000`, changed `LoopIntervalMs=50000`, bumped `ScriptVersion=6.47` |
-| SPEC.md | Documented workspace auto-check flow, updated placeholders table, updated version comparison table, updated UI layout diagram |
-| MEMORY.md | This section |
+| spec.md | Documented workspace auto-check flow, updated placeholders table, updated version comparison table, updated UI layout diagram |
+| memory.md | This section |
 
 ### Key Learnings
 1. **5s workspace auto-check is aggressive but necessary** — workspace changes are common during automation, and the user needs real-time visibility
@@ -901,7 +901,7 @@ runCycle()
 | Config.ahk | Added `loopMainProgressXPath` read from `[MacroLoop] MainProgressXPath` |
 | MacroLoop.ahk | Added `loopMainProgressXPath` to globals, added `__LOOP_MAIN_PROGRESS_XPATH__` StrReplace |
 | config.ini | Added `MainProgressXPath`, bumped `ScriptVersion=6.48` |
-| MEMORY.md | This section |
+| memory.md | This section |
 
 ### Key Learnings
 1. **Two-XPath strategy eliminates false negatives**: The main progress bar (div[1]) ALWAYS appears in the dialog — its presence confirms the dialog is fully loaded. If the free credit bar (div[2]) is absent after the main bar is visible, it's a definitive "no credit" signal, not a rendering delay.
@@ -948,7 +948,7 @@ This applies to all functions called via `CallLoopFunction`, not just `__delegat
 | File | Changes |
 |------|---------|
 | MacroLoop.ahk | Added `isHandlingDelegate` guard in `CheckClipboardForDelegate()` and `HandleDelegate()`; `CallLoopFunction()` wraps JS calls with `typeof` guard |
-| MEMORY.md | This section |
+| memory.md | This section |
 
 ### Key Learnings
 1. **AHK timers are pseudo-threads that can interrupt** — any long-running function (like `HandleDelegate`) can be interrupted by a timer callback. Always use re-entrance guards for timer-driven state machines.
@@ -1001,7 +1001,7 @@ HandleDelegate(direction)
 | File | Changes |
 |------|---------|
 | MacroLoop.ahk | Added Step 6b: `EmbedMacroLoopScript()` + 1s settle before `__delegateComplete` call |
-| MEMORY.md | This section |
+| memory.md | This section |
 
 ### Key Learning
 5. **typeof guard is necessary but not sufficient** — it prevents crashes but doesn't fix the root cause. If a function is expected to exist, the script that defines it must be re-injected before calling it. The typeof guard serves as a safety net for edge cases where re-injection also fails.
@@ -1040,8 +1040,8 @@ runCycle()
 |------|---------|
 | macro-looping.js | 500ms settle delay in pollForDialogReady(); removed auto-start of startStatusRefresh() |
 | config.ini | Version bump to 6.51 |
-| SPEC.md | Version bump to 6.51, updated pollForDialogReady documentation |
-| MEMORY.md | This section |
+| spec.md | Version bump to 6.51, updated pollForDialogReady documentation |
+| memory.md | This section |
 
 ### Key Learnings
 6. **DOM sibling rendering is not atomic** — When a Radix portal mounts a dialog, the main container element may appear before its sibling children (like optional progress bars) are rendered. Always add a settle delay after detecting the parent before checking for children.
@@ -1125,8 +1125,8 @@ HandleDelegate(direction)
 |------|---------|
 | MacroLoop.ahk | Step 4: combo probe before RunComboSafe; Step 6b: loop probe before EmbedMacroLoopScript |
 | config.ini | Version bump to 6.52 |
-| SPEC.md | Version bump to 6.52 |
-| MEMORY.md | This section |
+| spec.md | Version bump to 6.52 |
+| memory.md | This section |
 
 ### Key Learnings
 8. **Probe before inject** — Always check if a function exists on the current tab with a tiny `typeof` probe (~100 chars) before committing to a full script injection (~40-50KB). The probe cost is negligible compared to the full injection overhead (disk read + placeholder replacement + clipboard + paste + execute).
@@ -1150,8 +1150,8 @@ HandleDelegate was failing 100% of the time because `GetCurrentUrl()` returned e
 | MacroLoop.ahk | `HandleDelegate(direction, embeddedUrl)` uses embedded URL directly, falls back to `GetCurrentUrl()` only if missing |
 | MacroLoop.ahk | `consecutiveDelegateFailures` counter stops loop after 3 consecutive failures |
 | config.ini | Version bumped to 6.53 |
-| SPEC.md | Documented embedded URL signal format and failure guard |
-| MEMORY.md | This section |
+| spec.md | Documented embedded URL signal format and failure guard |
+| memory.md | This section |
 
 ### Key Learnings
 10. **Never rely on keyboard shortcuts for data extraction during automation** — Ctrl+L/Ctrl+C to read the address bar is fragile; focus state after F12 is unpredictable. Embed data directly in the communication channel (title signal) to eliminate the dependency.
@@ -1321,7 +1321,7 @@ if (clipStatus = ProgressStatus.DONE) {
 21. **Token redaction is mandatory in all log paths** — Any log statement that touches a bearer token must truncate to 8 chars + `***`. This applies to fetch headers, storage operations, and diagnostic exports.
 22. **Selective localStorage cleanup preserves site functionality** — The Clear All button only targets `ahk_` and `ml_` prefixed keys, avoiding destruction of the host site's own localStorage data (auth tokens, preferences, etc.).
 23. **Enum-style static classes eliminate magic strings** — All repeated string literals used as state values, log levels, or mode selectors must be defined as static class members in `Config/Constants/`. This prevents typo bugs, enables autocomplete, and provides a single source of truth.
-24. **ValidateEnums() halts on failure with MsgBox + ExitApp** — `ValidateConfig()` calls `ValidateEnums()` which tries to access every member of `ProgressStatus`, `LogLevel`, and `AuthMode` inside `try/catch` blocks. On success, all values are logged to `activity.txt` via `SubLog`. On failure, errors are logged to `error.txt`, then a `MsgBox` (OK/Cancel, warning icon — matching the version mismatch dialog pattern) gives the user the choice to exit (`ExitApp`) or continue anyway for debugging.
+24. **ValidateEnums() halts on failure with MsgBox + ExitApp** — `ValidateConfig()` calls `ValidateEnums()` which tries to access every member of `ProgressStatus`, `LogLevel`, and `AuthMode` inside `try/catch` blocks. On success, all values are logged to `activity.txt` via `SubLog`. On failure, errors are logged to `error.txt`, then a `MsgBox` (OK/Cancel, warning icon) gives the user the choice to exit (`ExitApp`) or continue anyway for debugging.
 25. **Bearer token save validates input before storage** — The Save Token button rejects empty/whitespace-only values and tokens shorter than 10 characters. Rejected attempts show a red ⚠ warning in the title label that auto-clears after 2.5s, preventing silent auth failures from empty tokens overriding cookie-session fallback.
 26. **findElement supports exact-match mode via `textMatchExact`** — Element descriptors can set `textMatchExact: true` to force Method 2 (text scan) to use strict equality (`===`) instead of `indexOf` substring matching. This prevents false positives where a broad term like "Save" inadvertently matches "Save Token". Applied to the Confirm button descriptor to ensure only "Confirm transfer" or "Confirm" are matched.
 
@@ -1330,9 +1330,9 @@ if (clipStatus = ProgressStatus.DONE) {
 |------|---------|
 | combo.js | Bearer token UI (with input validation), enhanced fetch logging, Clear All Data button |
 | config.ini | Version bump to 7.4, added LovableBearerToken placeholder |
-| specs/SPEC.md | Documented token resolution, fetch logging, Clear All |
-| specs/README.md | Version bump to 7.4, changelog entry |
-| specs/MEMORY.md | This section |
+| specs/spec.md | Documented token resolution, fetch logging, Clear All |
+| specs/readme.md | Version bump to 7.4, changelog entry |
+| specs/memory.md | This section |
 | Config/Constants/ProgressStatus.ahk | New enum: combo.js polling states |
 | Config/Constants/LogLevel.ahk | New enum: log severity levels (replaces globals) |
 | Config/Constants/AuthMode.ahk | New enum: authentication mode values |
@@ -1501,8 +1501,8 @@ If `window.XPathUtils` is not available at parse time, a 500ms `setTimeout` retr
 | JsInject.ahk | F6 re-focus for subsequent injections (200ms delay), removed F12 close/reopen |
 | Combo.ahk | Increased xpath-utils.js sleep to 500ms, title-marker verification, removed F12 from fast path |
 | MacroLoop/Embed.ahk | Increased xpath-utils.js sleep to 500ms |
-| specs/SPEC.md | Documented UI overhaul, updated UI diagram, new shortcuts |
-| specs/MEMORY.md | This section |
+| specs/spec.md | Documented UI overhaul, updated UI diagram, new shortcuts |
+| specs/memory.md | This section |
 
 ## V7.5.2 Changes - DOM Project Name, Credit Logic, var→const/let
 
@@ -1568,7 +1568,7 @@ All hardcoded color strings in converted sections replaced with `THEME.*` and `F
 | ComboSwitch.ahk | Reads & logs ProjectNameXPath |
 | Combo.ahk | Replaces `__PROJECT_NAME_XPATH__` placeholder |
 | combo.js | DOM project name detection, credit logic fix (dailyFree/available), hover tooltips, 120+ var→const/let, THEME/FONT constants |
-| specs/MEMORY.md | This section |
+| specs/memory.md | This section |
 
 ## V7.5.3 Changes - UI Consolidation, Progress Bars & Filtering
 
@@ -1612,12 +1612,12 @@ All hardcoded color strings in converted sections replaced with `THEME.*` and `F
 | File | Changes |
 |------|---------|
 | combo.js | Consolidated layout, inverted progress bar, yellow free bar, Focus fix, Free Only filter |
-| specs/MEMORY.md | This section |
+| specs/memory.md | This section |
 
 ## V7.6 Changes - Documentation & DevTools Console Focus
 
-### JSON-schema.md Created
-- New comprehensive data reference at `specs/JSON-schema.md`
+### json-schema.md Created
+- New comprehensive data reference at `specs/json-schema.md`
 - Documents API response schema (`GET /user/workspaces`) with all workspace fields and types
 - Documents internal combo.js data models: `creditState`, `perWorkspace[]`, `comboHistory[]`, `jsHistory[]`
 - Documents all `config.ini` sections with keys, types, defaults, and descriptions
@@ -1630,8 +1630,8 @@ All hardcoded color strings in converted sections replaced with `THEME.*` and `F
 - **Trade-off**: If already on Console, `Ctrl+Shift+J` is a toggle and may close DevTools; next call recovers via the first-time open path (`devToolsOpened` flag)
 - Refocus delay increased from 200ms to 300ms to account for panel switching
 
-### CHANGELOG.md Created
-- New `specs/CHANGELOG.md` centralizes all version history from v4.9 through v7.6
+### changelog.md Created
+- New `specs/changelog.md` centralizes all version history from v4.9 through v7.6
 - Follows Keep a Changelog format with Added/Fixed/Changed categories per version
 - Single reference point for release notes
 
@@ -1647,9 +1647,9 @@ All hardcoded color strings in converted sections replaced with `THEME.*` and `F
 | Automator.ahk | Version bump to 7.6 |
 | GeneralDefaults.ahk | Version bump to 7.6 |
 | config.ini | Version bump to 7.6 |
-| specs/JSON-schema.md | New — comprehensive data reference |
-| specs/CHANGELOG.md | New — centralized version history |
-| specs/MEMORY.md | This section |
+| specs/json-schema.md | New — comprehensive data reference |
+| specs/changelog.md | New — centralized version history |
+| specs/memory.md | This section |
 
 ## V7.8 Changes - InjectJSQuick, Idempotent Init & Domain Guards
 
@@ -1739,5 +1739,21 @@ This prevents state loss during re-injection (e.g., after a combo.js re-embed, c
 | Automator.ahk | Version bump to 7.8 |
 | GeneralDefaults.ahk | Version bump to 7.8 |
 | config.ini | Version bump to 7.8 |
-| specs/CHANGELOG.md | v7.8 release notes |
-| specs/MEMORY.md | This section |
+| specs/changelog.md | v7.8 release notes |
+| specs/memory.md | This section |
+
+### Version Auto-Sync Mechanism (v7.18)
+**Before**: If `config.ini` `ScriptVersion` didn't match `AHK_BUILD_VERSION`, a blocking `MsgBox` dialog appeared asking the user to continue or exit.
+**After**: `AHK_BUILD_VERSION` in `Automator.ahk` is the **single source of truth**. On startup, if `config.ini` has a different `ScriptVersion`, it is **silently overwritten** via `IniWrite()` — no dialog, no user action required.
+
+**Flow**:
+```
+Startup → LoadConfig() → compare AHK_BUILD_VERSION vs scriptVersion
+  ├─ Match    → no action
+  └─ Mismatch → IniWrite(AHK_BUILD_VERSION, configFile, "General", "ScriptVersion")
+                 scriptVersion := AHK_BUILD_VERSION
+                 WarnLog + InfoLog to activity.txt
+                 (try/catch: if IniWrite fails, WarnLog and continue)
+```
+
+**Architectural Decision #27**: `AHK_BUILD_VERSION` is authoritative; `config.ini ScriptVersion` is a derived value auto-synced on startup. Developers only need to update the hardcoded constant in `Automator.ahk` — `config.ini` and `GeneralDefaults.ahk` will align automatically.

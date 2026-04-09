@@ -1,6 +1,197 @@
-# CHANGELOG.md — Automator Version History
+# changelog.md — Automator Version History
 
 All notable changes to the Automator project are documented in this file.
+
+---
+
+## v7.19.1 (2026-03-04)
+
+### Fixed
+- **Manual Check button guard regression** — `runCheck` button was blocked for most of the loop cycle by `countdown > 10` guard. Updated to only block while active delegation/move is in progress (`state.isDelegating`).
+- **Macro Auth panel controls** — Added reliable drag, minimize, and close controls for the injected auth panel in both standalone controller script and extension-seeded default controller script.
+
+### Files
+- `marco-script-ahk-v7.latest/macro-looping.js`
+- `01-script-direct-copy-paste.js`
+- `standalone-scripts/macro-controller/macro-controller.js`
+- `chrome-extension/src/background/default-scripts-seeder.ts`
+
+---
+
+## v7.14.0 (2026-02-25)
+
+### Fixed
+- **Check button uses wrong detection path (Issue #28)** — `runCheck()` was calling `autoDetectLoopCurrentWorkspace` (v7.13.0) which includes a `POST mark-viewed` API call (Tier 1). This is unnecessary and unreliable for the Check button. The Check button should ONLY use XPath: click Project Button → read workspace name from dialog → update state. Removed Tier 1 API from `runCheck()`, now calls `detectWorkspaceViaProjectDialog` directly.
+
+### Changed
+- **Default loop interval** — `LoopIntervalMs` changed from 50000 (50s) to 100000 (100s) in `config.ini`.
+
+### Files
+- `macro-looping.js` — `runCheck()` simplified to XPath-only detection
+- `config.ini` — `LoopIntervalMs=100000`, `ScriptVersion=7.14`
+
+---
+
+## v7.13.0 (2026-02-25)
+
+### Fixed
+- **Check button skips Tier 1 API detection (Issue #28)** — `runCheck()` called `detectWorkspaceViaProjectDialog()` directly (Tier 2 XPath only), completely bypassing `autoDetectLoopCurrentWorkspace()` which includes Tier 1 API detection via `POST /projects/{id}/mark-viewed`. When XPath failed (dialog didn't render, stale XPath, DOM race), the cleared `state.workspaceName` caused unconditional fallback to `perWs[0]` (first workspace). Fix: `runCheck()` now calls `autoDetectLoopCurrentWorkspace(token)` for full Tier 1 API → Tier 2 XPath → Tier 3 Default hierarchy. Guard flags (`workspaceFromApi`, `workspaceName`) are cleared before detection to force fresh re-detection.
+
+### Files
+- `macro-looping.js` — `runCheck()` rewritten to use `autoDetectLoopCurrentWorkspace` instead of direct Tier 2 call
+
+---
+
+## v7.12.0 (2026-02-25)
+
+### Fixed
+- **Available credits formula missing freeUsed (Issue #27A)** — `calcAvailableCredits()` subtracted `rolloverUsed`, `dailyUsed`, and `billingUsed` from `totalCredits` but did NOT subtract `credits_used` (usage against `credits_granted`). This inflated the `⚡ Available` number by `credits_granted` when those credits were fully consumed. Example: P01 with all credits exhausted showed ⚡105/294 instead of ⚡0/294. Fix: Added `freeUsed` as 5th parameter to `calcAvailableCredits()` in both controllers. Updated all call sites including inline fallback in `updateStatus()`.
+- **Workspace defaults to first on initial load (Issue #27B)** — `detectWorkspaceViaProjectDialog()` tried to find the project button once with no retry. On initial page load, the API response arrives before the DOM renders the project button, causing immediate fallback to `perWs[0]`. Fix: Added `findProjectButtonWithRetry()` which tries up to 3 times with 1-second delays. Extracted `openDialogAndPoll()` for clarity.
+
+### Files
+- `macro-looping.js` — `calcAvailableCredits()`, `parseLoopApiResponse()`, `updateStatus()`, `detectWorkspaceViaProjectDialog()` refactored with retry
+- `combo.js` — `calcAvailableCredits()`, parse function updated
+
+---
+
+## v7.11.4 (2026-02-25)
+
+### Fixed
+- **Check button does not update workspace name (Issue #26)** — `runCheck()` relied on `detectWorkspaceViaProjectDialog()` guards from v7.11.2 which preserved the existing `state.workspaceName` when XPath matching failed. On a manual Check, the user expects fresh re-detection, but the guard blocked it. Additionally, if the project dialog was already open, the detection would read stale DOM nodes. Fix: (1) `runCheck()` now saves and clears `state.workspaceName` before detection, restoring only on total failure; (2) if the dialog is already open, it force-closes then reopens for a clean read; (3) polling logic extracted to reusable `pollForWorkspaceName()` function.
+
+---
+
+## v7.11.3 (2026-02-25)
+
+### Fixed
+- **Check button skips workspace detection & shows no feedback (Issue #25)** — `runCheck()` had three problems: (1) No visual "Searching..." feedback in the status bar, (2) when `perWorkspace` was empty, `fetchLoopCredits()` was called fire-and-forget then `continueCheck()` ran immediately with no workspace data, (3) the empty-workspace path never called `detectWorkspaceViaProjectDialog`. Fix: Status bar now shows "🔍 Searching for workspace..." immediately; added `fetchLoopCreditsAsync()` promise-returning variant; empty-workspace path awaits credit fetch then runs XPath detection before proceeding.
+
+---
+
+## v7.11.2 (2026-02-25)
+
+### Fixed
+- **MacroLoop workspace name clobbers to P01 on cycle** — Three Tier 2/3 fallback paths in `detectWorkspaceViaProjectDialog()` and `closeDialogAndDefault()` unconditionally overwrote `state.workspaceName` with `perWs[0]` when XPath detection failed. During running cycles (`runCycle` resets `workspaceFromApi=false` every ~50s), if both Tier 1 (API) and Tier 2 (XPath) fail, the fallback would replace a valid workspace name with P01. Fix: All three paths now check `if (!state.workspaceName)` before defaulting — same guard pattern already present in `combo.js`. See Issue #24.
+
+---
+
+## v7.11 (2026-02-25)
+
+### Changed
+- Version bump to v7.11 (consolidates v7.10.x patch series)
+
+### Fixed
+- **Cookie-only auth skips Tier 1 workspace detection (v7.11.1)** — `autoDetectLoopCurrentWorkspace()` and `autoDetectCurrentWorkspace()` required both `projectId` AND `bearerToken` to attempt the mark-viewed API call. When using `cookieSession` auth mode (no bearer token in localStorage), Tier 1 was entirely skipped, causing workspace name to be wrong on first load. Fix: Tier 1 now only requires `projectId`; cookie auth via `credentials: 'include'` handles authentication.
+
+---
+
+## v7.10.3 (2026-02-25)
+
+### Fixed
+- **Workspace detection wrong on initial load** — Restored mark-viewed API as Tier 1 workspace detection (was removed in v7.9.30). The XPath-only approach (Tier 2) requires clicking the project dialog which is fragile when XPaths change. `POST /projects/{id}/mark-viewed` returns `workspace_id` which maps to `wsById` dictionary for O(1) lookup. Both `macro-looping.js` and `combo.js` now use 3-tier detection: API mark-viewed → Project Dialog XPath → Default first workspace.
+
+### Files
+- `macro-looping.js` — `autoDetectLoopCurrentWorkspace()`: Added Tier 1 mark-viewed API call before XPath fallback
+- `combo.js` — `autoDetectCurrentWorkspace()`: Same Tier 1 mark-viewed API restoration
+
+---
+
+## v7.10.2 (2026-02-25)
+
+### Fixed
+- **XPath multi-match workspace detection (Issue #22)** — `getByXPath(CONFIG.WORKSPACE_XPATH)` returned only the first matching DOM node, which could be a non-workspace element (e.g., project name, label). Replaced with `getAllByXPath()` to iterate all matching nodes and validate each against known workspaces. First valid match wins. Logs every node checked for diagnostics.
+- **combo.js: same multi-match fix** — `detectWorkspaceViaProjectDialogCombo()` used single-match `findByXPath()`. Added `findAllByXPath()` and updated the polling loop to iterate all nodes with the same validate-and-match pattern.
+
+### Files
+- `macro-looping.js` — `detectWorkspaceViaProjectDialog()`: `getByXPath` → `getAllByXPath` + iterate-and-validate
+- `combo.js` — added `findAllByXPath()`, updated `detectWorkspaceViaProjectDialogCombo()`: `findByXPath` → `findAllByXPath` + iterate-and-validate
+
+---
+
+## v7.10.1 (2026-02-25)
+
+### Fixed
+- **GetCurrentUrl timing — press twice to work (Issue #19, Iteration 2)** — `ActivateBrowserPage()` alone was insufficient; the window wasn't ready for keyboard input. Added `WinWaitActive("ahk_id " hwnd, , 3)` + `Sleep(browserActivateDelayMs)` after activation.
+- **Workspace name stuck after external change (Issue #20)** — `workspaceFromApi` guard in `autoDetectLoopCurrentWorkspace()` blocked re-detection on every 50s cycle and manual Check. Once set to `true`, the controller showed stale workspace names indefinitely. Fixed by resetting `state.workspaceFromApi = false` before detection in `runCycle`, `runCheck`, and double-confirm.
+- **InjectViaDevTools — Ctrl+Shift+J sent before window ready (Issue #21)** — Same pattern as Issue #19. `ActivateBrowserPage()` returned before the window was ready for keyboard input, so `Ctrl+Shift+J` fired too early and DevTools failed to open. Added `WinWaitActive` + settle delay after both `ActivateBrowserPage()` calls (attempt 1 and retry).
+
+### Added
+- **Engineering Standard #19**: WinWaitActive Mandatory After Window Activation
+- **Engineering Standard #20**: Guard Flags Must Reset on Cycle Boundaries (RULE-GUARD-1)
+- **Engineering Standard #21**: Every Cycle Must Force Fresh Detection (RULE-DETECT-1)
+- **Code Style Standards renumbered** to #22–#26
+
+### Files
+- `MacroLoop/Routing.ahk` (v7.0 + v7.32), `macro-looping.js`, `spec/08-coding-guidelines/engineering-standards.md`, `spec/02-app-issues/19-*.md`, `spec/02-app-issues/20-*.md`
+
+---
+
+## v7.10 (2026-02-25)
+
+### Fixed
+- **GetCurrentUrl activates DevTools window (Issue #19)** — Replaced generic `WinActivate` with `ActivateBrowserPage()`. Added `ClipWait` return value check.
+
+### Added
+- **Engineering Standard #17**: Always Use ActivateBrowserPage()
+- **Engineering Standard #18**: ClipWait Must Check Return Value
+- **Code Style Standards #19–#23** (small functions, small files, positive conditions, reuse, logging)
+- **Anti-patterns table expanded** — generic WinActivate, negative conditions, large functions, copy-pasted code
+
+### Files
+- `MacroLoop/Routing.ahk` (v7.0 + v7.32), `spec/08-coding-guidelines/engineering-standards.md`, `spec/02-app-issues/19-*.md`, `Automator.ahk`, `GeneralDefaults.ahk`, `config.ini`
+
+---
+
+## v7.9.45 (2026-02-23)
+
+### Fixed
+- **DevTools context injection bug (DOMAIN GUARD ABORT)** — Removed F12 from injection sequence. Now uses Ctrl+Shift+J ONLY. Added F6 after Ctrl+Shift+J to ensure cursor is in console input prompt.
+
+### Added
+- **🍪 From Cookie button** — New button in both combo.js and macro-looping.js bearer token UI that reads the `lovable-session-id.id` cookie, saves it to localStorage, verifies via `/user/workspaces` API, and triggers a full data refresh.
+
+### Files
+- `JsInject.ahk`, `Combo.ahk`, `combo.js`, `macro-looping.js`, `Automator.ahk`, `GeneralDefaults.ahk`, `config.ini`
+
+---
+
+## v7.9.35 (2026-02-23)
+
+### Added
+- **Cookie-based bearer token fallback** — When the bearer token in localStorage is missing or expired, the system now reads the `lovable-session-id.id` cookie as a fallback source. The cookie value is auto-saved to localStorage for future use.
+- **`resolveToken()` unified function** — Token resolution chain: `config.ini` → `localStorage` → `lovable-session-id.id` cookie. All API call sites updated to use this single function.
+- **Auto-recovery on 401/403** — Instead of immediately marking the token as expired, the system first checks if a valid cookie token exists. If found (and different from the stored one), it auto-saves and logs recovery. Only marks expired if no cookie fallback is available.
+
+### Files
+- `combo.js`, `macro-looping.js`, `Automator.ahk`, `GeneralDefaults.ahk`, `config.ini`
+
+---
+
+## v7.9.34 (2026-02-23)
+
+### Fixed
+- **Post-move workspace name STILL resetting to perWs[0]** — Root cause: v7.9.32 removed XPath from the post-move handler itself, but `fetchLoopCredits()` / `checkCreditsViaApi()` (called 2s after move) still invoked `autoDetectCurrentWorkspace()` which ran XPath on a stale DOM and overwrote the authoritative name. Fix: added an **authoritative guard** at the top of both `autoDetectLoopCurrentWorkspace()` and `autoDetectCurrentWorkspace()` — if workspace was already set via API success (`state.workspaceFromApi=true` / `window.__wsCurrentName` matches a known workspace), XPath detection is skipped entirely.
+
+### Engineering Rule
+- **Post-mutation credit refreshes must NOT re-detect workspace** — the credit fetch path must respect the authoritative workspace state set by the mutation. XPath detection is only for initial detection or manual "Check" clicks, never for post-move refreshes.
+
+### Files
+- `macro-looping.js`, `combo.js`, `Automator.ahk`, `GeneralDefaults.ahk`, `config.ini`
+
+---
+
+## v7.9.33 (2026-02-23)
+
+### Fixed
+- **Force move shortcuts unreachable in combo.js** — The Alt+Up/Down handler was placed after the `if (!isCtrlAlt) return;` guard, making it impossible to trigger. Moved force-move check before the guard.
+
+### Changed
+- **Combo shortcuts → Ctrl+Right/Left** — AHK combo hotkeys changed from Ctrl+Up/Down to Ctrl+Right (down) / Ctrl+Left (up) to free Up/Down for force move.
+- **Force move shortcuts → Ctrl+Up/Down** — Changed from Alt+Up/Down (which didn't register in browser) to Ctrl+Up/Down. Both macro-looping.js and combo.js updated.
+- **All tooltips and hint text updated** to reflect new shortcut assignments.
+
+### Files
+- `macro-looping.js`, `combo.js`, `Automator.ahk`, `GeneralDefaults.ahk`, `HotkeyDefaults.ahk`, `config.ini`
 
 ---
 
@@ -220,7 +411,7 @@ All notable changes to the Automator project are documented in this file.
 - **Tooltips & progress bars updated** — Now show correct Total Credits and Available breakdown.
 
 ### Files
-- `combo.js`, `macro-looping.js`, `Automator.ahk`, `GeneralDefaults.ahk`, `config.ini`, `JSON-schema.md`
+- `combo.js`, `macro-looping.js`, `Automator.ahk`, `GeneralDefaults.ahk`, `config.ini`, `json-schema.md`
 
 ---
 
@@ -413,8 +604,8 @@ All notable changes to the Automator project are documented in this file.
 ## v7.6 (2026-02-21)
 
 ### Added
-- **`specs/JSON-schema.md`** — Comprehensive data reference documenting API response schema (`GET /user/workspaces`), internal combo.js data models (`creditState`, `perWorkspace[]`, `comboHistory[]`, `jsHistory[]`), all `config.ini` sections with types/defaults, and the full placeholder injection map.
-- **`specs/CHANGELOG.md`** — This file; centralizes all version history.
+- **`specs/json-schema.md`** — Comprehensive data reference documenting API response schema (`GET /user/workspaces`), internal combo.js data models (`creditState`, `perWorkspace[]`, `comboHistory[]`, `jsHistory[]`), all `config.ini` sections with types/defaults, and the full placeholder injection map.
+- **`specs/changelog.md`** — This file; centralizes all version history.
 - **Export Compiled JS** — Tray menu entries ("Export combo.js", "Export macro-looping.js") that resolve all `__PLACEHOLDER__` tokens from config.ini, save the compiled JS to `logs/compiled-<name>.js` with a metadata header, and copy to clipboard for easy paste-into-DevTools debugging.
 - **`Includes/ExportCompiledJS.ahk`** — Generic `SaveCompiledJS(scriptName, compiledJs, sourceFile)` utility + per-script `ExportComboJS()` / `ExportMacroLoopJS()` wrappers.
 - **`BuildComboJS(direction)`** in Combo.ahk and **`BuildMacroLoopJS()`** in MacroLoop/Embed.ahk — Extracted placeholder-resolution logic into reusable builder functions shared by both injection and export paths.
@@ -425,7 +616,7 @@ All notable changes to the Automator project are documented in this file.
 
 ### Changed
 - Version bump from 7.5.3 → 7.6 across `Automator.ahk`, `GeneralDefaults.ahk`, `config.ini`.
-- **Expanded testing checklist** — Added "DevTools Console Focus (v7.6)" section to `MEMORY.md` with 7 manual test scenarios covering all DevTools tabs (Elements, Network, Sources, Console), rapid double-press, and manual close recovery.
+- **Expanded testing checklist** — Added "DevTools Console Focus (v7.6)" section to `memory.md` with 7 manual test scenarios covering all DevTools tabs (Elements, Network, Sources, Console), rapid double-press, and manual close recovery.
 
 ---
 
