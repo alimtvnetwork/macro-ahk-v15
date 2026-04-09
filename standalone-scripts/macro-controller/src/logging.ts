@@ -14,6 +14,7 @@ import { toErrorMessage } from './error-utils';
  */
 
 import { VERSION, BLOATED_KEY_PATTERNS, LOG_STORAGE_KEY, LOG_MAX_ENTRIES, WS_HISTORY_KEY, state, cLogDefault, cLogError, cLogInfo, cLogSuccess, cLogWarn, cLogDelegate, cLogCheck, cLogSkip } from './shared-state';
+import { getByXPath } from './xpath-utils';
 import type { PersistedLogEntry } from './types';
 import { shouldLog, shouldConsole, shouldPersist, shouldActivityUi } from './log-manager';
 import { addActivityLog } from './log-activity-ui';
