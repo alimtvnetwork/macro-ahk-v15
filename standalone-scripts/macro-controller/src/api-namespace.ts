@@ -152,26 +152,26 @@ export function getNamespace(): MacroControllerNamespace | null {
       root.Projects.MacroController = {};
     }
 
-    const mc = root.Projects.MacroController as Record<string, Record<string, unknown>>;
+    const mc = root.Projects.MacroController as MacroControllerNamespace;
 
     // Ensure sub-objects exist
-    if (!mc.meta) mc.meta = {};
-    if (!mc.api) mc.api = {};
-    const api = mc.api as Record<string, unknown>;
-    if (!api.loop) api.loop = {};
-    if (!api.credits) api.credits = {};
-    if (!api.auth) api.auth = {};
-    if (!api.workspace) api.workspace = {};
-    if (!api.ui) api.ui = {};
-    if (!api.config) api.config = {};
-    if (!api.autoAttach) api.autoAttach = {};
-    if (!mc._internal) mc._internal = {};
+    if (!mc.meta) mc.meta = { version: '', displayName: '' };
+    if (!mc.api) mc.api = {} as MacroControllerApi;
+    const api = mc.api;
+    if (!api.loop) api.loop = {} as LoopApi;
+    if (!api.credits) api.credits = {} as CreditsApi;
+    if (!api.auth) api.auth = {} as AuthApi;
+    if (!api.workspace) api.workspace = {} as WorkspaceApi;
+    if (!api.ui) api.ui = {} as UiApi;
+    if (!api.config) api.config = {} as ConfigApi;
+    if (!api.autoAttach) api.autoAttach = {} as AutoAttachApi;
+    if (!mc._internal) mc._internal = {} as MacroControllerInternal;
 
     // Set meta
-    (mc.meta as Record<string, string>).version = VERSION;
-    (mc.meta as Record<string, string>).displayName = 'Macro Controller';
+    mc.meta.version = VERSION;
+    mc.meta.displayName = 'Macro Controller';
 
-    nsCache.ns = mc as MacroControllerNamespace;
+    nsCache.ns = mc;
     return nsCache.ns;
   } catch (e) {
     logError('getNamespace', 'Failed to access MacroController namespace', e);
