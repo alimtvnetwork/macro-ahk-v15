@@ -20,6 +20,7 @@ import { createFilesApi } from "./files";
 import { createUtilsApi } from "./utils";
 import { createPromptsApi } from "./prompts";
 import { createApiModule } from "./api";
+import { NamespaceLogger } from "./logger";
 /* ------------------------------------------------------------------ */
 /*  Build namespace                                                    */
 /* ------------------------------------------------------------------ */
@@ -53,7 +54,9 @@ const marco = Object.freeze({
 
 const win = window as unknown as Record<string, unknown>;
 if (!win.RiseupAsiaMacroExt) {
-    win.RiseupAsiaMacroExt = { Projects: {} };
+    win.RiseupAsiaMacroExt = { Projects: {}, Logger: NamespaceLogger };
+} else {
+    (win.RiseupAsiaMacroExt as Record<string, unknown>).Logger = NamespaceLogger;
 }
 
 
