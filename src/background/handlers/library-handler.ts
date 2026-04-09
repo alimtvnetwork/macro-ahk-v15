@@ -31,6 +31,8 @@ function markDirty(): void {
     dbManager?.markDirty();
 }
 
+const SQL_LAST_INSERT_ROWID = "SELECT last_insert_rowid()";
+
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
