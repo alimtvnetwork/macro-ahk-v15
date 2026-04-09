@@ -16,9 +16,9 @@ import {
 } from './shared-state';
 import { log } from './logging';
 import { renameWorkspace } from './workspace-rename';
-import {
 import { logError } from './error-utils';
 import { showToast } from './toast';
+import {
   populateLoopWorkspaceDropdown,
   fetchLoopCreditsWithDetect,
 } from './ws-list-renderer';
@@ -130,8 +130,8 @@ export function startInlineRename(
             populateLoopWorkspaceDropdown();
             fetchLoopCreditsWithDetect(false);
           })
-          .catch(function () {
-            logError('wsContextMenu', 'Workspace context action failed', function);
+          .catch(function (e: unknown) {
+            logError('wsContextMenu', 'Workspace context action failed', e);
             showToast('❌ Workspace context action failed', 'error');
             populateLoopWorkspaceDropdown();
           });
