@@ -44,6 +44,7 @@ import {
   UserMinus,
   Loader2,
   ArrowLeft,
+  ArrowDownToLine,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -94,7 +95,7 @@ function GroupFormDialog({ open, onOpenChange, onSaved, editGroup }: GroupFormDi
     }
     setSaving(true);
     try {
-      await sendMessage({
+      const result = await sendMessage<{ groupId: number; cascadedCount: number }>({
         type: "LIBRARY_SAVE_GROUP" as never,
         group: {
           ...(isEdit ? { Id: editGroup!.Id } : {}),
@@ -102,7 +103,10 @@ function GroupFormDialog({ open, onOpenChange, onSaved, editGroup }: GroupFormDi
           SharedSettingsJson: settings.trim() || null,
         },
       } as never);
-      toast.success(isEdit ? `Group "${name}" updated` : `Group "${name}" created`);
+      const cascadeMsg = result.cascadedCount > 0
+        ? ` — settings pushed to ${result.cascadedCount} project(s)`
+        : "";
+      toast.success((isEdit ? `Group "${name}" updated` : `Group "${name}" created`) + cascadeMsg);
       onOpenChange(false);
       onSaved();
     } catch (err) {
