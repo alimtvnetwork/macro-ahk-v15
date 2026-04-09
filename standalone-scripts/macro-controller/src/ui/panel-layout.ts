@@ -24,7 +24,7 @@ function savePanelState(state: string): void {
 }
 
 function loadPanelState(): string {
-  try { return localStorage.getItem(LS_PANEL_STATE) || 'expanded'; } catch (_e) { return 'expanded'; }
+  try { return localStorage.getItem(LS_PANEL_STATE) || 'expanded'; } catch (_e) { logSub('Failed to load panel state: ' + (_e instanceof Error ? _e.message : String(_e)), 1); return 'expanded'; }
 }
 
 interface PanelGeometry {
@@ -51,7 +51,7 @@ function loadPanelGeometry(): PanelGeometry | null {
     const raw = localStorage.getItem(LS_PANEL_GEOMETRY);
     if (!raw) return null;
     return JSON.parse(raw) as PanelGeometry;
-  } catch (_e) { return null; }
+  } catch (_e) { logSub('Failed to parse panel geometry: ' + (_e instanceof Error ? _e.message : String(_e)), 1); return null; }
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -162,7 +162,7 @@ export function getBackdropOpacity(): number {
 
 export function setBackdropOpacity(opacity: number): void {
   const clamped = Math.min(1, Math.max(0, opacity));
-  try { localStorage.setItem(LS_BACKDROP_OPACITY, String(clamped)); } catch { /* ignore */ }
+  try { localStorage.setItem(LS_BACKDROP_OPACITY, String(clamped)); } catch (_e) { logSub('Failed to save backdrop opacity: ' + (_e instanceof Error ? _e.message : String(_e)), 1); }
   const backdrop = document.getElementById(BACKDROP_ID);
   if (!backdrop) return;
   if (clamped === 0) {
