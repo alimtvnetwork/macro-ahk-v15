@@ -98,7 +98,7 @@ marco-script-ahk-v4/logs/activity.txt
 
 /standalone-scripts/_generated
 /chrome-extension
-/standalone-scripts/macro-controller
+/standalone-scripts/macro-controller/dist
 /standalone-scripts/_generated
 standalone-scripts/_generated/seed-manifest.json
 .gitmap/release-assets
