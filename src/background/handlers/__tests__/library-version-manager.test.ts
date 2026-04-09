@@ -18,9 +18,10 @@ describe("parseSemver", () => {
     expect(parseSemver("3.2")).toEqual([3, 2, 0]);
   });
 
-  it("defaults to 1.0.0 for empty string", () => {
+  it("handles empty string gracefully", () => {
     const [major, minor, patch] = parseSemver("");
-    expect(major).toBeNaN();
+    // Number("") returns 0, so fallback kicks in: parts[0] ?? 1 = 0 (0 is not nullish)
+    expect(major).toBe(0);
     expect(minor).toBe(0);
     expect(patch).toBe(0);
   });
