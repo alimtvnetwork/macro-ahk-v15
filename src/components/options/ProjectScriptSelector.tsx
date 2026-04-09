@@ -187,6 +187,12 @@ function ScriptEntryCard({
               {binding.configBindings.length} config{binding.configBindings.length !== 1 ? "s" : ""}
             </Badge>
           )}
+          {linkMap?.has(binding.scriptName) && (
+            <SyncBadge
+              state={linkMap.get(binding.scriptName)!.state}
+              pinnedVersion={linkMap.get(binding.scriptName)!.pinnedVersion}
+            />
+          )}
           <Button
             type="button"
             size="icon"
