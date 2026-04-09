@@ -6,6 +6,8 @@
 
 import { useState, useRef } from "react";
 import { usePrompts, type PromptEntry } from "@/hooks/use-prompts";
+import { useLibraryLinkMap, type LibraryAssetSet } from "@/hooks/use-library-link-map";
+import { SyncBadge } from "./LibraryView";
 import { exportPromptsAsSqliteZip, importPromptsFromSqliteZip, mergePromptsFromSqliteZip } from "@/lib/sqlite-bundle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -227,10 +229,11 @@ interface PromptRowProps {
     onMoveDown: (id: string) => void;
     onToggleFavorite: (id: string) => void;
     onView: (p: PromptEntry) => void;
+    libraryAssets?: LibraryAssetSet;
 }
 
 // eslint-disable-next-line max-lines-per-function
-function PromptRow({ prompt, index, total, onEdit, onDelete, onMoveUp, onMoveDown, onToggleFavorite, onView }: PromptRowProps) {
+function PromptRow({ prompt, index, total, onEdit, onDelete, onMoveUp, onMoveDown, onToggleFavorite, onView, libraryAssets }: PromptRowProps) {
     const isDefault = prompt.isDefault === true;
     const isFav = prompt.isFavorite === true;
 
