@@ -284,7 +284,7 @@ function handleCreateTable(
   const columnDefinitions = columns.map(buildColumnDefinition);
 
   sendToExtension('PROJECT_DB_CREATE_TABLE', {
-    project: MACRO_CONTROLLER,
+    project: MACRO_CONTROLLER_NS,
     tableName,
     columns: columnDefinitions,
   }).then((response: ExtensionCallbackResponse) => {
@@ -369,7 +369,7 @@ function refreshTableList(
   statusBar: HTMLElement,
 ): void {
   sendToExtension('PROJECT_DB_LIST_TABLES', {
-    project: MACRO_CONTROLLER,
+    project: MACRO_CONTROLLER_NS,
     method: 'SCHEMA',
     endpoint: 'listTables',
   }).then((response: ExtensionCallbackResponse) => {
@@ -452,7 +452,7 @@ function buildTableEntry(
 
     if (isConfirmed) {
       sendToExtension('PROJECT_DB_DROP_TABLE', {
-        project: MACRO_CONTROLLER,
+        project: MACRO_CONTROLLER_NS,
         tableName,
       }).then((response: ExtensionCallbackResponse) => {
         const isSuccess = response?.isOk === true;

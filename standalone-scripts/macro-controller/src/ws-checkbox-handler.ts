@@ -98,7 +98,7 @@ function syncCheckboxVisuals(): void {
     const cb = item.querySelector('.loop-ws-checkbox');
     if (!cb) continue;
 
-    const wsId = item.getAttribute(ATTR_DATA_WS_ID);
+    const wsId = item.getAttribute(ATTR_WS_ID);
     const isChecked = !!getLoopWsCheckedIds()[wsId!];
     cb.textContent = isChecked ? '☑' : '☐';
     (cb as HTMLElement).style.color = isChecked ? '#a78bfa' : '#64748b';
@@ -155,7 +155,7 @@ export function triggerLoopMoveFromSelection(): void {
       const items = listEl.querySelectorAll(SEL_LOOP_WS_ITEM);
       const navItem = items[currentNavIndex] as HTMLElement | undefined;
       if (navItem) {
-        wsId = navItem.getAttribute(ATTR_DATA_WS_ID) || '';
+        wsId = navItem.getAttribute(ATTR_WS_ID) || '';
         wsName = navItem.getAttribute('data-ws-name') || '';
         log('Move fallback: using keyboard-navigated item idx=' + currentNavIndex + ' (' + wsName + ')', 'info');
       }
@@ -201,7 +201,7 @@ function updateSelectedIndicator(item: Element): void {
   const selectedEl = document.getElementById('loop-ws-selected');
   if (!selectedEl) return;
 
-  const wsId = item.getAttribute(ATTR_DATA_WS_ID) || '';
+  const wsId = item.getAttribute(ATTR_WS_ID) || '';
   const wsName = item.getAttribute('data-ws-name') || '';
   selectedEl.setAttribute('data-selected-id', wsId);
   selectedEl.setAttribute('data-selected-name', wsName);
