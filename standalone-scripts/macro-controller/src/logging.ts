@@ -279,7 +279,7 @@ export function clearAllLogs(): void {
     const key = getLogStorageKey();
     localStorage.removeItem(key);
   } catch (_e) {
-    /* ignore */
+    console.debug('[RiseupAsia] [clearAllLogs] localStorage.removeItem failed: ' + (_e instanceof Error ? _e.message : String(_e)));
   }
 }
 

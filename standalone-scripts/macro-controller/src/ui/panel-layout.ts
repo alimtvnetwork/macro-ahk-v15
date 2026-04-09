@@ -162,7 +162,7 @@ export function getBackdropOpacity(): number {
 
 export function setBackdropOpacity(opacity: number): void {
   const clamped = Math.min(1, Math.max(0, opacity));
-  try { localStorage.setItem(LS_BACKDROP_OPACITY, String(clamped)); } catch { /* ignore */ }
+  try { localStorage.setItem(LS_BACKDROP_OPACITY, String(clamped)); } catch (_e) { logSub('Failed to save backdrop opacity: ' + (_e instanceof Error ? _e.message : String(_e)), 1); }
   const backdrop = document.getElementById(BACKDROP_ID);
   if (!backdrop) return;
   if (clamped === 0) {
