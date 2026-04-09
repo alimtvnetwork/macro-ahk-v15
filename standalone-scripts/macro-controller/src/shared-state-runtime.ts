@@ -145,6 +145,7 @@ export const state: ControllerState = {
   countdownIntervalId: null,
   workspaceName: _cachedWsName,
   projectNameFromApi: '',
+  projectNameFromDom: '',
   hasFreeCredit: false,
   lastStatusCheck: 0,
   statusRefreshId: null,

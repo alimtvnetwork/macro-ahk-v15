@@ -78,7 +78,7 @@ const TTypo = theme.typography || {};
 // Exported constants
 // ============================================
 export const FILE_NAME = 'macro-looping.js';
-export const VERSION = '2.119.0';
+export const VERSION = '2.119.1';
 
 // Expose version via RiseupAsiaMacroExt namespace (Issue 78 — no bare window globals)
 try {
@@ -279,7 +279,7 @@ export const CONFIG: XPathConfig = {
   WORKSPACE_NAV_XPATH: loopXPaths.workspaceNav || '',
   CONTROLS_XPATH: loopXPaths.controls || '/html/body/div[3]/div/div[2]/main/div/div/div[3]',
   PROMPT_ACTIVE_XPATH: loopXPaths.promptActive || '/html/body/div[2]/div/div[2]/main/div/div/div[1]/div/div[2]/div/form/div[2]',
-  PROJECT_NAME_XPATH: loopXPaths.projectName || '/html/body/div[2]/div/div/div/div/div/div/div[1]/div/div/div[2]/div/div[1]/div/p',
+  PROJECT_NAME_XPATH: loopXPaths.projectName || '/html/body/div[2]/div/div[2]/nav/div[2]/div/div/div[1]/div[1]/button/div/div/p',
   REQUIRED_DOMAIN: loopUrls.requiredDomain || 'https://lovable.dev/',
   SETTINGS_PATH: loopUrls.settingsTabPath || '/settings?tab=project',
   DEFAULT_VIEW: loopUrls.defaultView || '?view=codeEditor'
