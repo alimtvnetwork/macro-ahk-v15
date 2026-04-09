@@ -112,13 +112,7 @@ export class AuthTokenUtils {
         onScanError?: (error: unknown) => void,
     ): string {
         try {
-            const keys: string[] = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key) {
-                    keys.push(key);
-                }
-            }
+            const keys = AuthTokenUtils.collectLocalStorageKeys();
 
             for (const key of keys) {
                 if (!key.startsWith("sb-") || !key.includes("-auth-token")) {
@@ -147,6 +141,17 @@ export class AuthTokenUtils {
         }
 
         return "";
+    }
+
+    private static collectLocalStorageKeys(): string[] {
+        const keys: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key) {
+                keys.push(key);
+            }
+        }
+        return keys;
     }
 
     /**

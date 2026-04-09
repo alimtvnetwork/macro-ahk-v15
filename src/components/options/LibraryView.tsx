@@ -183,6 +183,7 @@ interface AssetCardProps {
   onViewDetail: (asset: SharedAsset) => void;
 }
 
+// eslint-disable-next-line max-lines-per-function -- single card with delete dialog, splitting would reduce cohesion
 export function AssetCard({ asset, links, onSync, onDelete, onViewDetail }: AssetCardProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const syncedCount = links.filter(l => l.LinkState === "synced").length;
@@ -283,6 +284,7 @@ interface PromoteDialogProps {
   onPromoted: () => void;
 }
 
+// eslint-disable-next-line max-lines-per-function -- dialog with form + conflict resolution, splitting would break state cohesion
 export function PromoteDialog({ open, onOpenChange, onPromoted }: PromoteDialogProps) {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -475,6 +477,7 @@ interface AssetDetailPanelProps {
   onDelete: (assetId: number) => void;
 }
 
+// eslint-disable-next-line max-lines-per-function -- detail panel with meta cards + actions, pure JSX
 function AssetDetailPanel({ asset, links, onBack, onSync, onDelete }: AssetDetailPanelProps) {
   return (
     <div className="space-y-6">

@@ -31,6 +31,8 @@ function markDirty(): void {
     dbManager?.markDirty();
 }
 
+const SQL_LAST_INSERT_ROWID = "SELECT last_insert_rowid()";
+
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
@@ -126,7 +128,7 @@ export async function handleSaveSharedAsset(msg: unknown): Promise<{ assetId: nu
         `INSERT INTO SharedAsset (Type, Name, Slug, ContentJson, ContentHash, Version) VALUES (?, ?, ?, ?, ?, ?)`,
         [asset.Type, asset.Name, asset.Slug, asset.ContentJson, contentHash, version],
     );
-    const idResult = db.exec("SELECT last_insert_rowid()");
+    const idResult = db.exec(SQL_LAST_INSERT_ROWID);
     const newId = idResult[0].values[0][0] as number;
     markDirty();
     return { assetId: newId };
@@ -211,7 +213,7 @@ export async function handleSaveAssetLink(msg: unknown): Promise<{ linkId: numbe
         `INSERT OR REPLACE INTO AssetLink (SharedAssetId, ProjectId, LinkState, PinnedVersion, LocalOverrideJson) VALUES (?, ?, ?, ?, ?)`,
         [link.SharedAssetId, link.ProjectId, linkState, link.PinnedVersion ?? null, link.LocalOverrideJson ?? null],
     );
-    const idResult = db.exec("SELECT last_insert_rowid()");
+    const idResult = db.exec(SQL_LAST_INSERT_ROWID);
     const newId = idResult[0].values[0][0] as number;
     markDirty();
     return { linkId: newId };
@@ -292,7 +294,7 @@ export async function handlePromoteAsset(msg: unknown): Promise<{
             `INSERT INTO SharedAsset (Type, Name, Slug, ContentJson, ContentHash, Version) VALUES (?, ?, ?, ?, ?, '1.0.0')`,
             [type, name, slug, contentJson, hash],
         );
-        const idResult = db.exec("SELECT last_insert_rowid()");
+        const idResult = db.exec(SQL_LAST_INSERT_ROWID);
         const newId = idResult[0].values[0][0] as number;
         markDirty();
         return { action: "created", assetId: newId };
@@ -360,7 +362,7 @@ export async function handleForkLibraryAsset(msg: unknown): Promise<{ assetId: n
         `INSERT INTO SharedAsset (Type, Name, Slug, ContentJson, ContentHash, Version) VALUES (?, ?, ?, ?, ?, '1.0.0')`,
         [type, name, forkSlug, contentJson, hash],
     );
-    const idResult = db.exec("SELECT last_insert_rowid()");
+    const idResult = db.exec(SQL_LAST_INSERT_ROWID);
     const newId = idResult[0].values[0][0] as number;
     markDirty();
     return { assetId: newId, slug: forkSlug };
@@ -398,7 +400,7 @@ export async function handleSaveProjectGroup(msg: unknown): Promise<{ groupId: n
         `INSERT INTO ProjectGroup (Name, SharedSettingsJson) VALUES (?, ?)`,
         [group.Name, group.SharedSettingsJson ?? null],
     );
-    const idResult = db.exec("SELECT last_insert_rowid()");
+    const idResult = db.exec(SQL_LAST_INSERT_ROWID);
     const newId = idResult[0].values[0][0] as number;
     markDirty();
     return { groupId: newId };
@@ -436,7 +438,7 @@ export async function handleAddGroupMember(msg: unknown): Promise<{ memberId: nu
         `INSERT OR IGNORE INTO ProjectGroupMember (GroupId, ProjectId) VALUES (?, ?)`,
         [groupId, projectId],
     );
-    const idResult = db.exec("SELECT last_insert_rowid()");
+    const idResult = db.exec(SQL_LAST_INSERT_ROWID);
     const newId = idResult[0].values[0][0] as number;
     markDirty();
     return { memberId: newId };
@@ -471,124 +473,102 @@ export interface LibraryExport {
     }>;
 }
 
-export async function handleExportLibrary(): Promise<{ bundle: LibraryExport }> {
-    const db = getDb();
-
-    // Export assets
-    const assetStmt = db.prepare("SELECT * FROM SharedAsset ORDER BY Name ASC");
+function exportAssets(db: SqlJsDatabase): LibraryExport["assets"] {
+    const stmt = db.prepare("SELECT * FROM SharedAsset ORDER BY Name ASC");
     const assets: LibraryExport["assets"] = [];
-    while (assetStmt.step()) {
-        const row = assetStmt.getAsObject() as unknown as SharedAsset;
+    while (stmt.step()) {
+        const row = stmt.getAsObject() as unknown as SharedAsset;
         let content: unknown;
-        try {
-            content = JSON.parse(row.ContentJson);
-        } catch {
-            content = row.ContentJson;
-        }
-        assets.push({
-            type: row.Type,
-            slug: row.Slug,
-            name: row.Name,
-            version: row.Version,
-            content,
-        });
+        try { content = JSON.parse(row.ContentJson); } catch { content = row.ContentJson; }
+        assets.push({ type: row.Type, slug: row.Slug, name: row.Name, version: row.Version, content });
     }
-    assetStmt.free();
+    stmt.free();
+    return assets;
+}
 
-    // Export groups with members
-    const groupStmt = db.prepare("SELECT * FROM ProjectGroup ORDER BY Name ASC");
+function exportGroups(db: SqlJsDatabase): LibraryExport["groups"] {
+    const stmt = db.prepare("SELECT * FROM ProjectGroup ORDER BY Name ASC");
     const groups: LibraryExport["groups"] = [];
-    while (groupStmt.step()) {
-        const row = groupStmt.getAsObject() as unknown as ProjectGroup;
-        const memberResult = db.exec(
-            "SELECT ProjectId FROM ProjectGroupMember WHERE GroupId = ?",
-            [row.Id],
-        );
-        const memberProjectIds = memberResult.length > 0
-            ? memberResult[0].values.map((v) => v[0] as number)
-            : [];
-
+    while (stmt.step()) {
+        const row = stmt.getAsObject() as unknown as ProjectGroup;
+        const memberResult = db.exec("SELECT ProjectId FROM ProjectGroupMember WHERE GroupId = ?", [row.Id]);
+        const memberProjectIds = memberResult.length > 0 ? memberResult[0].values.map((v) => v[0] as number) : [];
         let sharedSettings: unknown = null;
         if (row.SharedSettingsJson) {
-            try {
-                sharedSettings = JSON.parse(row.SharedSettingsJson);
-            } catch {
-                sharedSettings = row.SharedSettingsJson;
-            }
+            try { sharedSettings = JSON.parse(row.SharedSettingsJson); } catch { sharedSettings = row.SharedSettingsJson; }
         }
-
-        groups.push({
-            name: row.Name,
-            sharedSettings,
-            memberProjectIds,
-        });
+        groups.push({ name: row.Name, sharedSettings, memberProjectIds });
     }
-    groupStmt.free();
+    stmt.free();
+    return groups;
+}
 
+export async function handleExportLibrary(): Promise<{ bundle: LibraryExport }> {
+    const db = getDb();
     return {
         bundle: {
             exportVersion: "1.0",
             exportedAt: new Date().toISOString(),
-            assets,
-            groups,
+            assets: exportAssets(db),
+            groups: exportGroups(db),
         },
     };
 }
 
-export async function handleImportLibrary(msg: unknown): Promise<{
+interface ImportResult {
     imported: number;
     skipped: number;
     conflicts: Array<{ slug: string; existingVersion: string }>;
-}> {
-    const { bundle } = msg as { bundle: LibraryExport };
-    const db = getDb();
-    let imported = 0;
-    let skipped = 0;
-    const conflicts: Array<{ slug: string; existingVersion: string }> = [];
+}
 
-    for (const asset of bundle.assets) {
-        const contentJson = typeof asset.content === "string"
-            ? asset.content
-            : JSON.stringify(asset.content);
-        const hash = await computeContentHash(contentJson);
+async function importAsset(
+    db: SqlJsDatabase,
+    asset: LibraryExport["assets"][0],
+    result: ImportResult,
+): Promise<void> {
+    const contentJson = typeof asset.content === "string" ? asset.content : JSON.stringify(asset.content);
+    const hash = await computeContentHash(contentJson);
+    const existing = db.exec("SELECT Id, ContentHash, Version FROM SharedAsset WHERE Slug = ?", [asset.slug]);
 
-        // Check slug collision
-        const existing = db.exec("SELECT Id, ContentHash, Version FROM SharedAsset WHERE Slug = ?", [asset.slug]);
-
-        if (existing.length === 0 || existing[0].values.length === 0) {
-            // New — insert
-            db.run(
-                `INSERT INTO SharedAsset (Type, Name, Slug, ContentJson, ContentHash, Version) VALUES (?, ?, ?, ?, ?, ?)`,
-                [asset.type, asset.name, asset.slug, contentJson, hash, asset.version],
-            );
-            imported++;
+    if (existing.length === 0 || existing[0].values.length === 0) {
+        db.run(
+            `INSERT INTO SharedAsset (Type, Name, Slug, ContentJson, ContentHash, Version) VALUES (?, ?, ?, ?, ?, ?)`,
+            [asset.type, asset.name, asset.slug, contentJson, hash, asset.version],
+        );
+        result.imported++;
+    } else {
+        const [, existingHash, existingVersion] = existing[0].values[0] as [number, string, string];
+        if (existingHash === hash) {
+            result.skipped++;
         } else {
-            const [, existingHash, existingVersion] = existing[0].values[0] as [number, string, string];
-            if (existingHash === hash) {
-                skipped++; // Identical
-            } else {
-                conflicts.push({ slug: asset.slug, existingVersion });
-            }
+            result.conflicts.push({ slug: asset.slug, existingVersion });
         }
     }
+}
 
-    // Import groups (skip conflicts — group names are not unique-constrained beyond the user's intent)
-    for (const group of bundle.groups) {
+function importGroups(db: SqlJsDatabase, groups: LibraryExport["groups"]): void {
+    for (const group of groups) {
         db.run(
             `INSERT INTO ProjectGroup (Name, SharedSettingsJson) VALUES (?, ?)`,
             [group.name, group.sharedSettings ? JSON.stringify(group.sharedSettings) : null],
         );
-        const groupIdResult = db.exec("SELECT last_insert_rowid()");
-        const groupId = groupIdResult[0].values[0][0] as number;
-
+        const groupId = db.exec(SQL_LAST_INSERT_ROWID)[0].values[0][0] as number;
         for (const projectId of group.memberProjectIds) {
-            db.run(
-                `INSERT OR IGNORE INTO ProjectGroupMember (GroupId, ProjectId) VALUES (?, ?)`,
-                [groupId, projectId],
-            );
+            db.run(`INSERT OR IGNORE INTO ProjectGroupMember (GroupId, ProjectId) VALUES (?, ?)`, [groupId, projectId]);
         }
     }
+}
 
+export async function handleImportLibrary(msg: unknown): Promise<ImportResult> {
+    const { bundle } = msg as { bundle: LibraryExport };
+    const db = getDb();
+    const result: ImportResult = { imported: 0, skipped: 0, conflicts: [] };
+
+    for (const asset of bundle.assets) {
+        await importAsset(db, asset, result);
+    }
+    importGroups(db, bundle.groups);
     markDirty();
-    return { imported, skipped, conflicts };
+
+    return result;
 }
