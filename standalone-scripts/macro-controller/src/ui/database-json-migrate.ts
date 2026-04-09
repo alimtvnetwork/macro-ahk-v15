@@ -12,7 +12,7 @@ import type { ExtensionCallbackResponse } from '../types';
 import type { JsonSchema, JsonMigration } from './database-json-types';
 import { appendLog } from './database-json-tab';
 
-const MACRO_CONTROLLER = 'macro-controller';
+import { MACRO_CONTROLLER_NS } from '../constants';
 
 /* ------------------------------------------------------------------ */
 /*  Validate                                                           */

@@ -18,9 +18,7 @@ import { log } from './logging';
 import { moveToWorkspace, updateLoopMoveStatus } from './workspace-management';
 import { showToast } from './toast';
 
-const ID_LOOP_WS_LIST = 'loop-ws-list';
-const SEL_LOOP_WS_ITEM = '.loop-ws-item';
-const ATTR_DATA_WS_ID = 'data-ws-id';
+import { ID_LOOP_WS_LIST, SEL_LOOP_WS_ITEM, ATTR_WS_ID } from './constants';
 
 // ============================================
 // CQ11/CQ17: Encapsulated keyboard navigation state

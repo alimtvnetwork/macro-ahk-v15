@@ -19,8 +19,7 @@ import {
   type ColumnEntry,
 } from './database-schema-editors';
 
-const ID_MARCO_SCHEMA_LABEL = 'marco-schema-label';
-const MACRO_CONTROLLER = 'macro-controller';
+import { ID_MARCO_SCHEMA_LABEL, MACRO_CONTROLLER_NS } from '../constants';
 
 // Re-export for backward compatibility
 export type { ColumnValidation, ForeignKeyDef } from './database-schema-editors';
