@@ -57,8 +57,8 @@ export function normalizeNewlines(text: string): string {
 export function parseWithRecovery(content: string): unknown {
   try {
     return JSON.parse(content);
-  logError('cleanPromptText', 'Prompt text cleanup failed', e);
   } catch (e) {
+    logError('parseWithRecovery', 'JSON parse failed, attempting recovery', e);
     const trimmed = String(content || '').trim();
     const lastBrace = trimmed.lastIndexOf('}');
     if (lastBrace > 0) {

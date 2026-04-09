@@ -55,8 +55,8 @@ class DomCache {
       const el = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
       this._cache.set(xpath, { element: el, timestamp: Date.now() });
       return el;
-    logError('DomCache.getOne', 'XPath evaluation failed', e);
-    } catch (_e: unknown) {
+    } catch (e: unknown) {
+      logError('DomCache.getOne', 'XPath evaluation failed', e);
       return null;
     }
   }

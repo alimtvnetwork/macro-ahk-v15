@@ -93,11 +93,10 @@ class PromptLoaderState {
     this._pendingCallbacks = [];
     for (const callback of pending) {
       try {
-        logError('parsePromptFile', 'Failed to parse prompt file', e);
-        showToast('❌ Failed to parse prompt file', 'error');
         callback(prompts);
-      } catch (_e) {
-        // Ignore callback failures so prompt loading can continue.
+      } catch (e) {
+        logError('parsePromptFile', 'Prompt callback execution failed', e);
+        showToast('❌ Prompt callback failed', 'error');
       }
     }
   }

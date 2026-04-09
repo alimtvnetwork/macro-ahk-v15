@@ -40,8 +40,8 @@ export function getCachedWorkspaceName(): string {
   try {
     const pid = resolveProjectId();
     return localStorage.getItem(cacheKey(pid, 'name')) || '';
-  logError('getCachedWsName', 'Failed to read cached workspace name', e);
-  } catch (_e) {
+  } catch (e) {
+    logError('getCachedWsName', 'Failed to read cached workspace name', e);
     return '';
   }
 }
@@ -51,8 +51,8 @@ export function getCachedWorkspaceId(): string {
   try {
     const pid = resolveProjectId();
     return localStorage.getItem(cacheKey(pid, 'id')) || '';
-  logError('getCachedWsId', 'Failed to read cached workspace ID', e);
-  } catch (_e) {
+  } catch (e) {
+    logError('getCachedWsId', 'Failed to read cached workspace ID', e);
     return '';
   }
 }

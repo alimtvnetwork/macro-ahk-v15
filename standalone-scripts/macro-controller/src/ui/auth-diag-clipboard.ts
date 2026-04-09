@@ -32,9 +32,9 @@ export function buildHeaderControls(
     navigator.clipboard.writeText(text).then(function () {
       copyButton.textContent = '✅';
       setTimeout(function () { copyButton.textContent = '📋'; }, 1500);
-    logError('copyAuthDiag', 'Clipboard write failed', e);
-    showToast('❌ Clipboard write failed', 'error');
-    }).catch(function () {
+    }).catch(function (e: unknown) {
+      logError('copyAuthDiag', 'Clipboard write failed', e);
+      showToast('❌ Clipboard write failed', 'error');
       copyButton.textContent = '❌';
       setTimeout(function () { copyButton.textContent = '📋'; }, 1500);
     });
