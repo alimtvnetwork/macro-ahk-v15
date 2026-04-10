@@ -1057,6 +1057,15 @@ export function LibraryView() {
               )}
             </>
           )}
+
+          {/* Keyboard hints */}
+          <div className="flex items-center gap-4 pt-3 border-t border-border/40 text-[10px] text-muted-foreground/60">
+            <span className="flex items-center gap-1"><Keyboard className="h-3 w-3" /> Shortcuts:</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-muted/50 font-mono text-[9px]">/</kbd> Search</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-muted/50 font-mono text-[9px]">N</kbd> New</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-muted/50 font-mono text-[9px]">←</kbd><kbd className="px-1 py-0.5 rounded bg-muted/50 font-mono text-[9px] ml-0.5">→</kbd> Page</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-muted/50 font-mono text-[9px]">Esc</kbd> Blur</span>
+          </div>
         </TabsContent>
 
         <TabsContent value="groups" className="mt-4">
