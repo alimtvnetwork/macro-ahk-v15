@@ -70,6 +70,8 @@ import {
   Settings2,
   Users,
   ArrowUpCircle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { ProjectGroupPanel } from "./ProjectGroupPanel";
 import { VersionHistory } from "./VersionHistory";
@@ -700,6 +702,7 @@ export function LibraryView() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<AssetType | "all">("all");
+  const [page, setPage] = useState(0);
   const [promoteOpen, setPromoteOpen] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState<SharedAsset | null>(null);
   const [importExportLoading, setImportExportLoading] = useState(false);
@@ -797,12 +800,16 @@ export function LibraryView() {
     input.click();
   }, [loadData]);
 
-  // Filter assets
+  // Filter + paginate assets
+  const PAGE_SIZE = 50;
   const filtered = assets.filter(a => {
     if (filterType !== "all" && a.Type !== filterType) return false;
     if (search && !a.Name.toLowerCase().includes(search.toLowerCase()) && !a.Slug.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages - 1);
+  const paged = filtered.slice(safePage * PAGE_SIZE, (safePage + 1) * PAGE_SIZE);
 
   const linksForAsset = (assetId: number) => links.filter(l => l.SharedAssetId === assetId);
 
