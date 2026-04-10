@@ -72,6 +72,9 @@ import {
   ArrowUpCircle,
   ChevronLeft,
   ChevronRight,
+  Keyboard,
+  Lightbulb,
+  ArrowRight,
 } from "lucide-react";
 import { ProjectGroupPanel } from "./ProjectGroupPanel";
 import { VersionHistory } from "./VersionHistory";
@@ -924,18 +927,50 @@ export function LibraryView() {
               <span className="text-sm">Loading library…</span>
             </div>
           ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-3">
-              <Library className="h-10 w-10 opacity-30" />
-              <p className="text-sm">
-                {assets.length === 0
-                  ? "No shared assets yet. Promote an asset to get started."
-                  : "No assets match your filter."}
-              </p>
-              {assets.length === 0 && (
-                <Button size="sm" variant="outline" onClick={() => setPromoteOpen(true)}>
-                  <Plus className="h-3.5 w-3.5 mr-1" />
-                  Promote first asset
-                </Button>
+            <div className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-4">
+              <Library className="h-12 w-12 opacity-20" />
+              {assets.length === 0 ? (
+                <>
+                  <div className="text-center space-y-1">
+                    <p className="text-sm font-medium text-foreground">Your shared library is empty</p>
+                    <p className="text-xs max-w-xs">
+                      Promote prompts, scripts, chains, or presets to share them across projects.
+                    </p>
+                  </div>
+
+                  {/* Onboarding steps */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg w-full mt-2">
+                    {[
+                      { step: "1", title: "Promote", desc: "Push a local asset to the library" },
+                      { step: "2", title: "Link", desc: "Connect it to other projects" },
+                      { step: "3", title: "Sync", desc: "Changes cascade automatically" },
+                    ].map(s => (
+                      <div key={s.step} className="flex flex-col items-center gap-1.5 rounded-lg border border-border/60 bg-card/50 p-3 text-center">
+                        <span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary/15 text-primary text-xs font-bold">{s.step}</span>
+                        <span className="text-xs font-medium text-foreground">{s.title}</span>
+                        <span className="text-[10px] text-muted-foreground">{s.desc}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-2 mt-1">
+                    <Button size="sm" onClick={() => setPromoteOpen(true)}>
+                      <Plus className="h-3.5 w-3.5 mr-1" />
+                      Promote first asset
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={handleImport} disabled={importExportLoading}>
+                      <Upload className="h-3.5 w-3.5 mr-1" />
+                      Import library
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm">No assets match your filter.</p>
+                  <Button size="sm" variant="ghost" onClick={() => { setSearch(""); setFilterType("all"); setPage(0); }}>
+                    Clear filters
+                  </Button>
+                </>
               )}
             </div>
           ) : (
