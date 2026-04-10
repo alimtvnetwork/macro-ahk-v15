@@ -72,6 +72,9 @@ import {
   ArrowUpCircle,
   ChevronLeft,
   ChevronRight,
+  Keyboard,
+  Lightbulb,
+  ArrowRight,
 } from "lucide-react";
 import { ProjectGroupPanel } from "./ProjectGroupPanel";
 import { VersionHistory } from "./VersionHistory";
@@ -811,6 +814,40 @@ export function LibraryView() {
   const safePage = Math.min(page, totalPages - 1);
   const paged = filtered.slice(safePage * PAGE_SIZE, (safePage + 1) * PAGE_SIZE);
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const isInput = target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
+
+      if (e.key === "/" && !isInput && activeTab === "assets") {
+        e.preventDefault();
+        const searchInput = document.querySelector<HTMLInputElement>('[placeholder="Search assets…"]');
+        searchInput?.focus();
+        return;
+      }
+
+      if (e.key === "Escape" && isInput) {
+        (target as HTMLInputElement).blur();
+        return;
+      }
+
+      if (isInput) return;
+
+      if (e.key === "ArrowLeft" && safePage > 0) {
+        setPage(p => p - 1);
+      } else if (e.key === "ArrowRight" && safePage < totalPages - 1) {
+        setPage(p => p + 1);
+      }
+
+      if (e.key === "n" && !e.metaKey && !e.ctrlKey && activeTab === "assets") {
+        setPromoteOpen(true);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [activeTab, safePage, totalPages]);
+
   const linksForAsset = (assetId: number) => links.filter(l => l.SharedAssetId === assetId);
 
   const handleLinkStateChange = useCallback(async (link: AssetLink, newState: LinkState) => {
@@ -924,18 +961,50 @@ export function LibraryView() {
               <span className="text-sm">Loading library…</span>
             </div>
           ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-3">
-              <Library className="h-10 w-10 opacity-30" />
-              <p className="text-sm">
-                {assets.length === 0
-                  ? "No shared assets yet. Promote an asset to get started."
-                  : "No assets match your filter."}
-              </p>
-              {assets.length === 0 && (
-                <Button size="sm" variant="outline" onClick={() => setPromoteOpen(true)}>
-                  <Plus className="h-3.5 w-3.5 mr-1" />
-                  Promote first asset
-                </Button>
+            <div className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-4">
+              <Library className="h-12 w-12 opacity-20" />
+              {assets.length === 0 ? (
+                <>
+                  <div className="text-center space-y-1">
+                    <p className="text-sm font-medium text-foreground">Your shared library is empty</p>
+                    <p className="text-xs max-w-xs">
+                      Promote prompts, scripts, chains, or presets to share them across projects.
+                    </p>
+                  </div>
+
+                  {/* Onboarding steps */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg w-full mt-2">
+                    {[
+                      { step: "1", title: "Promote", desc: "Push a local asset to the library" },
+                      { step: "2", title: "Link", desc: "Connect it to other projects" },
+                      { step: "3", title: "Sync", desc: "Changes cascade automatically" },
+                    ].map(s => (
+                      <div key={s.step} className="flex flex-col items-center gap-1.5 rounded-lg border border-border/60 bg-card/50 p-3 text-center">
+                        <span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary/15 text-primary text-xs font-bold">{s.step}</span>
+                        <span className="text-xs font-medium text-foreground">{s.title}</span>
+                        <span className="text-[10px] text-muted-foreground">{s.desc}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-2 mt-1">
+                    <Button size="sm" onClick={() => setPromoteOpen(true)}>
+                      <Plus className="h-3.5 w-3.5 mr-1" />
+                      Promote first asset
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={handleImport} disabled={importExportLoading}>
+                      <Upload className="h-3.5 w-3.5 mr-1" />
+                      Import library
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm">No assets match your filter.</p>
+                  <Button size="sm" variant="ghost" onClick={() => { setSearch(""); setFilterType("all"); setPage(0); }}>
+                    Clear filters
+                  </Button>
+                </>
               )}
             </div>
           ) : (
@@ -988,6 +1057,15 @@ export function LibraryView() {
               )}
             </>
           )}
+
+          {/* Keyboard hints */}
+          <div className="flex items-center gap-4 pt-3 border-t border-border/40 text-[10px] text-muted-foreground/60">
+            <span className="flex items-center gap-1"><Keyboard className="h-3 w-3" /> Shortcuts:</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-muted/50 font-mono text-[9px]">/</kbd> Search</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-muted/50 font-mono text-[9px]">N</kbd> New</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-muted/50 font-mono text-[9px]">←</kbd><kbd className="px-1 py-0.5 rounded bg-muted/50 font-mono text-[9px] ml-0.5">→</kbd> Page</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-muted/50 font-mono text-[9px]">Esc</kbd> Blur</span>
+          </div>
         </TabsContent>
 
         <TabsContent value="groups" className="mt-4">
