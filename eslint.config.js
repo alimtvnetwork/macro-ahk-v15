@@ -23,6 +23,7 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "error",
       "no-var": "error",
 
       // --- SonarJS: Code smells & complexity ---
@@ -52,7 +53,7 @@ export default tseslint.config(
   {
     files: ["standalone-scripts/**/*.{ts,tsx}"],
     rules: {
-      "@typescript-eslint/no-explicit-any": "off",
+      // no-explicit-any enforced here too — no exceptions
     },
   },
   {
