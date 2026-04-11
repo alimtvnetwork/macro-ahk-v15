@@ -81,8 +81,9 @@ function performAuthDiagUpdate(ctx: AuthDiagUpdateCtx): void {
     const diag = window.marco?.auth?.getLastAuthDiag?.();
     if (diag) {
       const bridgeError = diag.bridgeOutcome === 'error';
-      const bridgeErrorMsg = typeof diag.bridgeError === 'string' ? diag.bridgeError : '';
-      const isSuspended = bridgeError && _isMv3Suspension(bridgeErrorMsg);
+      // Check controller-level bridge outcome for the actual error message
+      const controllerBridge = ctx.deps.getLastBridgeOutcome();
+      const isSuspended = bridgeError && _isMv3Suspension(controllerBridge.error || '');
       const isDegraded = (diag.bridgeOutcome === 'timeout' || (bridgeError && !isSuspended)) && diag.source !== 'none';
       const isDown = diag.source === 'none';
 
@@ -92,7 +93,6 @@ function performAuthDiagUpdate(ctx: AuthDiagUpdateCtx): void {
         ctx.headerBadge.textContent = '🟢';
         ctx.headerBadge.title = 'Bridge OK · ' + Math.round(diag.durationMs) + 'ms';
       } else if (isSuspended && diag.source !== 'none') {
-        // MV3 idle but token resolved from another source — not an error
         ctx.headerBadge.textContent = '🟡';
         ctx.headerBadge.title = 'Bridge idle (MV3 suspended) · token from ' + diag.source + ' · ' + Math.round(diag.durationMs) + 'ms';
       } else if (diag.bridgeOutcome === 'timeout') {
@@ -109,7 +109,6 @@ function performAuthDiagUpdate(ctx: AuthDiagUpdateCtx): void {
   } catch (e: unknown) {
     logError('renderAuthDiag', 'Auth diagnostics render failed', e);
     showToast('❌ Auth diagnostics render failed', 'error');
-    // SDK not available
   }
 }
 
