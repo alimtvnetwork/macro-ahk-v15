@@ -17,7 +17,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Badge } from "@/components/ui/badge";
 import { ColumnEditor, type ColumnDefinition } from "./ColumnEditor";
 import { ValidationRuleEditor, type ValidationRule } from "./ValidationRuleEditor";
-import { ForeignKeyEditor, type ForeignKeyDefinition } from "./ForeignKeyEditor";
+import { ForeignKeyEditor, type ForeignKeyDefinition, type OnDeleteAction } from "./ForeignKeyEditor";
 import { SchemaDiffPreview } from "./SchemaDiffPreview";
 import { SchemaVersionHistory } from "./SchemaVersionHistory";
 import { sendMessage } from "@/lib/message-client";
