@@ -110,7 +110,7 @@ function resolveColors(): Record<string, ToastColors> {
     let errorBorder = "#ef4444";
 
     try {
-        const themeRoot = (window as any).__MARCO_THEME__ || {};
+        const themeRoot = (window as unknown as Record<string, Record<string, unknown>>).__MARCO_THEME__ || {};
         const presets = themeRoot.presets || {};
         const theme = presets.dark || presets[themeRoot.activePreset || "dark"] || themeRoot || {};
         const TC = theme.colors || {};
