@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- chrome.storage dynamic config arrays */
 /**
  * Marco Extension — Injection Handler
  *
