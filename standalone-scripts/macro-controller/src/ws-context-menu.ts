@@ -137,7 +137,7 @@ export function startInlineRename(
             fetchLoopCreditsWithDetect(false);
           })
           .catch(function () {
-            logError('wsContextMenu', 'Workspace context action failed', function);
+            logError('wsContextMenu', 'Workspace context action failed', e);
             showToast('❌ Workspace context action failed', 'error');
             populateLoopWorkspaceDropdown();
           });
