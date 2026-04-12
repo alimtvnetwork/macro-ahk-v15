@@ -8,6 +8,7 @@
 
 import { useState, useCallback } from "react";
 import { useActivityTimeline, type TimelineEntry } from "@/hooks/use-activity-timeline";
+import { sendMessage } from "@/lib/message-client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
