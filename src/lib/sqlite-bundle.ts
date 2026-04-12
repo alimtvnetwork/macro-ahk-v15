@@ -12,7 +12,7 @@
  * See: spec/06-coding-guidelines/coding-guidelines/database-id-convention.md
  */
 
-import type { SqlValue } from "sql.js";
+import type { SqlValue } from "@/background/handlers/handler-types";
 import initSqlJs, { type Database } from "sql.js";
 import JSZip from "jszip";
 import { sendMessage } from "@/lib/message-client";

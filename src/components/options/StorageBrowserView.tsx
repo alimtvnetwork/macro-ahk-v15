@@ -6,7 +6,7 @@
  * complex fields. Views are read-only.
  */
 
-import type { SqlValue } from "sql.js";
+import type { SqlValue } from "@/background/handlers/handler-types";
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { getPlatform } from "@/platform";
 import { Button } from "@/components/ui/button";

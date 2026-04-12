@@ -5,7 +5,8 @@
  * to replace bare `unknown` with semantically meaningful types.
  */
 
-import type { SqlValue } from "sql.js";
+/** A primitive value returned by sql.js queries. */
+export type SqlValue = string | number | Uint8Array | null;
 
 /** A single row returned by sql.js `stmt.getAsObject()`. */
 export type SqlRow = Record<string, SqlValue>;

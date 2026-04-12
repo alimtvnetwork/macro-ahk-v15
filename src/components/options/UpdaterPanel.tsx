@@ -383,7 +383,7 @@ export function UpdaterPanel({ projectId: _projectId }: Props) {
     );
   };
 
-  const handleUpdateEndpoint = (updaterId: number, endpointId: number, field: keyof UpdaterEndpoint, value: UpdaterEntry[typeof field]) => {
+  const handleUpdateEndpoint = (updaterId: number, endpointId: number, field: keyof UpdaterEndpoint, value: UpdaterEndpoint[keyof UpdaterEndpoint]) => {
     setUpdaters((prev) =>
       prev.map((u) => {
         if (u.id !== updaterId) return u;
@@ -422,7 +422,7 @@ export function UpdaterPanel({ projectId: _projectId }: Props) {
     );
   };
 
-  const handleUpdateStep = (updaterId: number, stepId: number, field: keyof UpdaterStep, value: UpdaterEntry[typeof field]) => {
+  const handleUpdateStep = (updaterId: number, stepId: number, field: keyof UpdaterStep, value: UpdaterStep[keyof UpdaterStep]) => {
     setUpdaters((prev) =>
       prev.map((u) => {
         if (u.id !== updaterId) return u;
@@ -666,13 +666,13 @@ interface UpdaterEntryCardProps {
   onCheck: () => void;
   onRemove: () => void;
   onToggleEnabled: () => void;
-  onUpdateField: (field: keyof UpdaterEntry, value: UpdaterEntry[typeof field]) => void;
+  onUpdateField: (field: keyof UpdaterEntry, value: UpdaterEntry[keyof UpdaterEntry]) => void;
   onAddEndpoint: () => void;
   onRemoveEndpoint: (id: number) => void;
-  onUpdateEndpoint: (id: number, field: keyof UpdaterEndpoint, value: UpdaterEntry[typeof field]) => void;
+  onUpdateEndpoint: (id: number, field: keyof UpdaterEndpoint, value: UpdaterEndpoint[keyof UpdaterEndpoint]) => void;
   onAddStep: () => void;
   onRemoveStep: (id: number) => void;
-  onUpdateStep: (id: number, field: keyof UpdaterStep, value: UpdaterEntry[typeof field]) => void;
+  onUpdateStep: (id: number, field: keyof UpdaterStep, value: UpdaterStep[keyof UpdaterStep]) => void;
   toggleCategory: (cats: string[], cat: string) => string[];
 }
 
