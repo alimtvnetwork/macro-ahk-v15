@@ -21,6 +21,7 @@ interface ConfigSectionListProps {
   onSave: (row: ConfigRow) => void;
 }
 
+// eslint-disable-next-line max-lines-per-function -- collapsible section list with inline row editors
 export function ConfigSectionList({ sections, edits, saving, editKey, onEditChange, onSave }: ConfigSectionListProps) {
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
 

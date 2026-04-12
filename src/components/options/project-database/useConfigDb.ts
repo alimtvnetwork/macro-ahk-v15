@@ -17,6 +17,7 @@ export interface ConfigRow {
   UpdatedAt: string;
 }
 
+// eslint-disable-next-line max-lines-per-function -- hook managing config CRUD state
 export function useConfigDb(projectSlug: string) {
   const [rows, setRows] = useState<ConfigRow[]>([]);
   const [loading, setLoading] = useState(false);

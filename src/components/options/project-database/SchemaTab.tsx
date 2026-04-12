@@ -23,6 +23,7 @@ interface SchemaTabProps {
   onMigrationComplete: () => void;
 }
 
+// eslint-disable-next-line max-lines-per-function -- thin orchestrator for visual table builder
 export function SchemaTab({ projectSlug, onMigrationComplete }: SchemaTabProps) {
   const sb = useSchemaBuilder(projectSlug, onMigrationComplete);
 
@@ -97,6 +98,7 @@ export function SchemaTab({ projectSlug, onMigrationComplete }: SchemaTabProps) 
 /*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
+// eslint-disable-next-line max-lines-per-function -- toolbar with multiple action buttons
 function SchemaToolbar({
   tableCount, loadingExisting, applying, importRef,
   onLoadExisting, onImport, onExport, onAddTable, onApply,

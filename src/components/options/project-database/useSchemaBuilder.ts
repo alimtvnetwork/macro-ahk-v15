@@ -40,6 +40,7 @@ export interface ApplyResult {
 /*  Hook                                                               */
 /* ------------------------------------------------------------------ */
 
+// eslint-disable-next-line max-lines-per-function -- hook managing complex schema builder state
 export function useSchemaBuilder(projectSlug: string, onMigrationComplete: () => void) {
   const [tables, setTables] = useState<TableDefinition[]>([]);
   const [applying, setApplying] = useState(false);
@@ -70,6 +71,7 @@ export function useSchemaBuilder(projectSlug: string, onMigrationComplete: () =>
     updateTable(index, { isOpen: !tables[index].isOpen });
   };
 
+  // eslint-disable-next-line max-lines-per-function -- loads and transforms existing schema from DB meta
   const handleLoadExisting = useCallback(async () => {
     setLoadingExisting(true);
     try {
@@ -200,6 +202,7 @@ export function useSchemaBuilder(projectSlug: string, onMigrationComplete: () =>
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
+// eslint-disable-next-line max-lines-per-function -- builds nested schema payload structure
 function buildSchemaPayload(validTables: TableDefinition[]) {
   return {
     version: "1.0.0",

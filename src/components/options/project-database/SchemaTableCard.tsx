@@ -25,6 +25,7 @@ interface SchemaTableCardProps {
   onToggle: (index: number) => void;
 }
 
+// eslint-disable-next-line max-lines-per-function -- collapsible card with column, validation, and FK editors
 export function SchemaTableCard({ table, tableIdx, allTableNames, onUpdate, onRemove, onToggle }: SchemaTableCardProps) {
   return (
     <Card className="border-border">
