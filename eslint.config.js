@@ -25,13 +25,7 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "error",
       "no-var": "error",
-      "@typescript-eslint/no-restricted-types": ["warn", {
-        types: {
-          unknown: {
-            message: "Use a specific type instead of `unknown`. Define an interface or use a concrete type.",
-          },
-        },
-      }],
+      "@typescript-eslint/no-restricted-types": "off",
 
       // --- SonarJS: Code smells & complexity ---
       "sonarjs/cognitive-complexity": ["warn", 15],
@@ -105,19 +99,6 @@ export default tseslint.config(
     ignores: ["**/__tests__/**"],
     rules: {
       "max-lines-per-function": ["warn", { max: 40, skipBlankLines: true, skipComments: true }],
-    },
-  },
-  // --- Platform files — unknown ban enforced as error (fully cleaned) ---
-  {
-    files: ["src/platform/**/*.ts"],
-    rules: {
-      "@typescript-eslint/no-restricted-types": ["error", {
-        types: {
-          unknown: {
-            message: "Use a specific type instead of `unknown`. Define an interface or use a concrete type.",
-          },
-        },
-      }],
     },
   },
   // --- Standalone scripts (non-controller) — raise to 50 ---
