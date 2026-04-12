@@ -50,7 +50,7 @@ function deepMerge<T extends Record<string, unknown>>(target: T, source: Partial
   return result as T;
 }
 
-function isPlainObject(v: unknown): v is Record<string, unknown> {
+function isPlainObject(v: string | number | boolean | object | null | undefined): v is Record<string, string | number | boolean | null | object> {
   return v !== null && typeof v === 'object' && !Array.isArray(v);
 }
 
