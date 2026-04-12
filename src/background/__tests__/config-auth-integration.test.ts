@@ -26,7 +26,6 @@ const PROJECT_ID = "584600b3-0bba-43a0-a09d-ab632bf4b5ac";
 
 type CookieStore = Map<string, Map<string, { name: string; value: string; domain: string }>>;
 
-// eslint-disable-next-line max-lines-per-function
 function buildChromeMock(options: {
     cookies?: CookieStore;
     tabs?: chrome.tabs.Tab[];
@@ -161,7 +160,6 @@ function makeCookieStore(entries: Array<{ url: string; name: string; value: stri
 /*  fetchAuthToken Tests                                               */
 /* ------------------------------------------------------------------ */
 
-// eslint-disable-next-line max-lines-per-function
 describe("fetchAuthToken — integration", () => {
     it("returns JWT directly from a JWT session cookie", async () => {
         const tabs = [
@@ -235,7 +233,6 @@ describe("fetchAuthToken — integration", () => {
 /*  handleGetToken Tests                                               */
 /* ------------------------------------------------------------------ */
 
-// eslint-disable-next-line max-lines-per-function
 describe("handleGetToken — integration", () => {
     it("returns cached JWT when cache is valid", async () => {
         const tabs = [
