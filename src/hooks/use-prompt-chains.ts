@@ -98,7 +98,7 @@ export function usePromptChains() {
             setChains(normalized);
         } catch (error) {
             setChains([]);
-            setFatalError(toError(error, "Failed to load prompt chains"));
+            setFatalError(toError(error as Error, "Failed to load prompt chains"));
         } finally {
             setLoading(false);
         }

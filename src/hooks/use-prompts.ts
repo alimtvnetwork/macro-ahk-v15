@@ -76,7 +76,7 @@ export function usePrompts() {
             setPrompts(normalized);
         } catch (error) {
             setPrompts([]);
-            setFatalError(toError(error, "Failed to load prompts"));
+            setFatalError(toError(error as Error, "Failed to load prompts"));
         } finally {
             setLoading(false);
         }
