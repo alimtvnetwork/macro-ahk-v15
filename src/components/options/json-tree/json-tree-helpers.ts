@@ -1,4 +1,3 @@
-import type { JsonValue } from "@/background/handlers/handler-types";
 import type { JsonValue, JsonObject, JsonArray } from "./json-tree-types";
 
 /** Safely parse a JSON string, returning null on failure. */
