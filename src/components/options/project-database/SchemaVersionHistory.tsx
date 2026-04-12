@@ -22,13 +22,13 @@ interface SchemaSnapshot {
   label: string;
   savedAt: string;
   tableCount: number;
-  tables: Record<string, JsonValue>[];
+  tables: Record<string, unknown>[];
 }
 
 interface SchemaVersionHistoryProps {
   projectSlug: string;
-  currentTables: Record<string, JsonValue>[];
-  onRestore: (tables: Record<string, JsonValue>[]) => void;
+  currentTables: Record<string, unknown>[];
+  onRestore: (tables: Record<string, unknown>[]) => void;
 }
 
 const KV_KEY = "schema_version_history";

@@ -1,6 +1,5 @@
 import type { JsonValue } from "@/background/handlers/handler-types";
 import { useState } from "react";
-import type { JsonValue } from "@/background/handlers/handler-types";
 import { Button } from "@/components/ui/button";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Input } from "@/components/ui/input";

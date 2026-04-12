@@ -6,7 +6,7 @@
  * complex fields. Views are read-only.
  */
 
-import type { SqlValue } from "sql.js";
+import type { SqlValue } from "@/background/handlers/handler-types";
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { getPlatform } from "@/platform";
 import { Button } from "@/components/ui/button";
@@ -806,7 +806,7 @@ function TableDataView({
                     )}
                     {columns.map((col) => (
                       <TableCell key={col} className="text-[10px] font-mono p-1.5 max-w-[200px] truncate">
-                        <CellValue value={row[col]} />
+                        <CellValue value={row[col] as SqlValue} />
                       </TableCell>
                     ))}
                   </tr>

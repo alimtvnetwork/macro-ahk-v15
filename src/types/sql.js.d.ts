@@ -1,14 +1,17 @@
+/** Primitive value returned by sql.js queries. */
+type SqlJsValue = string | number | Uint8Array | null;
+
 declare module "sql.js" {
   export interface Statement {
-    run(params?: unknown[]): void;
-    bind(params?: unknown[]): boolean;
+    run(params?: SqlJsValue[]): void;
+    bind(params?: SqlJsValue[]): boolean;
     step(): boolean;
-    getAsObject(): Record<string, unknown>;
+    getAsObject(): Record<string, SqlJsValue>;
     free(): void;
   }
 
   export interface Database {
-    run(sql: string, params?: unknown[]): Database;
+    run(sql: string, params?: SqlJsValue[]): Database;
     exec(sql: string): QueryExecResult[];
     prepare(sql: string): Statement;
     close(): void;
@@ -17,7 +20,7 @@ declare module "sql.js" {
 
   export interface QueryExecResult {
     columns: string[];
-    values: unknown[][];
+    values: SqlJsValue[][];
   }
 
   export interface SqlJsStatic {
