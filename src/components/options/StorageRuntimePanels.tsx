@@ -75,7 +75,7 @@ function toPrettyJson(value: unknown): string {
   }
 }
 
-function parseEditorValue(raw: string): unknown {
+function parseEditorValue(raw: string): string | number | boolean | null | object {
   const trimmed = raw.trim();
   if (!trimmed) return "";
   try {
