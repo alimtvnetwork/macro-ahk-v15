@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- chrome runtime detection via globalThis */
+import type { ScriptEntry } from "@/shared/project-types";
 import { useState, useCallback, useRef } from "react";
 import { sendMessage } from "@/lib/message-client";
 import { getPlatform } from "@/platform";
