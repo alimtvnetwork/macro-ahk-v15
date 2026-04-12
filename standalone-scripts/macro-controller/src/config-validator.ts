@@ -191,7 +191,7 @@ function validateSchemaVersion(label: string, version: number, supported: number
 }
 
 function validateFieldType(
-  obj: Record<string, unknown>,
+  obj: MergeableRecord,
   field: string,
   expected: string,
   label: string,
