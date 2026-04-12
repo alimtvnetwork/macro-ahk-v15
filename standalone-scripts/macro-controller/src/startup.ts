@@ -168,7 +168,7 @@ function _preWarmPrompts(attempt: number): void {
   const sdk = (window as unknown as Record<string, unknown>).marco as { prompts?: { preWarm(): Promise<unknown[]> } } | undefined;
 
   if (sdk && sdk.prompts && typeof sdk.prompts.preWarm === 'function') {
-    sdk.prompts.preWarm().then(function(prompts: unknown[]) {
+    sdk.prompts.preWarm().then(function(prompts: MarcoSDKPromptEntry[]) {
       if (prompts && prompts.length > 0) {
         log('Startup: 📋 Pre-warmed ' + prompts.length + ' prompts via SDK (attempt ' + (attempt + 1) + ')', 'success');
         timingEnd(PROMPT_PREWARM, 'ok', prompts.length + ' prompts via SDK');
@@ -176,7 +176,7 @@ function _preWarmPrompts(attempt: number): void {
         log('Startup: ⚠️ SDK prompt pre-warm returned empty — falling back to loader', 'warn');
         _preWarmViaLoader();
       }
-    }).catch(function(e: unknown) {
+    }).catch(function (e) {
       log('Startup: SDK prompt pre-warm failed (attempt ' + (attempt + 1) + '): ' + (e instanceof Error ? e.message : String(e)), 'warn');
       _preWarmViaLoader();
     });
@@ -205,7 +205,7 @@ function _preWarmViaLoader(): void {
         timingEnd(PROMPT_PREWARM, 'warn', 'empty result');
       }
     });
-  }).catch(function(e: unknown) {
+  }).catch(function (e) {
     logError('Startup', 'Prompt pre-warm loader import failed — ' + (e instanceof Error ? e.message : String(e)));
     timingEnd(PROMPT_PREWARM, 'error', 'loader import failed');
   });
@@ -405,7 +405,7 @@ function launchCreditAndWorkspaceLoad(): void {
 
   Promise.all([creditPromise, tier1Promise])
     .then(function () { handleCreditSuccess(tier1Data); })
-    .catch(function (err: unknown) { handleCreditError(err); });
+    .catch(function (err) { handleCreditError(err); });
 }
 
 /** Handle successful credit + workspace load. */
@@ -447,7 +447,7 @@ function handleCreditSuccess(tier1Data: MarkViewedResponse | null): void {
 }
 
 /** Handle credit/workspace load failure. */
-function handleCreditError(err: unknown): void {
+function handleCreditError(err: CaughtError): void {
   const errMsg = err && typeof err === 'object' && 'message' in err ? (err as Error).message : String(err);
   const axiosStatus = err && typeof err === 'object' && 'response' in err ? (err as { response?: { status?: number; statusText?: string; data?: unknown } }).response : null;
   const statusDetail = axiosStatus ? ' [HTTP ' + (axiosStatus.status || '?') + ' ' + (axiosStatus.statusText || '') + ']' : '';
@@ -499,7 +499,7 @@ function handleTier1Response(resp: { ok: boolean; status?: number; data?: unknow
   return (resp.data ?? null) as MarkViewedResponse | null;
 }
 
-function handleTier1Error(err: unknown): null {
+function handleTier1Error(err: CaughtError): null {
   log('Startup: Tier 1 prefetch error: ' + toErrorMessage(err), 'warn');
   timingEnd(WS_PREFETCH, 'warn', toErrorMessage(err));
   return null;
@@ -625,7 +625,7 @@ function scheduleWorkspaceRetry(attempt: number): void {
         log(STARTUP_RETRY + attempt + ' — workspace still empty, scheduling next retry', 'warn');
         scheduleWorkspaceRetry(attempt + 1);
       }
-    }).catch(function (err: unknown) {
+    }).catch(function (err) {
       log(STARTUP_RETRY + attempt + ' failed: ' + toErrorMessage(err) + ' — scheduling next retry', 'warn');
       scheduleWorkspaceRetry(attempt + 1);
     });
