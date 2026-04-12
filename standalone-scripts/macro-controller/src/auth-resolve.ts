@@ -57,17 +57,14 @@ function getAuthUtils(): MarcoSDKAuthTokenUtils {
 
       return token.startsWith('eyJ') && token.split('.').length === 3;
     },
-    extractBearerTokenFromUnknown(raw: unknown): string {
-      if (typeof raw !== 'string') {
-        return '';
-      }
+    extractBearerTokenFromRaw(raw: string): string {
       const normalized = this.normalizeBearerToken(raw);
       if (this.isUsableToken(normalized)) {
         return normalized;
       }
 
       try {
-        const parsed = JSON.parse(raw) as Record<string, unknown>;
+        const parsed = JSON.parse(raw) as Record<string, string>;
         if (parsed === null || typeof parsed !== 'object') {
           return '';
         }
@@ -82,7 +79,7 @@ function getAuthUtils(): MarcoSDKAuthTokenUtils {
           }
         }
       } catch (e: unknown) {
-        log('auth-resolve: fallback extractBearerTokenFromUnknown JSON parse failed — ' + toErrorMessage(e), 'debug');
+        log('auth-resolve: fallback extractBearerTokenFromRaw JSON parse failed — ' + toErrorMessage(e), 'debug');
       }
 
       return '';
@@ -109,8 +106,8 @@ export function isUsableToken(raw: string): boolean {
   return getAuthUtils().isUsableToken(raw);
 }
 
-export function extractBearerTokenFromUnknown(raw: unknown): string {
-  return getAuthUtils().extractBearerTokenFromUnknown(raw);
+export function extractBearerTokenFromRaw(raw: string): string {
+  return getAuthUtils().extractBearerTokenFromRaw(raw);
 }
 
 // ============================================
