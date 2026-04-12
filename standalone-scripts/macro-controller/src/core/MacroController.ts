@@ -43,7 +43,7 @@ export interface CreditManagerInterface {
   fetchAsync(isRetry?: boolean): Promise<void>;
   fetchBalance(workspaceId?: string): Promise<import('../types').CreditBalanceResponse | null>;
   getState(): LoopCreditState;
-  parse(data: Record<string, unknown>): boolean;
+  parse(data: WorkspacesApiResponse): boolean;
   sync(): void;
   calcTotal(granted: number, dailyLimit: number, billingLimit: number, topupLimit: number, rolloverLimit: number): number;
   calcAvailable(totalCredits: number, rolloverUsed: number, dailyUsed: number, billingUsed: number, freeUsed: number): number;

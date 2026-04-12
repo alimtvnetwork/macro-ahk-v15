@@ -38,7 +38,7 @@ export class CreditManager implements CreditManagerInterface {
   }
 
   /** Parse raw API response into loopCreditState */
-  parse(data: Record<string, unknown>): boolean {
+  parse(data: WorkspacesApiResponse): boolean {
     return parseLoopApiResponse(data);
   }
 

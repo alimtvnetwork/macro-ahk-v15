@@ -87,8 +87,8 @@ function buildLabels(attempt: RenameAttemptState): string {
   return labels.length > 0 ? ' (' + labels.join(', ') + ')' : '';
 }
 
-function buildRenameBody(newName: string, includeCreditLimit: boolean): Record<string, unknown> {
-  const payload: Record<string, unknown> = { name: newName };
+function buildRenameBody(newName: string, includeCreditLimit: boolean): MutationPayload {
+  const payload: MutationPayload = { name: newName };
 
   if (includeCreditLimit) {
     payload.default_monthly_member_credit_limit = -1;
