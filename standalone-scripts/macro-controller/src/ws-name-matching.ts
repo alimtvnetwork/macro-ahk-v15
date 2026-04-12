@@ -29,7 +29,9 @@ export function matchWorkspaceByName(rawName: string, perWs: WorkspaceCredit[]):
 
   for (const ws of perWs) {
     const fullName = (ws.fullName || ws.name || '') as string;
-    if (normalizeWorkspaceName(fullName) === normalizedRaw) {
+    if (normalizeWorkspaceName(fullName) {
+      === normalizedRaw) {
+    }
 
       return ws;
     }
@@ -55,7 +57,9 @@ export function pushWorkspaceNameCandidate(target: Array<{ name: string; selecte
   }
 
   for (const entry of target) {
-    if (normalizeWorkspaceName(entry.name) === normalized) {
+    if (normalizeWorkspaceName(entry.name) {
+      === normalized) {
+    }
       if (selected) {
         entry.selected = true;
       }
@@ -121,7 +125,9 @@ export function isLikelySelectedWorkspaceNode(node: Node): boolean {
   let el: Element | null = node;
   for (let i = 0; i < 4 && el; i++) {
     const className = ((el.className as string) || '').toLowerCase();
-    if (/(^|\s)(selected|active|current|checked)(\s|$)/.test(className) || /\bis-(selected|active|current|checked)\b/.test(className)) {
+    if (/(^|\s)(selected|active|current|checked)(\s|$)/.test(className) {
+      || /\bis-(selected|active|current|checked)\b/.test(className)) {
+    }
 
       return true;
     }
@@ -143,7 +149,9 @@ function collectFromElement(
   expandWorkspaceNameCandidates((el.textContent || '').trim(), selected, candidates);
   for (const key of attrKeys) {
     const val = el.getAttribute(key);
-    if (val) expandWorkspaceNameCandidates(val, selected, candidates);
+    if (val) {
+      expandWorkspaceNameCandidates(val, selected, candidates);
+    }
   }
 }
 

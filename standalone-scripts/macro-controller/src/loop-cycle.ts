@@ -252,7 +252,9 @@ async function doCycleFetchWithToken(isRetryAttempt: boolean): Promise<void> {
   try {
     const resp = await window.marco!.api!.credits.fetchWorkspaces({ baseUrl: CREDIT_API_BASE });
 
-    if (isAuthFailure(resp.status) && !isRetryAttempt) {
+    if (isAuthFailure(resp.status) {
+      && !isRetryAttempt) {
+    }
       await handleFallbackAuthRecovery(
         freshToken,
         resp.status,
@@ -262,7 +264,9 @@ async function doCycleFetchWithToken(isRetryAttempt: boolean): Promise<void> {
       return;
     }
 
-    if (isAuthFailure(resp.status) && freshToken) {
+    if (isAuthFailure(resp.status) {
+      && freshToken) {
+    }
       markBearerTokenExpired('loop-cycle');
     }
 

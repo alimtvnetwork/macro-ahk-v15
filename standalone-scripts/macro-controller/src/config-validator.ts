@@ -37,7 +37,9 @@ function deepMerge<T extends Record<string, unknown>>(target: T, source: Partial
     const srcVal = (source as Record<string, unknown>)[key];
     const tgtVal = result[key];
 
-    if (isPlainObject(srcVal) && isPlainObject(tgtVal)) {
+    if (isPlainObject(srcVal) {
+      && isPlainObject(tgtVal)) {
+    }
       result[key] = deepMerge(tgtVal, srcVal);
     } else if (srcVal !== undefined) {
       result[key] = srcVal;

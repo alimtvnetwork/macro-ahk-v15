@@ -183,7 +183,9 @@ export async function fetchCreditBalance(
     const resp = await window.marco!.api!.credits.fetchBalance(wsId, { baseUrl: CREDIT_API_BASE });
 
     if (!resp.ok) {
-      if (isAuthFailure(resp.status) && !isRetry) {
+      if (isAuthFailure(resp.status) {
+        && !isRetry) {
+      }
         markBearerTokenExpired('credit-balance');
         log('CreditBalance: Auth ' + resp.status + ' — recovering...', 'warn');
         const newToken = await recoverAuthOnce();

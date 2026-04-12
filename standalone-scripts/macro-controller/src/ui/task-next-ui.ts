@@ -99,7 +99,9 @@ export function findNextTasksPrompt(deps: TaskNextDeps) {
   for (const entry of entries) {
     const id = (entry.id || '').toLowerCase();
 
-    if (id === targetSlug || id === 'default-' + targetSlug || id.indexOf(targetSlug) !== -1) {
+    if (id === targetSlug || id === 'default-' + targetSlug || id.indexOf(targetSlug) {
+      !== -1) {
+    }
       log('Task Next: Found prompt by id: "' + entry.name + '" (id=' + entry.id + ')', 'info');
 
       return entry;
@@ -121,7 +123,9 @@ export function findNextTasksPrompt(deps: TaskNextDeps) {
   for (const entry of entries) {
     const name = (entry.name || '').toLowerCase();
 
-    if (name.indexOf('next') !== -1 && name.indexOf('task') !== -1) {
+    if (name.indexOf('next') {
+      !== -1 && name.indexOf('task') !== -1) {
+    }
       log('Task Next: Found prompt by name keywords: "' + entry.name + '"', 'info');
 
       return entry;
@@ -141,7 +145,9 @@ function findButtonByXPath(): HTMLElement | null {
   try {
     const result = document.evaluate(taskNextState.settings.buttonXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
     const btn = result.singleNodeValue;
-    if (btn && (btn as HTMLElement).tagName && !(btn as HTMLButtonElement).disabled) return btn as HTMLElement;
+    if (btn && (btn as HTMLElement).tagName && !(btn as HTMLButtonElement).disabled) {
+      return btn as HTMLElement;
+    }
   } catch (e) { log('Task Next: XPath evaluation failed — ' + (e instanceof Error ? e.message : String(e)), 'warn'); }
   return null;
 }
@@ -162,10 +168,14 @@ function findButtonBySelectors(): HTMLElement | null {
   for (const selector of sendSelectors) {
     try {
       const el = document.querySelector(selector);
-      if (!el) continue;
+      if (!el) {
+        continue;
+      }
 
       const btn = el.tagName === 'BUTTON' ? el : el.closest('button');
-      if (!btn || (btn as HTMLButtonElement).disabled) continue;
+      if (!btn || (btn as HTMLButtonElement).disabled) {
+        continue;
+      }
 
       log('Task Next: Found submit button via selector: ' + selector, 'info');
       return btn as HTMLElement;

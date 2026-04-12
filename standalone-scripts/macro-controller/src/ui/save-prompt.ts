@@ -127,7 +127,9 @@ function findContainerViaCssFallback(): Element | null {
       const result = fallbackIndex === 2
         ? tryToolbarButtonFallback(fallbackSelector, fallbackIndex)
         : tryDirectFallback(fallbackSelector, fallbackIndex);
-      if (result) return result;
+      if (result) {
+        return result;
+      }
     } catch (_e: unknown) { log('Save Prompt: CSS selector error at fallback #' + (fallbackIndex + 1) + ': ' + (_e instanceof Error ? _e.message : String(_e)), 'warn'); }
   }
 
@@ -156,7 +158,9 @@ interface InjectCtx {
 }
 
 function tryInjectSavePrompt(ctx: InjectCtx): boolean {
-  if (ctx.injected) return true;
+  if (ctx.injected) {
+    return true;
+  }
 
   const isAlreadyPresent = document.getElementById('marco-save-prompt-btn') !== null;
 
@@ -170,7 +174,9 @@ function tryInjectSavePrompt(ctx: InjectCtx): boolean {
     const container = findSavePromptContainer();
     const isContainerMissing = container === null;
 
-    if (isContainerMissing) return false;
+    if (isContainerMissing) {
+      return false;
+    }
 
     const promptsWrapper = buildPromptsButton(ctx.deps);
     const saveWrapper = buildSaveButton(ctx.deps);

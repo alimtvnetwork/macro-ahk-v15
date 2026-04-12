@@ -42,7 +42,9 @@ export function runIdempotentCheck(): IdempotentResult {
   nsWrite('_internal.destroyed', false);
 
   const existingMarker = document.getElementById(IDS.SCRIPT_MARKER);
-  if (!existingMarker) return 'proceed';
+  if (!existingMarker) {
+    return 'proceed';
+  }
 
   const existingVersion = existingMarker.getAttribute('data-version') || '';
   const isVersionMismatch = existingVersion !== VERSION;
@@ -64,7 +66,9 @@ function handleVersionMismatch(marker: HTMLElement, existingVersion: string): Id
   try { nsCallTyped('api.loop.stop'); } catch (e) { logSub('Version mismatch teardown: loop stop failed — ' + (e instanceof Error ? e.message : String(e)), 1); }
   marker.remove();
   const staleContainer = document.getElementById(IDS.CONTAINER);
-  if (staleContainer) staleContainer.remove();
+  if (staleContainer) {
+    staleContainer.remove();
+  }
   return 'proceed';
 }
 
@@ -112,7 +116,9 @@ function attemptUiRecovery(marker: HTMLElement): IdempotentResult {
 
 
 function healAllManagers(existingController: RecoverableController | null): void {
-  if (!existingController) return;
+  if (!existingController) {
+    return;
+  }
 
   // Self-heal UIManager
   if (!existingController.ui) {
@@ -149,7 +155,9 @@ function healManager(
   getter: () => unknown,
   register: ((m: unknown) => void) | undefined,
 ): void {
-  if (typeof register !== 'function') return;
+  if (typeof register !== 'function') {
+    return;
+  }
   let has = false;
   try { has = !!getter(); } catch (_e) { logSub('Self-heal getter threw for ' + label + ': ' + (_e instanceof Error ? _e.message : String(_e)), 1); }
   if (!has) {
@@ -165,6 +173,8 @@ function handleStaleMarker(marker: HTMLElement): IdempotentResult {
   console.warn(Label.LogMacroloopV + VERSION + '] Stale marker found (globals missing) — removing marker and re-initializing');
   marker.remove();
   const staleContainer = document.getElementById(IDS.CONTAINER);
-  if (staleContainer) staleContainer.remove();
+  if (staleContainer) {
+    staleContainer.remove();
+  }
   return 'proceed';
 }

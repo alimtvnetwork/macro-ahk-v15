@@ -51,9 +51,15 @@ import { StorageKey } from './types';
 
 export function resolvePreset(key: string): ThemePreset {
   const darkPreset = themeRoot.presets?.dark;
-  if (darkPreset) return darkPreset;
-  if (themeRoot.presets && themeRoot.presets[key]) return themeRoot.presets[key];
-  if (themeRoot.colors) return { colors: themeRoot.colors };
+  if (darkPreset) {
+    return darkPreset;
+  }
+  if (themeRoot.presets && themeRoot.presets[key]) {
+    return themeRoot.presets[key];
+  }
+  if (themeRoot.colors) {
+    return { colors: themeRoot.colors };
+  }
   return {} as ThemePreset;
 }
 
@@ -85,7 +91,9 @@ export const VERSION = '2.133.0';
 try {
   const root = RiseupAsiaMacroExt;
   if (root && root.Projects && root.Projects.MacroController) {
-    if (!root.Projects.MacroController.meta) root.Projects.MacroController.meta = {};
+    if (!root.Projects.MacroController.meta) {
+      root.Projects.MacroController.meta = {};
+    }
     root.Projects.MacroController.meta.version = VERSION;
   }
 } catch (_e) { logDebug('shared-state', 'SDK namespace not yet registered — version set at injection time'); }

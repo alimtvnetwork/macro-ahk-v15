@@ -200,11 +200,15 @@ const nsCache = new NamespaceCache();
  * Safe to call multiple times — idempotent.
  */
 export function getNamespace(): MacroControllerNamespace | null {
-  if (nsCache.ns) return nsCache.ns;
+  if (nsCache.ns) {
+    return nsCache.ns;
+  }
 
   try {
     const root = RiseupAsiaMacroExt;
-    if (!root || !root.Projects) return null;
+    if (!root || !root.Projects) {
+      return null;
+    }
 
     if (!root.Projects.MacroController) {
       root.Projects.MacroController = {};
@@ -213,17 +217,37 @@ export function getNamespace(): MacroControllerNamespace | null {
     const mc = root.Projects.MacroController as MacroControllerNamespace;
 
     // Ensure sub-objects exist
-    if (!mc.meta) mc.meta = { version: '', displayName: '' };
-    if (!mc.api) mc.api = {} as MacroControllerApi;
+    if (!mc.meta) {
+      mc.meta = { version: '', displayName: '' };
+    }
+    if (!mc.api) {
+      mc.api = {} as MacroControllerApi;
+    }
     const api = mc.api;
-    if (!api.loop) api.loop = {} as LoopApi;
-    if (!api.credits) api.credits = {} as CreditsApi;
-    if (!api.auth) api.auth = {} as AuthApi;
-    if (!api.workspace) api.workspace = {} as WorkspaceApi;
-    if (!api.ui) api.ui = {} as UiApi;
-    if (!api.config) api.config = {} as ConfigApi;
-    if (!api.autoAttach) api.autoAttach = {} as AutoAttachApi;
-    if (!mc._internal) mc._internal = {} as MacroControllerInternal;
+    if (!api.loop) {
+      api.loop = {} as LoopApi;
+    }
+    if (!api.credits) {
+      api.credits = {} as CreditsApi;
+    }
+    if (!api.auth) {
+      api.auth = {} as AuthApi;
+    }
+    if (!api.workspace) {
+      api.workspace = {} as WorkspaceApi;
+    }
+    if (!api.ui) {
+      api.ui = {} as UiApi;
+    }
+    if (!api.config) {
+      api.config = {} as ConfigApi;
+    }
+    if (!api.autoAttach) {
+      api.autoAttach = {} as AutoAttachApi;
+    }
+    if (!mc._internal) {
+      mc._internal = {} as MacroControllerInternal;
+    }
 
     // Set meta
     mc.meta.version = VERSION;
@@ -248,7 +272,9 @@ export function getNamespace(): MacroControllerNamespace | null {
  */
 export function nsWrite<P extends keyof NsPathMap>(path: P, value: NsPathMap[P]): void {
   const ns = getNamespace();
-  if (!ns) return;
+  if (!ns) {
+    return;
+  }
 
   // 2-segment: _internal.* or api.mc
   const dot1 = path.indexOf('.');
@@ -280,7 +306,9 @@ export function nsWrite<P extends keyof NsPathMap>(path: P, value: NsPathMap[P])
  */
 export function nsReadTyped<P extends keyof NsPathMap>(path: P): NsPathMap[P] | undefined {
   const ns = getNamespace();
-  if (!ns) return undefined;
+  if (!ns) {
+    return undefined;
+  }
 
   const dot1 = path.indexOf('.');
   const dot2 = path.indexOf('.', dot1 + 1);
@@ -343,5 +371,7 @@ export function nsRead(_windowKey: string, nsPath: string): unknown {
 /** @deprecated Use nsCallTyped() instead. */
 export function nsCall(_windowKey: string, nsPath: string, ...args: unknown[]): unknown {
   const fn = nsReadTyped(nsPath as keyof NsPathMap);
-  if (typeof fn === 'function') return (fn as (...a: unknown[]) => unknown)(...args);
+  if (typeof fn === 'function') {
+    return (fn as (...a: unknown[]) => unknown)(...args);
+  }
 }

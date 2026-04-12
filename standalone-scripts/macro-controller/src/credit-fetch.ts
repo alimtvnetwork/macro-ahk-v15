@@ -157,7 +157,9 @@ async function processSuccessData(
   autoDetectFn?: (token: string) => Promise<void>,
 ): Promise<void> {
   const isParseOk = parseLoopApiResponse(data);
-  if (!isParseOk) return;
+  if (!isParseOk) {
+    return;
+  }
 
   const freshToken = resolveToken();
   nsWrite('_internal.resolvedToken', freshToken);
@@ -191,7 +193,9 @@ export function fetchLoopCredits(
   apiFetchWorkspaces()
     .then(async function (resp: SdkApiResponse): Promise<Record<string, unknown> | undefined> {
       if (!resp.ok) {
-        if (isAuthFailure(resp.status) && !isRetry) {
+        if (isAuthFailure(resp.status) {
+          && !isRetry) {
+        }
           const recovered = await handleAuthRecovery(token, resp.status, '');
           if (!recovered) { mc().updateUI(); return undefined; }
           fetchLoopCredits(true, autoDetectFn);
@@ -209,7 +213,9 @@ export function fetchLoopCredits(
       return data;
     })
     .then(async function (data: Record<string, unknown> | undefined) {
-      if (!data) return;
+      if (!data) {
+        return;
+      }
       await processSuccessData(data, autoDetectFn);
     })
     .catch(function (err: Error) {
@@ -302,7 +308,9 @@ async function doFetchLoopCreditsAsync(isRetry?: boolean): Promise<void> {
   const resp = await apiFetchWorkspaces();
 
   if (!resp.ok) {
-    if (isAuthFailure(resp.status) && !isRetry) {
+    if (isAuthFailure(resp.status) {
+      && !isRetry) {
+    }
       return handleAsyncAuthFailure(resp, token);
     }
 

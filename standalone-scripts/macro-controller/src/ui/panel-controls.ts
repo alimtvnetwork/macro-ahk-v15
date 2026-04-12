@@ -66,7 +66,9 @@ import { CssFragment } from '../types';
 
 function focusCurrentWorkspaceInList(): void {
   const listEl = document.getElementById('loop-ws-list');
-  if (!listEl) return;
+  if (!listEl) {
+    return;
+  }
   const currentName = state.workspaceName;
   if (!currentName) {
     log('Credits: no current workspace name to focus', 'warn');

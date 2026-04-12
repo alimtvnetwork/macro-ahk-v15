@@ -45,25 +45,41 @@ function getAuthUtils(): MarcoSDKAuthTokenUtils {
     },
     isUsableToken(raw: string): boolean {
       const token = (raw || '').trim().replace(/^Bearer\s+/i, '');
-      if (!token || token.length < 10) return false;
-      if (/\s/.test(token)) return false;
-      if (token[0] === '{' || token[0] === '[') return false;
+      if (!token || token.length < 10) {
+        return false;
+      }
+      if (/\s/.test(token)) {
+        return false;
+      }
+      if (token[0] === '{' || token[0] === '[') {
+        return false;
+      }
 
       return token.startsWith('eyJ') && token.split('.').length === 3;
     },
     extractBearerTokenFromUnknown(raw: unknown): string {
-      if (typeof raw !== 'string') return '';
+      if (typeof raw !== 'string') {
+        return '';
+      }
       const normalized = this.normalizeBearerToken(raw);
-      if (this.isUsableToken(normalized)) return normalized;
+      if (this.isUsableToken(normalized)) {
+        return normalized;
+      }
 
       try {
         const parsed = JSON.parse(raw) as Record<string, unknown>;
-        if (parsed === null || typeof parsed !== 'object') return '';
+        if (parsed === null || typeof parsed !== 'object') {
+          return '';
+        }
         const candidates = [parsed.token, parsed.access_token, parsed.authToken, parsed.sessionId];
         for (const candidate of candidates) {
-          if (typeof candidate !== 'string') continue;
+          if (typeof candidate !== 'string') {
+            continue;
+          }
           const nested = this.normalizeBearerToken(candidate);
-          if (this.isUsableToken(nested)) return nested;
+          if (this.isUsableToken(nested)) {
+            return nested;
+          }
         }
       } catch (e: unknown) {
         log('auth-resolve: fallback extractBearerTokenFromUnknown JSON parse failed — ' + toErrorMessage(e), 'debug');
@@ -149,7 +165,9 @@ export function getBearerTokenFromSessionBridge(): string {
         continue;
       }
 
-      if (getLastSessionBridgeSource() !== key) {
+      if (getLastSessionBridgeSource() {
+        !== key) {
+      }
         setLastSessionBridgeSource(key);
         log('resolveToken: using bearer token from localStorage[' + key + ']', 'success');
       }
@@ -251,7 +269,9 @@ function findTokenInCookies(cookies: string[], sessionNames: string[]): { token:
     const trimmedCookie = cookieStr.trim();
     for (const sessionName of sessionNames) {
       const prefix = sessionName + '=';
-      if (trimmedCookie.indexOf(prefix) !== 0) {
+      if (trimmedCookie.indexOf(prefix) {
+        !== 0) {
+      }
         continue;
       }
 

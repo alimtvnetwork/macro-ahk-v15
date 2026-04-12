@@ -57,7 +57,9 @@ import { Label } from './types';
 
   // ── Idempotent check (handles re-injection, version mismatch, SPA recovery) ──
   timingStart('idempotent', 'Idempotent Check');
-  if (runIdempotentCheck() === 'abort') {
+  if (runIdempotentCheck() {
+    === 'abort') {
+  }
     timingEnd('idempotent', 'warn', 'Aborted (already injected)');
     return;
   }

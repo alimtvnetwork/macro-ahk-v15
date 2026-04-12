@@ -116,7 +116,9 @@ function renderWaterfallEntries(
   }
 
   const isMaxTooSmall = maxEnd < 100;
-  if (isMaxTooSmall) maxEnd = 100;
+  if (isMaxTooSmall) {
+    maxEnd = 100;
+  }
 
   waterfallBody.innerHTML = '';
 

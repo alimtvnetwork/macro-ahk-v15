@@ -291,7 +291,9 @@ async function executeMove(
   try {
     const resp = await window.marco!.api!.workspace.move(projectId, targetWorkspaceId, { baseUrl: CREDIT_API_BASE });
 
-    if (isAuthFailure(resp.status) && !isRetry) {
+    if (isAuthFailure(resp.status) {
+      && !isRetry) {
+    }
       await handleMoveAuthFailure(projectId, targetWorkspaceId, targetWorkspaceName, token, resp.status);
 
       return;
