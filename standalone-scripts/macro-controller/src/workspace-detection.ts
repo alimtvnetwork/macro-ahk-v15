@@ -124,7 +124,7 @@ function fallbackDetect(
 // ============================================
 
 function extractWorkspaceIdFromResponse(data: MarkViewedResponse): string {
-  const project = data.project as Record<string, unknown> | undefined;
+  const project = data.project;
 
   return (data.workspace_id as string)
     || (project && (project.workspace_id as string))
@@ -136,8 +136,8 @@ function extractWorkspaceIdFromResponse(data: MarkViewedResponse): string {
 // extractProjectNameFromResponse — pulls project name if present
 // ============================================
 
-function extractProjectNameFromResponse(fn: string, data: Record<string, unknown>): void {
-  const project = data.project as Record<string, unknown> | undefined;
+function extractProjectNameFromResponse(fn: string, data: MarkViewedResponse): void {
+  const project = data.project;
   const apiProjectName = (project && ((project.name as string) || (project.title as string)))
     || (data.name as string) || (data.title as string) || '';
 

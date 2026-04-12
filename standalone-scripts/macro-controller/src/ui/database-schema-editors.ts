@@ -273,7 +273,7 @@ function addValField(
 
 function addValNumField(
   panel: HTMLElement,
-  validation: Record<string, unknown>,
+  validation: ValidationRules,
   key: string,
   label: string,
 ): void {

@@ -7,6 +7,8 @@
  * @see spec/04-macro-controller/ts-migration-v2/05-module-splitting.md
  */
 
+import type { ValidationRules } from '../types';
+
 export interface JsonColumnDef {
   name: string;
   type: 'TEXT' | 'INTEGER' | 'REAL' | 'BLOB' | 'BOOLEAN';
