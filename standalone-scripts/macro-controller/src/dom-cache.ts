@@ -42,9 +42,13 @@ class DomCache {
     }
 
     const cached = this._cache.get(xpath);
-    if (cached && Date.now() - cached.timestamp < this._ttlMs) {
+    const isCacheFresh = cached && Date.now() - cached.timestamp < this._ttlMs;
+
+    if (isCacheFresh) {
       // Verify element is still in DOM
-      if (cached.element === null || (cached.element instanceof Element && document.contains(cached.element))) {
+      const isStillValid = cached.element === null || (cached.element instanceof Element && document.contains(cached.element));
+
+      if (isStillValid) {
         this._hits++;
         return cached.element;
       }
@@ -70,7 +74,9 @@ class DomCache {
     }
 
     const cached = this._cacheMulti.get(xpath);
-    if (cached && Date.now() - cached.timestamp < this._ttlMs) {
+    const isCacheFresh = cached && Date.now() - cached.timestamp < this._ttlMs;
+
+    if (isCacheFresh) {
       this._hits++;
       return cached.elements;
     }
@@ -99,8 +105,12 @@ class DomCache {
   querySelector(selector: string): Element | null {
     const key = 'css:' + selector;
     const cached = this._cache.get(key);
-    if (cached && Date.now() - cached.timestamp < this._ttlMs) {
-      if (cached.element === null || (cached.element instanceof Element && document.contains(cached.element))) {
+    const isCacheFresh = cached && Date.now() - cached.timestamp < this._ttlMs;
+
+    if (isCacheFresh) {
+      const isStillValid = cached.element === null || (cached.element instanceof Element && document.contains(cached.element));
+
+      if (isStillValid) {
         this._hits++;
         return cached.element as Element | null;
       }
@@ -117,8 +127,12 @@ class DomCache {
   getElementById(id: string): HTMLElement | null {
     const key = 'id:' + id;
     const cached = this._cache.get(key);
-    if (cached && Date.now() - cached.timestamp < this._ttlMs) {
-      if (cached.element === null || (cached.element instanceof Element && document.contains(cached.element))) {
+    const isCacheFresh = cached && Date.now() - cached.timestamp < this._ttlMs;
+
+    if (isCacheFresh) {
+      const isStillValid = cached.element === null || (cached.element instanceof Element && document.contains(cached.element));
+
+      if (isStillValid) {
         this._hits++;
         return cached.element as HTMLElement | null;
       }

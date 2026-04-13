@@ -224,7 +224,9 @@ function refreshStatusStopped(): void {
     logSub('Workspace name updated from nav (passive, loop stopped)', 1);
   }
 
-  if (!state.workspaceName && (!loopCreditState.perWorkspace || loopCreditState.perWorkspace.length === 0)) {
+  const hasNoCreditData = !state.workspaceName && (!loopCreditState.perWorkspace || loopCreditState.perWorkspace.length === 0);
+
+  if (hasNoCreditData) {
     triggerBackgroundCreditFetch();
   }
 
