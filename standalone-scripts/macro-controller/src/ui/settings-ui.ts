@@ -53,7 +53,7 @@ export interface SettingsDeps {
   getPromptsConfig: () => ResolvedPromptsConfig;
   showToast: (msg: string, level?: string) => void;
   log: (msg: string, level?: string) => void;
-  sendToExtension: (type: string, payload: Record<string, unknown>) => Promise<ExtensionResponse>;
+  sendToExtension: (type: string, payload: ExtensionPayload) => Promise<ExtensionResponse>;
 }
 
 // ============================================

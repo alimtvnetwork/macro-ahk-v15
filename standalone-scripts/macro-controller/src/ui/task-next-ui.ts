@@ -48,7 +48,7 @@ export const taskNextState: {
 };
 
 export interface TaskNextDeps {
-  sendToExtension: (type: string, payload: Record<string, unknown>) => Promise<Record<string, unknown>>;
+  sendToExtension: (type: string, payload: ExtensionPayload) => Promise<ExtensionResponse>;
   getPromptsConfig: () => ResolvedPromptsConfig;
   getByXPath: (xpath: string) => Element | null;
 }

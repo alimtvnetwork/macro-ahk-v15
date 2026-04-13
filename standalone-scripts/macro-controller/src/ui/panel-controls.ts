@@ -296,7 +296,7 @@ function buildPromptsDropdown(_deps: PanelBuilderDeps, btnStyle: string): Prompt
   promptsDropdown.style.cssText = 'display:none;position:absolute;top:100%;left:0;min-width:220px;max-width:340px;max-height:280px;overflow-y:auto;background:' + cPanelBg + ';border:1px solid ' + cPrimary + ';border-radius:' + lDropdownRadius + ';z-index:100001;box-shadow:' + lDropdownShadow + ';margin-top:2px;';
 
   const promptCtx: PromptContext = { promptsDropdown: promptsDropdown };
-  const taskNextDeps: TaskNextDeps = { sendToExtension: sendToExtension as (type: string, payload: Record<string, unknown>) => Promise<Record<string, unknown>>, getPromptsConfig: getPromptsConfig, getByXPath: ((xpath: string) => getByXPath(xpath) as Element | null) as (xpath: string) => Element | null };
+  const taskNextDeps: TaskNextDeps = { sendToExtension: sendToExtension as (type: string, payload: ExtensionPayload) => Promise<ExtensionResponse>, getPromptsConfig: getPromptsConfig, getByXPath: ((xpath: string) => getByXPath(xpath) as Element | null) as (xpath: string) => Element | null };
   loadTaskNextSettings(taskNextDeps);
   setupTaskNextCancelHandler();
   setRevalidateContext(promptCtx, taskNextDeps);
